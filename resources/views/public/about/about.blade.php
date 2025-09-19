@@ -225,7 +225,7 @@
                                 {{__('about.Dedicated customer service')}}
                             </h5>
                             <p class="card-text">
-                                {{__key('about.Vanessa will guide you through your purchasing process with expertise and kindness.')}}
+                                {{__('about.Vanessa will guide you through your purchasing process with expertise and kindness.')}}
                             </p>
                         </div>
                     </div>
