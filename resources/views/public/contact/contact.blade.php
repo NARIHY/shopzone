@@ -31,8 +31,8 @@
                 <i class="bi bi-geo-alt"></i>
               </div>
               <div class="info-content">
-                <h4>Our Address</h4>
-                <p>1842 Maple Avenue, Portland, Oregon 97204</p>
+                <h4>{{__('contact.Our Address')}}</h4>
+                <p>Lot IVN 26 Ankaditapaka Antanimena</p>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@
                 <i class="bi bi-envelope"></i>
               </div>
               <div class="info-content">
-                <h4>Email Address</h4>
+                <h4> {{__('contact.Email Address')}} </h4>
                 <p>info@example.com</p>
                 <p>contact@example.com</p>
               </div>
@@ -56,9 +56,9 @@
                 <i class="bi bi-headset"></i>
               </div>
               <div class="info-content">
-                <h4>Hours of Operation</h4>
-                <p>Sunday-Fri: 9 AM - 6 PM</p>
-                <p>Saturday: 9 AM - 4 PM</p>
+                <h4> {{__('contact.Hours of Operation')}} </h4>
+                <p> {{__('contact.Sunday-Fri: 9 AM - 6 PM')}} </p>
+                <p>{{__('contact.Saturday: 9 AM - 4 PM')}}</p>
               </div>
             </div>
           </div>
@@ -85,7 +85,7 @@
         <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">
           <div class="col-lg-10">
             <div class="contact-form-wrapper">
-              <h2 class="text-center mb-4">Get in Touch</h2>
+              <h2 class="text-center mb-4"> {{__('Get in Touch')}} </h2>
 
               <form action="{{route('public.storeContact')}}" method="post">
                 @csrf
@@ -94,7 +94,7 @@
                     <div class="form-group">
                       <div class="input-with-icon">
                         <i class="bi bi-person"></i>
-                        <input type="text" class="form-control" name="firstname" placeholder="First Name" required="">
+                        <input type="text" class="form-control" name="firstname" placeholder="{{__('contact.First Name')}}" required="">
                       </div>
                     </div>
                   </div>
@@ -103,7 +103,7 @@
                     <div class="form-group">
                       <div class="input-with-icon">
                         <i class="bi bi-person"></i>
-                        <input type="text" class="form-control" name="lastname" placeholder="Last Name" required="">
+                        <input type="text" class="form-control" name="lastname" placeholder="{{__('contact.Last Name')}}" required="">
                       </div>
                     </div>                    
                   </div>
@@ -112,7 +112,7 @@
                     <div class="form-group">
                       <div class="input-with-icon">
                         <i class="bi bi-envelope"></i>
-                        <input type="email" class="form-control" name="email" placeholder="Email Address" required="">
+                        <input type="email" class="form-control" name="email" placeholder="{{__('contact.Email Address')}}" required="">
                       </div>
                     </div>
                   </div>
@@ -120,7 +120,7 @@
                     <div class="form-group">
                       <div class="input-with-icon">
                         <i class="bi bi-text-left"></i>
-                        <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
+                        <input type="text" class="form-control" name="subject" placeholder="{{__('contact.Subject')}}" required="">
                       </div>
                     </div>
                   </div>
@@ -129,13 +129,13 @@
                     <div class="form-group">
                       <div class="input-with-icon">
                         <i class="bi bi-chat-dots message-icon"></i>
-                        <textarea class="form-control" name="message" placeholder="Write Message..." style="height: 180px" required=""></textarea>
+                        <textarea class="form-control" name="message" placeholder="{{__('contact.Write Message...')}}" style="height: 180px" required=""></textarea>
                       </div>
                     </div>
                   </div>
 
                   <div class="col-12 text-center">
-                    <button type="submit" class="btn btn-primary btn-submit">SEND MESSAGE</button>
+                    <button type="submit" class="btn btn-primary btn-submit">{{__('contact.SEND MESSAGE')}}</button>
                   </div>
                 </div>
               </form>
