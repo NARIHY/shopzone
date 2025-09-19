@@ -102,7 +102,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center mb-5">
-                    <h2 class="section-title display-6 fw-bold">Notre Histoire</h2>
+                    <h2 class="section-title display-6 fw-bold"> {{__('about.Our History')}} </h2>
                 </div>
             </div>
             <div class="row">
@@ -110,8 +110,10 @@
                     <div class="timeline-item">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
-                                <h5 class="card-title text-primary"><i class="fas fa-lightbulb me-2"></i>2008 - L'idée</h5>
-                                <p class="card-text">Née d'une idée de deux sœurs, avec le mari de la cadette, ont remarqué qu'il n'y avait pas assez de magasins spécialistes en cadeau à Tana. Surtout un cadeau qui demandait plus d'originalité.</p>
+                                <h5 class="card-title text-primary"><i class="fas fa-lightbulb me-2"></i> {{__('about.2008 - The idea')}} </h5>
+                                <p class="card-text">
+                                    {{__('about.Born from an idea, two sisters, along with the husband of the youngest, noticed that there weren\'t enough specialist gift shops in Tana. Especially a gift that required more originality.')}}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -119,8 +121,12 @@
                     <div class="timeline-item">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
-                                <h5 class="card-title text-primary"><i class="fas fa-store me-2"></i>Les débuts</h5>
-                                <p class="card-text">Ils ont commencé par louer un mur dans un centre commercial. Le stockage était encore dans une toute petite chambre. Plus les mois passaient, plus les placards se remplissaient des stocks de produits, envahissant même la cuisine !</p>
+                                <h5 class="card-title text-primary"><i class="fas fa-store me-2"></i>
+                                    {{__('about.The beginnings')}}
+                                </h5>
+                                <p class="card-text">
+                                    {{('about.They started by renting a wall in a shopping center. The storage space was still in a tiny room. As the months went by, the cupboards filled up with more and more products, even invading the kitchen!')}}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -128,8 +134,12 @@
                     <div class="timeline-item">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
-                                <h5 class="card-title text-primary"><i class="fas fa-building me-2"></i>Première boutique</h5>
-                                <p class="card-text">Quelques mois plus tard, ouverture de la première vraie boutique à Ankadifotsy, qui reste le principal magasin aujourd'hui. Accueil du premier employé et en moins de deux ans, l'équipe a triplé !</p>
+                                <h5 class="card-title text-primary"><i class="fas fa-building me-2"></i>
+                                    {{__('about.First store')}}
+                                </h5>
+                                <p class="card-text">
+                                    {{__('about.A few months later, the first real boutique opened in Ankadifotsy, which remains the main store today. The first employee was welcomed, and in less than two years, the team tripled!')}}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -137,8 +147,12 @@
                     <div class="timeline-item">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
-                                <h5 class="card-title text-primary"><i class="fas fa-cogs me-2"></i>Personnalisation</h5>
-                                <p class="card-text">Acquisition de la première machine de personnalisation par sublimation : mugs, coussins... Puis après 10 ans, expansion vers les entreprises avec l'impression UV et grand format.</p>
+                                <h5 class="card-title text-primary"><i class="fas fa-cogs me-2"></i>
+                                    {{__('about.Personalization')}}
+                                </h5>
+                                <p class="card-text">
+                                    {{__('about.Acquisition of the first sublimation personalization machine: mugs, cushions... Then after 10 years, expansion towards businesses with UV and large format printing.')}}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -146,8 +160,12 @@
                     <div class="timeline-item">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
-                                <h5 class="card-title text-primary"><i class="fas fa-users me-2"></i>Aujourd'hui</h5>
-                                <p class="card-text">Une équipe de 33 personnes qui s'emploie quotidiennement à proposer des idées de cadeaux innovantes. Depuis le Covid, engagement de couturiers pour la conception de vêtements professionnels.</p>
+                                <h5 class="card-title text-primary"><i class="fas fa-users me-2"></i>
+                                    {{__('about.Today')}}
+                                </h5>
+                                <p class="card-text">
+                                    {{__('about.A team of 33 people dedicated daily to offering innovative gift ideas. Since the Covid crisis, we\'ve hired designers to design professional clothing.')}}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -161,7 +179,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center mb-5">
-                    <h2 class="section-title display-6 fw-bold">Pourquoi choisir Fusion Gift ?</h2>
+                    <h2 class="section-title display-6 fw-bold">
+                        {{__('about.Why choose Fusion Gift?')}}
+                    </h2>
                 </div>
             </div>
             <div class="row g-4">
@@ -171,8 +191,12 @@
                             <div class="feature-icon">
                                 <i class="fas fa-paint-brush fa-lg"></i>
                             </div>
-                            <h5 class="card-title">Personnalisation sur mesure</h5>
-                            <p class="card-text">Nous personnalisons tous vos cadeaux dans notre atelier avec un contrôle qualité rigoureux.</p>
+                            <h5 class="card-title">
+                                {{__('about.Bespoke customization')}}
+                            </h5>
+                            <p class="card-text">
+                               {{__('about.We personalize all your gifts in our workshop with rigorous quality control.')}} 
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -182,8 +206,12 @@
                             <div class="feature-icon">
                                 <i class="fas fa-shipping-fast fa-lg"></i>
                             </div>
-                            <h5 class="card-title">Livraison rapide</h5>
-                            <p class="card-text">Emballage soigné à la main avec carte personnalisée, prêt à offrir.</p>
+                            <h5 class="card-title">
+                                {{__('about.Fast delivery')}}
+                            </h5>
+                            <p class="card-text">
+                                {{__('about.Carefully hand-wrapped with a personalized card, ready to give as a gift.')}}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -193,8 +221,12 @@
                             <div class="feature-icon">
                                 <i class="fas fa-headset fa-lg"></i>
                             </div>
-                            <h5 class="card-title">Service client dédié</h5>
-                            <p class="card-text">Vanessa vous accompagne dans votre processus d'achat avec expertise et bienveillance.</p>
+                            <h5 class="card-title">
+                                {{__('about.Dedicated customer service')}}
+                            </h5>
+                            <p class="card-text">
+                                {{__key('about.Vanessa will guide you through your purchasing process with expertise and kindness.')}}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -207,7 +239,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center mb-5">
-                    <h2 class="section-title display-6 fw-bold">Questions fréquentes</h2>
+                    <h2 class="section-title display-6 fw-bold">
+                        {{__('about.Frequently asked questions')}}
+                    </h2>
                 </div>
             </div>
             <div class="row">
@@ -215,14 +249,16 @@
                     <div class="accordion" id="faqAccordion">
                         <div class="faq-item">
                             <button class="faq-button w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                <span>Quelles sont les meilleures idées de cadeaux personnalisés ?</span>
+                                <span>
+                                   {{__('about.What are the best personalized gift ideas?')}} 
+                                </span>
                                 <i class="fas fa-plus"></i>
                             </button>
                             <div id="faq1" class="collapse" data-bs-parent="#faqAccordion">
                                 <div class="p-4 bg-white">
-                                    <p class="mb-3"><strong>Notre top 5 des cadeaux personnalisés :</strong></p>
+                                    <p class="mb-3"><strong>{{__('about.Our top 5 personalized gifts:')}}</strong></p>
                                     <ol class="list-unstyled">
-                                        <li class="mb-2"><i class="fas fa-coffee text-primary me-2"></i><strong>Mug personnalisé</strong> - Pour bien débuter la journée à petit prix</li>
+                                        <li class="mb-2"><i class="fas fa-coffee text-primary me-2"></i><strong>{{__('about.Personalized mug')}}</strong> - {{__('about.To start the day off right at a low price')}}</li>
                                         <li class="mb-2"><i class="fas fa-shopping-bag text-primary me-2"></i><strong>Tote bag</strong> - Très utile et réutilisable, à porter partout</li>
                                         <li class="mb-2"><i class="fas fa-trophy text-primary me-2"></i><strong>Trophée</strong> - Pas seulement pour des événements officiels</li>
                                         <li class="mb-2"><i class="fas fa-key text-primary me-2"></i><strong>Porte-clés personnalisé</strong> - Le cadeau indémodable</li>

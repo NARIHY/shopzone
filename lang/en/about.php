@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'Our History'=>'Our History',
+    '2008 - The idea'=>'2008 - The idea',
+    'Born from an idea, two sisters, along with the husband of the youngest, noticed that there weren\'t enough specialist gift shops in Tana. Especially a gift that required more originality.'=>'Born from an idea, two sisters, along with the husband of the youngest, noticed that there weren\'t enough specialist gift shops in Tana. Especially a gift that required more originality.',
+    'The beginnings'=>'The beginnings',
+    'They started by renting a wall in a shopping center. The storage space was still in a tiny room. As the months went by, the cupboards filled up with more and more products, even invading the kitchen!'=>'They started by renting a wall in a shopping center. The storage space was still in a tiny room. As the months went by, the cupboards filled up with more and more products, even invading the kitchen!',
+    'First store'=>'First store',
+    'A few months later, the first real boutique opened in Ankadifotsy, which remains the main store today. The first employee was welcomed, and in less than two years, the team tripled!'=> 'A few months later, the first real boutique opened in Ankadifotsy, which remains the main store today. The first employee was welcomed, and in less than two years, the team tripled!',
+    'Personalization' => 'Personalization',
+    'Acquisition of the first sublimation personalization machine: mugs, cushions... Then after 10 years, expansion towards businesses with UV and large format printing.'=>'Acquisition of the first sublimation personalization machine: mugs, cushions... Then after 10 years, expansion towards businesses with UV and large format printing.',
+    'Today'=>'Today',
+    'A team of 33 people dedicated daily to offering innovative gift ideas. Since the Covid crisis, we\'ve hired designers to design professional clothing.' =>'A team of 33 people dedicated daily to offering innovative gift ideas. Since the Covid crisis, we\'ve hired designers to design professional clothing.',
+    'Why choose Fusion Gift?'=>'Why choose Fusion Gift?',
+    'Bespoke customization'=>  'Bespoke customization',
+    'We personalize all your gifts in our workshop with rigorous quality control.'=>'We personalize all your gifts in our workshop with rigorous quality control.',
+    'Fast delivery'=>'Fast delivery',
+    'Carefully hand-wrapped with a personalized card, ready to give as a gift.' => 'Carefully hand-wrapped with a personalized card, ready to give as a gift.',
+    'Dedicated customer service' => 'Dedicated customer service',
+    'Vanessa will guide you through your purchasing process with expertise and kindness.' => 'Vanessa will guide you through your purchasing process with expertise and kindness.',
+    'Frequently asked questions' => 'Frequently asked questions',
+    'What are the best personalized gift ideas?' => 'What are the best personalized gift ideas?',
+    'Our top 5 personalized gifts:' => 'Our top 5 personalized gifts:',
+    'Personalized mug'=> 'Personalized mug',
+    'To start the day off right at a low price' => 'To start the day off right at a low price'
+
+];
