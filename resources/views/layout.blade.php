@@ -133,7 +133,7 @@
               @guest
                   <div class="dropdown-footer">
                       <a href="{{ route('login') }}" class="btn btn-primary w-100 mb-2">Sign In</a>
-                      <a href="{{ route('') }}" class="btn btn-outline-primary w-100">Register</a>
+                      <a href="{{ route('login') }}" class="btn btn-outline-primary w-100">Register</a>
                   </div>
               @endguest
           </div>

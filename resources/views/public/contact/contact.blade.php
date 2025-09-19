@@ -87,7 +87,8 @@
             <div class="contact-form-wrapper">
               <h2 class="text-center mb-4">Get in Touch</h2>
 
-              <form action="#" method="post" class="php-email-form">
+              <form action="{{route('public.storeContact')}}" method="post">
+                @csrf
                 <div class="row g-3">
                   <div class="col-md-6">
                     <div class="form-group">

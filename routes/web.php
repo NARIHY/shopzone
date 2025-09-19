@@ -7,7 +7,9 @@ use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
 Route::prefix('/')->name('public.')->group(function () {
     Route::get('/', [\App\Http\Controllers\Public\PublicController::class, 'home'])->name('home');
     Route::get('/about', [\App\Http\Controllers\Public\PublicController::class, 'about'])->name('about');
+
     Route::get('/contact', [\App\Http\Controllers\Public\PublicController::class, 'contact'])->name('contact');
+    Route::post('/contact', [\App\Http\Controllers\Public\PublicController::class, 'storeContact'])->name('storeContact');
 });
 
 Route::middleware([
