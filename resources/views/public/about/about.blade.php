@@ -1,0 +1,68 @@
+@extends('layout')
+
+@section('title', 'A propos de fusion - Votre Boutique en Ligne')
+
+
+
+@section('content')
+    <section id="about-2" class="about-2 section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <span class="section-badge"><i class="bi bi-info-circle"></i> About Us</span>
+        <div class="row">
+          <div class="col-lg-6">
+            <h2 class="about-title">Nemo enim ipsam voluptatem quia voluptas aspernatur</h2>
+            <p class="about-description">Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
+          </div>
+          <div class="col-lg-6">
+            <p class="about-text">Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+            <p class="about-text">Amet eos ut. Officiis soluta ab id dolor non sint. Corporis omnis consequatur quisquam ex consequuntur quo omnis. Quo eligendi cum. Amet mollitia qui quidem dolores praesentium quasi ut et.</p>
+          </div>
+        </div>
+
+        <div class="row features-boxes gy-4 mt-3">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="feature-box">
+              <div class="icon-box">
+                <i class="bi bi-bullseye"></i>
+              </div>
+              <h3><a href="#" class="stretched-link">At vero eos</a></h3>
+              <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="feature-box">
+              <div class="icon-box">
+                <i class="bi bi-person-check"></i>
+              </div>
+              <h3><a href="#" class="stretched-link">Sed ut perspiciatis</a></h3>
+              <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
+            <div class="feature-box">
+              <div class="icon-box">
+                <i class="bi bi-clipboard-data"></i>
+              </div>
+              <h3><a href="#" class="stretched-link">Nemo enim ipsam</a></h3>
+              <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-lg-12" data-aos="zoom-in" data-aos-delay="200">
+            <div class="video-box">
+              <img src="{{asset('assets/img/about/about-wide-1.webp')}}" class="img-fluid" alt="Video Thumbnail">
+              <a href="https://www.youtube.com/watch?v=3GoyftjCNB0&list=RDMqIEOJa5fPU&index=3" class="glightbox pulsating-play-btn"></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+@endsection
