@@ -23,6 +23,21 @@ return [
     'What are the best personalized gift ideas?' => 'What are the best personalized gift ideas?',
     'Our top 5 personalized gifts:' => 'Our top 5 personalized gifts:',
     'Personalized mug'=> 'Personalized mug',
-    'To start the day off right at a low price' => 'To start the day off right at a low price'
+    'To start the day off right at a low price' => 'To start the day off right at a low price',
+    'Tote bag' => 'Tote bag',
+    'Very useful and reusable, to carry everywhere' => 'Very useful and reusable, to carry everywhere',
+    'Trophy' => 'Trophy',
+    'Not just for official events'=>'Not just for official events',
+    'Personalized keychain' => 'Personalized keychain',
+    'The timeless gift'=> 'The timeless gift',
+    'T-shirt'=> 'T-shirt',
+    'A great classic that always pleases'=> 'A great classic that always pleases',
+    'What gifts can be personalized?'=> 'What gifts can be personalized?',
+    'Kitchen' => 'Kitchen',
+    'Personalized glasses'=> 'Personalized glasses',
+    'Personalized aprons'=> 'Personalized aprons',
+    'Cutting boards'=> 'Cutting boards',
+    'Spoon sets'=> 'Spoon sets',
+    'Coasters'=> 'Coasters',
 
 ];

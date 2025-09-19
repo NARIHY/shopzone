@@ -259,10 +259,10 @@
                                     <p class="mb-3"><strong>{{__('about.Our top 5 personalized gifts:')}}</strong></p>
                                     <ol class="list-unstyled">
                                         <li class="mb-2"><i class="fas fa-coffee text-primary me-2"></i><strong>{{__('about.Personalized mug')}}</strong> - {{__('about.To start the day off right at a low price')}}</li>
-                                        <li class="mb-2"><i class="fas fa-shopping-bag text-primary me-2"></i><strong>Tote bag</strong> - Très utile et réutilisable, à porter partout</li>
-                                        <li class="mb-2"><i class="fas fa-trophy text-primary me-2"></i><strong>Trophée</strong> - Pas seulement pour des événements officiels</li>
-                                        <li class="mb-2"><i class="fas fa-key text-primary me-2"></i><strong>Porte-clés personnalisé</strong> - Le cadeau indémodable</li>
-                                        <li class="mb-2"><i class="fas fa-tshirt text-primary me-2"></i><strong>T-shirt</strong> - Un grand classique qui fait toujours plaisir</li>
+                                        <li class="mb-2"><i class="fas fa-shopping-bag text-primary me-2"></i><strong> {{__('about.Tote bag')}} </strong> - {{__('about.Very useful and reusable, to carry everywhere')}} </li>
+                                        <li class="mb-2"><i class="fas fa-trophy text-primary me-2"></i><strong>{{__('about.Trophy')}}</strong> - {{__('about.Not just for official events')}} </li>
+                                        <li class="mb-2"><i class="fas fa-key text-primary me-2"></i><strong>{{__('about.Personalized keychain')}}</strong> - {{__('about.The timeless gift')}} </li>
+                                        <li class="mb-2"><i class="fas fa-tshirt text-primary me-2"></i><strong>{{__('about.T-shirt')}}</strong> - {{__('about.A great classic that always pleases')}} </li>
                                     </ol>
                                 </div>
                             </div>
@@ -270,20 +270,22 @@
 
                         <div class="faq-item">
                             <button class="faq-button w-100 text-start d-flex justify-content-between align-items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                <span>Quels cadeaux peuvent être personnalisés ?</span>
+                                <span>
+                                    {{__('about.What gifts can be personalized?')}}
+                                </span>
                                 <i class="fas fa-plus"></i>
                             </button>
                             <div id="faq2" class="collapse" data-bs-parent="#faqAccordion">
                                 <div class="p-4 bg-white">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <h6 class="text-primary"><i class="fas fa-utensils me-2"></i>Cuisine</h6>
+                                            <h6 class="text-primary"><i class="fas fa-utensils me-2"></i>{{__('about.Kitchen')}}</h6>
                                             <ul class="list-unstyled small mb-3">
-                                                <li>• Verres personnalisés</li>
-                                                <li>• Tabliers personnalisés</li>
-                                                <li>• Planches à découper</li>
-                                                <li>• Sets de cuillères</li>
-                                                <li>• Sous-verres</li>
+                                                <li>• {{__('about.Personalized glasses')}}</li>
+                                                <li>• {{__('about.Personalized aprons')}}</li>
+                                                <li>• {{__('about.Cutting boards')}}</li>
+                                                <li>• {{__('about.Spoon sets')}}</li>
+                                                <li>• {{__('about.Coasters')}}</li>
                                             </ul>
                                         </div>
                                         <div class="col-md-6">
