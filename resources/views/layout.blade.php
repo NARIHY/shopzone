@@ -12,6 +12,7 @@
   <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> --}}
 
+  @yield('customcss')
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
@@ -957,6 +958,8 @@
 
   <!-- Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
+
+  @yield('customjs')
 
 </body>
 

@@ -44,8 +44,7 @@
               </div>
               <div class="info-content">
                 <h4> {{__('contact.Email Address')}} </h4>
-                <p>info@example.com</p>
-                <p>contact@example.com</p>
+                <p>commercial1@fusiongift.mg</p>
               </div>
             </div>
           </div>
