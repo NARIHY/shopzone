@@ -22,6 +22,7 @@ class ProductCategoryList extends Component
     public function render()
     {
          $categories = ProductCategory::where('is_active', true)
+            ->orderBy('created_at', 'desc')
             ->where('name', 'like', "%{$this->search}%")
             ->paginate(10);
 
