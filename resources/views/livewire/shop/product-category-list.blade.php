@@ -34,74 +34,69 @@
     </div>
 
     {{-- Table Card --}}
-    <div class="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-900">
-        {{-- Professional Plan Notice --}}
-        <div class="border-b border-yellow-200 dark:border-yellow-700 px-4 py-3">
-            <p class="text-sm text-yellow-800 dark:text-yellow-200 text-center">
-                {{ __('shop.PROFESSIONAL PLAN REQUIRED TO USE THIS FEATURE') }}
-            </p>
-        </div>
+    <x-table.card 
+        :columns="[
+            ['label' => '#', 'align' => 'left'],
+            ['label' => __('shop.Name Catgory'), 'align' => 'left'],
+            ['label'=> __('shop.Status'), 'align' => 'center'],
+            ['label' => __('utils.Actions'), 'align' => 'center'],
+        ]"
+        :notice="__('shop.PROFESSIONAL PLAN REQUIRED TO USE THIS FEATURE')"
+    >
+        {{-- Corps du tableau --}}
+        @forelse($categories as $category)
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                    {{ $category->id }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {{ $category->name }}
+                    </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium {{ $category->is_active != 0 ? 'text-green-600' : 'text-yellow-600' }}">
+                        {{ $category->is_active != 0 ? __('Active') : __('Inactive') }}
+                    </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center">
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
+                        {{-- Boutons --}}
+                        <a href="{{ route('admin.product-categories.edit', $category) }}"
+                        class="inline-block px-3 py-1 text-sm font-medium text-blue-600 border border-blue-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900">
+                            {{ __('utils.Edit') }}
+                        </a>
 
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">#</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('shop.Name Catgory') }}</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('utils.Actions') }}</th>
-                    </tr>
-                </thead>
+                        <button wire:click="openCategoryModal({{ $category->id }})"
+                                class="inline-block px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700">
+                            {{ __('utils.Show') }}
+                        </button>
 
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                    @forelse($categories as $category)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                {{ $category->id }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $category->name }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
-                                    <a href="{{ route('admin.product-categories.edit', $category) }}"
-                                       class="inline-block px-3 py-1 text-sm font-medium text-blue-600 border border-blue-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900">
-                                        {{ __('utils.Edit') }}
-                                    </a>
+                        <button
+                            onclick="if(!confirm('{{ __('Êtes-vous sûr de supprimer cette catégorie ?') }}')) return event.stopImmediatePropagation();"
+                            wire:click="deleteCategory({{ $category->id }})"
+                            class="inline-block px-3 py-1 text-sm font-medium text-red-600 border border-red-600 rounded hover:bg-red-50 dark:hover:bg-red-900">
+                            {{ __('utils.Remove') }}
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="3" class="px-6 py-8 text-center">
+                    <div class="text-gray-500 dark:text-gray-400">
+                        <p class="text-sm">{{ __('utils.Empty') }}</p>
+                    </div>
+                </td>
+            </tr>
+        @endforelse
 
-                                    <button wire:click="openCategoryModal({{ $category->id }})"
-                                            class="inline-block px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700">
-                                        {{ __('utils.Show') }}
-                                    </button>
+        {{-- Slot pagination --}}
+        <x-slot name="pagination">
+            {{ $categories->links() }}
+        </x-slot>
+    </x-table.card>
 
-                                    <button
-                                        onclick="if(!confirm('{{ __('Êtes-vous sûr de supprimer cette catégorie ?') }}')) return event.stopImmediatePropagation();"
-                                        wire:click="deleteCategory({{ $category->id }})"
-                                        class="inline-block px-3 py-1 text-sm font-medium text-red-600 border border-red-600 rounded hover:bg-red-50 dark:hover:bg-red-900">
-                                        {{ __('utils.Remove') }}
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3" class="px-6 py-8 text-center">
-                                <div class="text-gray-500 dark:text-gray-400">
-                                    <p class="text-sm">{{ __('utils.Empty') }}</p>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        {{-- Pagination --}}
-        @if($categories->hasPages())
-            <div class="px-6 py-3 border-t border-gray-200 dark:border-gray-700">
-                {{ $categories->links() }}
-            </div>
-        @endif
-    </div>
 
     {{-- Simple Modal --}}
     @if($showModal && $selectedCategory)

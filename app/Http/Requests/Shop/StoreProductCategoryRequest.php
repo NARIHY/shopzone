@@ -23,7 +23,7 @@ class StoreProductCategoryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255', 'unique:product_categories,name'],
-            'description' => ['nullable', 'string'],
+            'description' => ['required', 'string'],
             'is_active' => ['boolean'],
         ];
     }

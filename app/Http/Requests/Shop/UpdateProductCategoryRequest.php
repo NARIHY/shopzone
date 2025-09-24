@@ -23,7 +23,7 @@ class UpdateProductCategoryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255', 'unique:product_categories,name,' . $this->product_category->id],
-            'description' => ['nullable', 'string'],
+            'description' => ['required', 'string'],
             'is_active' => ['boolean'],
         ];
     }
