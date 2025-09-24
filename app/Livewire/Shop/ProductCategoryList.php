@@ -91,18 +91,14 @@ class ProductCategoryList extends Component
             // refresh pagination
             $this->resetPage();
 
-            session()->flash('message', __("La catégorie a été supprimée."));
+            session()->flash('success', __("Category deleted successfully."));
             $this->dispatchBrowserEvent('notify', [
                 'type' => 'success',
-                'message' => __("La catégorie a été supprimée.")
+                'message' => __("Category deleted successfully.")
             ]);
         } catch (\Throwable $e) {
             report($e);
-
-            $this->dispatchBrowserEvent('notify', [
-                'type' => 'error',
-                'message' => 'Impossible de supprimer la catégorie.'
-            ]);
+            session()->flash('error', $e->getMessage());
         }
     }
 
