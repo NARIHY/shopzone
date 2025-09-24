@@ -3,7 +3,14 @@
 use Livewire\Volt\Component;
 
 new class extends Component {
-    //
+    // Ici tu peux mettre des propriétés ou méthodes
+    public string $appearance = 'system';
+
+    public function updatedAppearance($value)
+    {
+        // Tu peux sauvegarder le choix (DB, user prefs, etc.)
+        auth()->user()?->update(['appearance' => $value]);
+    }
 }; ?>
 
 <section class="w-full">

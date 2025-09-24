@@ -22,5 +22,8 @@
             </div>
             @endif
         {{ $slot }}
+               
+
     </flux:main>
+    <x-utils.appearances-bottom />
 </x-layouts.app.sidebar>
