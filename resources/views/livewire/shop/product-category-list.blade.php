@@ -68,14 +68,14 @@
                         </a>
 
                         <button wire:click="openCategoryModal({{ $category->id }})"
-                                class="inline-block px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700">
+                                class="inline-block px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer">
                             {{ __('utils.Show') }}
                         </button>
 
                         <button
                             onclick="if(!confirm('{{ __('Êtes-vous sûr de supprimer cette catégorie ?') }}')) return event.stopImmediatePropagation();"
                             wire:click="deleteCategory({{ $category->id }})"
-                            class="inline-block px-3 py-1 text-sm font-medium text-red-600 border border-red-600 rounded hover:bg-red-50 dark:hover:bg-red-900">
+                            class="inline-block px-3 py-1 text-sm font-medium text-red-600 border border-red-600 rounded hover:bg-red-50 dark:hover:bg-red-900 cursor-pointer">
                             {{ __('utils.Remove') }}
                         </button>
                     </div>
