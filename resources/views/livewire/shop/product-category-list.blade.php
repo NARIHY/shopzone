@@ -37,7 +37,7 @@
     <x-table.card 
         :columns="[
             ['label' => '#', 'align' => 'left'],
-            ['label' => __('shop.Name Catgory'), 'align' => 'left'],
+            ['label' => __('shop.Name Catgory'), 'align' => 'center'],
             ['label'=> __('shop.Status'), 'align' => 'center'],
             ['label' => __('utils.Actions'), 'align' => 'center'],
         ]"
