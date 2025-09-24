@@ -7,4 +7,5 @@ return [
     'Remove'=>'Remove',
     'Close'=>'Close',
     'Show'=>'Show',
+    'Empty'=>'Empty',
 ];

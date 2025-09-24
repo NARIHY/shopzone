@@ -15,7 +15,7 @@ Route::prefix('/')->name('public.')->group(function () {
 Route::middleware([
     'auth',
     ValidateSessionWithWorkOS::class,
-])->group(function () {
+])->name('admin.')->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::resource('product-categories', \App\Http\Controllers\Shop\ProductCategoryController::class)->names('product-categories');
 });

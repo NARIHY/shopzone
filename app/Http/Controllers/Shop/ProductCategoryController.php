@@ -16,9 +16,7 @@ class ProductCategoryController extends Controller
      */
     public function index(): View
     {
-        return view(CategoryProductView::getCategoryListView(), [
-            'categories' => ProductCategory::where('is_active', true)->paginate(10),
-        ]);
+        return view(CategoryProductView::getCategoryListView());
     }
 
     /**
@@ -34,7 +32,18 @@ class ProductCategoryController extends Controller
      */
     public function store(StoreProductCategoryRequest $request)
     {
-        //
+        try {
+            $data = [
+                'name' => $request->validated('name'),
+                'description' => $request->validated('description', null),
+                'is_active' => $request->validated('is_active') ?? false,
+            ];
+            ProductCategory::create($data);
+            
+            return redirect()->route('admin.product-categories.index')->with('success', __('shop.Product category created successfully.'));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
+        }
     }
 
     /**
@@ -60,14 +69,33 @@ class ProductCategoryController extends Controller
      */
     public function update(UpdateProductCategoryRequest $request, ProductCategory $productCategory)
     {
-        //
+        try {
+            $data = [
+                'name' => $request->validated('name'),
+                'description' => $request->validated('description', null),
+                'is_active' => $request->validated('is_active') ?? false,
+            ];
+            // Update only the fields that are present in the request
+            $productCategory->update($data);
+
+            return redirect()->route('admin.product-categories.index')
+                            ->with('success', __('shop.Product category updated successfully.'));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(ProductCategory $productCategory)
-    {
-        //
+{
+    try {
+        $productCategory->delete();
+        return redirect()->route('admin.product-categories.index')
+                         ->with('success', __('shop.Product category deleted successfully.'));
+    } catch (\Exception $e) {
+        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
     }
+}
 }

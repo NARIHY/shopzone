@@ -7,4 +7,5 @@ return [
     'Remove' => 'Supprimer',
     'Close'=>'Fermer',
     'Show'=>'Afficher',
+    'Empty'=>'Aucun élément',
 ];

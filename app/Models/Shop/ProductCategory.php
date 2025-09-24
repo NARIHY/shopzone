@@ -9,7 +9,7 @@ class ProductCategory extends Model
 {
     /** @use HasFactory<\Database\Factories\Shop\ProductCategoryFactory> */
     use HasFactory;
-
+    protected $table = 'product_categories';    
     protected $fillable = [
         'name',
         'description',
