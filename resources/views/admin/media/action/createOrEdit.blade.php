@@ -2,7 +2,7 @@
 
     <div class="pagetitle mb-6">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
-            {{ __('Edit or Create Product Category') }}
+            {{ __('Edit or Create Media') }}
         </h1>
         <nav>
             <ol class="breadcrumb flex space-x-2 text-gray-600 dark:text-gray-400">
@@ -13,11 +13,11 @@
             </li>
             <li class="breadcrumb-item">/</li>
             <li class="breadcrumb-item">
-                <a href="{{route('admin.product-categories.index')}}" class="hover:text-blue-600 dark:hover:text-blue-400">
-                    {{__('shop.Product Category')}}
+                <a href="{{route('admin.media.index')}}" class="hover:text-blue-600 dark:hover:text-blue-400">
+                    {{__('Media files')}}
                 </a></li>
             <li class="breadcrumb-item">/</li>
-            <li class="breadcrumb-item font-semibold text-gray-800 dark:text-gray-100">{{__('Edit or Create Product Category')}}</li>
+            <li class="breadcrumb-item font-semibold text-gray-800 dark:text-gray-100">{{__('Edit or Create Media')}}</li>
             </ol>
         </nav>
     </div>
@@ -32,7 +32,7 @@
         </h1>
 
         {{-- Form --}}
-        <form action="{{ isset($category) ? route('admin.product-categories.update', $category->id) : route('admin.product-categories.store') }}"
+        <form action="{{ isset($category) ? route('admin.media.update', $category->id) : route('admin.media.store') }}"
               method="POST"
               class="flex flex-col gap-4">
 
@@ -43,34 +43,12 @@
 
             {{-- Category Name --}}
             <x-form.input 
-                name="name" 
-                label="{{ __('Category Name') }}" 
-                :value="$category->name ?? ''"
+                name="title" 
+                label="{{ __('Media title') }}" 
+                :value="$media->name ?? ''"
             />
 
-            {{-- Category Description --}}
-            <x-form.textarea 
-                name="description" 
-                label="{{ __('Description') }}" 
-                :value="$category->description ?? ''" 
-                rows="5"
-            />
-
-
-
-
-            {{-- Is Active Toggle --}}
-            <div class="flex items-center gap-2">
-                <input type="checkbox"
-                       name="is_active"
-                       id="is_active"
-                       value="1"
-                       {{ old('is_active', $category->is_active ?? false) ? 'checked' : '' }}
-                       class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600">
-                <label for="is_active" class="text-gray-700 dark:text-gray-200 font-medium">
-                    {{ __('Active') }}
-                </label>
-            </div>
+            <x-form.file :value="$media->paht ?? null" name="attachments" />
 
             {{-- Submit Button --}}
             <div class="flex justify-end">
@@ -78,7 +56,7 @@
                         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded
                                transition-colors duration-200
                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                    {{ isset($category) ? __('Update Category') : __('Create Category') }}
+                    {{ isset($category) ? __('Update Media') : __('Create Media') }}
                 </button>
             </div>
 

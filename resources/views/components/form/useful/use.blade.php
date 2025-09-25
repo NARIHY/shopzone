@@ -1,9 +1,12 @@
 {{-- FILE ONE FILES --}}
 
-<x-form.file name="avatar" label="Upload Avatar" accept="image/*" />
+<!-- remplace ceci : -->
+<x-form.file :value="$existingFiles?? null" name="attachments" />
 
 {{-- FILE MANY FILES --}}
-<x-form.file name="images" label="Upload Multiple Images" multiple accept="image/*" />
+
+<!-- par ça (sécurisé) : -->
+<x-form.file :value="$existingFiles ?? null" name="attachments" />
 
 {{-- Category Name --}}
 <x-form.input name="name" label="{{ __('Category Name') }}" :value="$category->name ?? ''" />
