@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class AppearencesBotoom extends Component
+class AppearancesBottom extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class AppearencesBotoom extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.utils.appearences-botoom');
+        return view('components.utils.appearances-bottom');
     }
 }

@@ -1,29 +1,26 @@
 <x-layouts.app.sidebar :title="$title ?? null">
     <flux:main>
-        {{-- Flash message --}}
-            @if(session()->has('success'))
-            <div class="mb-4 rounded bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 px-4 py-2 text-green-800 dark:text-green-100">
-                {{ session('success') }}
-                <button type="button" class="ml-2 text-green-800 dark:text-green-100" onclick="this.parentElement.style.display='none';">×</button>
-            </div>
+        {{-- Flash messages --}}
+        @foreach (['success', 'error', 'warning'] as $type)
+            @if(session()->has($type))
+                @php
+                    $colors = [
+                        'success' => ['bg' => 'green-50', 'darkBg' => 'green-900', 'border' => 'green-200', 'darkBorder' => 'green-700', 'text' => 'green-800', 'darkText' => 'green-100'],
+                        'error' => ['bg' => 'red-50', 'darkBg' => 'red-900', 'border' => 'red-200', 'darkBorder' => 'red-700', 'text' => 'red-800', 'darkText' => 'red-100'],
+                        'warning' => ['bg' => 'yellow-50', 'darkBg' => 'yellow-900', 'border' => 'yellow-200', 'darkBorder' => 'yellow-700', 'text' => 'yellow-800', 'darkText' => 'yellow-100'],
+                    ];
+                    $color = $colors[$type];
+                @endphp
+                <div class="mb-4 rounded bg-{{ $color['bg'] }} dark:bg-{{ $color['darkBg'] }} border border-{{ $color['border'] }} dark:border-{{ $color['darkBorder'] }} px-4 py-2 text-{{ $color['text'] }} dark:text-{{ $color['darkText'] }}">
+                    {{ session($type) }}
+                    <button type="button" class="ml-2 text-{{ $color['text'] }} dark:text-{{ $color['darkText'] }}" onclick="this.parentElement.style.display='none';">×</button>
+                </div>
             @endif
+        @endforeach
 
-            @if(session()->has('error'))
-            <div class="mb-4 rounded bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 px-4 py-2 text-red-800 dark:text-red-100">
-                {{ session('error') }}
-                <button type="button" class="ml-2 text-red-800 dark:text-red-100" onclick="this.parentElement.style.display='none';">×</button>
-            </div>
-            @endif
-
-            @if(session()->has('warning'))
-            <div class="mb-4 rounded bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-100">
-                {{ session('warning') }}
-                <button type="button" class="ml-2 text-yellow-800 dark:text-yellow-100" onclick="this.parentElement.style.display='none';">×</button>
-            </div>
-            @endif
         {{ $slot }}
-               
-
     </flux:main>
-    <x-utils.appearances-bottom />
+    <div class="fixed bottom-4 right-4" style="right: 1rem; bottom: 1rem;">
+        <x-utils.appearances-bottom />
+    </div>
 </x-layouts.app.sidebar>
