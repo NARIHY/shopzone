@@ -72,10 +72,10 @@
         <template x-for="(f, idx) in files" :key="f.key">
             <div class="relative border rounded-lg overflow-hidden p-2 bg-white dark:bg-gray-800">
                 <div class="h-28 w-full flex items-center justify-center overflow-hidden">
-                    <template x-if="f.isImage">
+                    <template x-show="f.isImage">
                         <img :src="f.preview" class="object-cover h-full w-full" alt="" />
                     </template>
-                    <template x-if="!f.isImage">
+                    <template x-show="!f.isImage">
                         <div class="text-xs text-center px-2 break-words">
                             <div x-text="f.name"></div>
                             <div class="text-gray-500 text-[11px]" x-text="f.humanSize"></div>

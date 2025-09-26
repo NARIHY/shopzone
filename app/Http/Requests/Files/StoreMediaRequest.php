@@ -24,7 +24,7 @@ class StoreMediaRequest extends FormRequest
     {
         return [
             'title'=>'required|string|max:255|unique:media,title',
-            'file' => 'required|file|max:2048|mimes:jpg,jpeg,png,pdf,docx', 
+            'file' => 'required|file|max:2048|image', 
             // max = 2 Mo (2048 Ko)
         ];
     }

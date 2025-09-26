@@ -33,11 +33,12 @@ class MediaController extends Controller
     public function store(StoreMediaRequest $request)
     {
         try {
-            $file = $request->file('file');
-            $path = $file->store('', 'public');
-            dd($request);
+            $file = $request->file('file'); // correspond au name du champ
+            $mediaPath = 'media'. DIRECTORY_SEPARATOR. date('D-M-Y').DIRECTORY_SEPARATOR.$request->validated('title'); // Dossier où les fichiers seront stockés
+            $path = $file->store($mediaPath, 'public');
+
             Media::create([
-                'title'=> $request->validated('title'),
+                'title'         => $request->title, // ou $request->validated()['title']
                 'path'          => $path,
                 'disk'          => 'public',
                 'mime_type'     => $file->getMimeType(),
@@ -61,6 +62,7 @@ class MediaController extends Controller
      */
     public function show(Media $media)
     {
+        //
     }
 
     /**
@@ -87,12 +89,17 @@ class MediaController extends Controller
                 $path = $file->store('', 'public');
 
                 $media->update([
-                    'title'=> $request->validated('title'),
+                    'title'         => $request->title,
                     'path'          => $path,
                     'disk'          => 'public',
                     'mime_type'     => $file->getMimeType(),
                     'size'          => $file->getSize(),
                     'original_name' => $file->getClientOriginalName(),
+                ]);
+            } else {
+                // update juste le titre si pas de nouveau fichier
+                $media->update([
+                    'title' => $request->title,
                 ]);
             }
 

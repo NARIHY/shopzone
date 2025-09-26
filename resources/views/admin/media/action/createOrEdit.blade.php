@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('Edit or Create Product Category')">
+<x-layouts.app :title="__('Edit or Create Media')">
 
     <div class="pagetitle mb-6">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
@@ -28,16 +28,16 @@
 
         {{-- Form Title --}}
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">
-            {{ isset($category) ? __('Edit Category') : __('Create Category') }}
+            {{ isset($media) ? __('Edit Media') : __('Create Media') }}
         </h1>
 
         {{-- Form --}}
-        <form action="{{ isset($category) ? route('admin.media.update', $category->id) : route('admin.media.store') }}"
+        <form action="{{ isset($media) ? route('admin.media.update', $media->id) : route('admin.media.store') }}" enctype="multipart/form-data"
               method="POST"
               class="flex flex-col gap-4">
 
             @csrf
-            @if(isset($category))
+            @if(isset($media))
                 @method('PUT')
             @endif
 
@@ -45,10 +45,10 @@
             <x-form.input 
                 name="title" 
                 label="{{ __('Media title') }}" 
-                :value="$media->name ?? ''"
+                :value="$media->title ?? ''"
             />
 
-            <x-form.file :value="$media->paht ?? null" name="attachments" />
+            <x-form.file :value="$media->path ?? null" name="file" />
 
             {{-- Submit Button --}}
             <div class="flex justify-end">
@@ -56,7 +56,7 @@
                         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded
                                transition-colors duration-200
                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                    {{ isset($category) ? __('Update Media') : __('Create Media') }}
+                    {{ isset($media) ? __('Update Media') : __('Create Media') }}
                 </button>
             </div>
 
