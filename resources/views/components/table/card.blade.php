@@ -1,15 +1,31 @@
 @props([
-    'notice' => null,   // message facultatif
-    'columns' => [],    // colonnes du tableau
+    'notice' => null,
+    'columns' => [],
 ])
 
-<div class="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-900">
+<div {{ $attributes->class([
+        'rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-900'
+    ]) }}>
     {{-- Notice facultative --}}
     @if($notice)
         <div class="border-b border-yellow-200 dark:border-yellow-700 px-4 py-3">
             <p class="text-sm text-yellow-800 dark:text-yellow-200 text-center">
                 {{ $notice }}
             </p>
+        </div>
+    @endif
+
+    {{-- Toolbar slot (search, boutons, filtres...) --}}
+    @if (isset($toolbar) || isset($actions))
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex-1">
+                    {{ $toolbar ?? '' }}
+                </div>
+                <div class="flex items-center gap-2">
+                    {{ $actions ?? '' }}
+                </div>
+            </div>
         </div>
     @endif
 

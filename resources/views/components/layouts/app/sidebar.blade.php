@@ -16,7 +16,8 @@
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     <flux:navlist.item icon="tag" :href="route('admin.product-categories.index')" :current="request()->routeIs('admin.product-categories.index')" wire:navigate>{{ __('Product Categories') }}</flux:navlist.item>
-                    <flux:navlist.item icon="tag" :href="route('admin.media.index')" :current="request()->routeIs('admin.media.index')" wire:navigate> {{ __('Médias') }} </flux:navlist.item>
+                    <flux:navlist.item icon="folder" :href="route('admin.media.index')" :current="request()->routeIs('admin.media.index')" wire:navigate> {{ __('Médias') }} </flux:navlist.item>
+                    <flux:navlist.item icon="tag" :href="route('admin.contact.index')" :current="request()->routeIs('admin.contact.index')" wire:navigate> {{ __('Contacts') }} </flux:navlist.item>
                     {{-- SIDE BAR ITEMS --}}
                 </flux:navlist.group>
             </flux:navlist>

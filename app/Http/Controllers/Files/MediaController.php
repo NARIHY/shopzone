@@ -33,12 +33,12 @@ class MediaController extends Controller
     public function store(StoreMediaRequest $request)
     {
         try {
-            $file = $request->file('file'); // correspond au name du champ
+            $file = $request->file('file'); 
             $mediaPath = 'media'. DIRECTORY_SEPARATOR. date('D-M-Y').DIRECTORY_SEPARATOR.$request->validated('title'); // Dossier où les fichiers seront stockés
             $path = $file->store($mediaPath, 'public');
 
             Media::create([
-                'title'         => $request->title, // ou $request->validated()['title']
+                'title'         => $request->title,
                 'path'          => $path,
                 'disk'          => 'public',
                 'mime_type'     => $file->getMimeType(),

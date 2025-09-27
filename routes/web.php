@@ -15,10 +15,12 @@ Route::prefix('/')->name('public.')->group(function () {
 Route::middleware([
     'auth',
     ValidateSessionWithWorkOS::class,
-])->name('admin.')->group(function () {
+])->name('admin.')->prefix('nerkaly/')->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::resource('product-categories', \App\Http\Controllers\Shop\ProductCategoryController::class)->names('product-categories');
     Route::resource('media', \App\Http\Controllers\Files\MediaController::class)->parameters(['media' => 'media'])->names('media');
+
+    Route::get('contacts', [\App\Http\Controllers\Contact\ContacController::class, 'index'])->name('contact.index');
 });
 
 
