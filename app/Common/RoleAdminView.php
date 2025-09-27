@@ -2,7 +2,7 @@
 
 namespace App\Common;
 
-class ContactAdminView
+class RoleAdminView
 {
     public static function getListView(): string
     {
@@ -21,6 +21,6 @@ class ContactAdminView
 
     private static function baseView(): string
     {
-        return "admin.contact.";
+        return "admin.access.role.";
     }
 }

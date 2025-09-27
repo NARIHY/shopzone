@@ -4,17 +4,17 @@ namespace App\Common;
 
 class CategoryProductView
 {
-    public static function getCategoryListView(): string
+    public static function getListView(): string
     {
         return self::baseView().'list';
     }
 
-    public static function getCategoryCreateOrEditView(): string
+    public static function getCreateOrEditView(): string
     {
         return self::baseView().'action.createOrEdit';
     }
 
-    public static function getCategoryShowView(): string
+    public static function getShowView(): string
     {
         return self::baseView().'action.show';
     }

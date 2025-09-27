@@ -16,7 +16,7 @@ class ProductCategoryController extends Controller
      */
     public function index(): View
     {
-        return view(CategoryProductView::getCategoryListView());
+        return view(CategoryProductView::getListView());
     }
 
     /**
@@ -24,7 +24,7 @@ class ProductCategoryController extends Controller
      */
     public function create()
     {
-        return view(CategoryProductView::getCategoryCreateOrEditView());
+        return view(CategoryProductView::getCreateOrEditView());
     }
 
     /**
@@ -59,7 +59,7 @@ class ProductCategoryController extends Controller
      */
     public function edit(ProductCategory $productCategory)
     {
-        return view(CategoryProductView::getCategoryCreateOrEditView(), [
+        return view(CategoryProductView::getCreateOrEditView(), [
             'category' => ProductCategory::findOrFail($productCategory->id),
         ]);
     }
