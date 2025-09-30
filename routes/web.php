@@ -21,6 +21,8 @@ Route::middleware([
     Route::resource('media', \App\Http\Controllers\Files\MediaController::class)->parameters(['media' => 'media'])->names('media');
 
     Route::get('contacts', [\App\Http\Controllers\Contact\ContacController::class, 'index'])->name('contact.index');
+
+    Route::resource('roles', \App\Http\Controllers\Access\RoleController::class)->names('roles');
 });
 
 

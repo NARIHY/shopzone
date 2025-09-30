@@ -17,7 +17,9 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'roleName' => $this->faker->unique()->jobTitle(),
+            'description' => $this->faker->optional()->sentence(),
+            'is_active' => $this->faker->boolean(),
         ];
     }
 }
