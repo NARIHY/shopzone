@@ -17,12 +17,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = Group::with('role')->paginate(10);
-
-        return view(GroupAdminView::getListView(), [
-            'groups' => $groups,
-            'rolesInput' => \App\Models\Access\Role::all(),
-        ]);
+        return view(GroupAdminView::getListView(), );
     }
 
     /**
