@@ -16,6 +16,11 @@
                        bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 aria-label="{{ __('Search roles') }}">
         </div>
+
+        <a href="{{ route('admin.roles.create') }}"
+           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap">
+            {{ __('+New role') }}
+        </a>
     </div>
 
     {{-- Table --}}
@@ -58,6 +63,18 @@
                                 class="px-3 py-1 text-sm font-medium border border-blue-600 text-blue-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900">
                             {{ __('Details') }}
                         </button>
+
+                        <a href="{{ route('admin.roles.edit', $item )}}" class="px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700">
+                            {{ __('edit') }}
+                        </a>
+                        {{-- UNCOMMENT FOR allow delet --}}
+
+                        {{-- <button
+                            onclick="if(!confirm('{{ __('Are you sure you want to delete this file?') }}')) return event.stopImmediatePropagation();"
+                            wire:click="deleteMedia({{ $item->id }})"
+                            class="px-3 py-1 text-sm font-medium border border-red-600 text-red-600 rounded hover:bg-red-50 dark:hover:bg-red-900">
+                            {{ __('Delete') }}
+                        </button> --}}
                     </div>
                 </td>
             </tr>

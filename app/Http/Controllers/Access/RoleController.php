@@ -33,7 +33,7 @@ class RoleController extends Controller
     {
         try {
             $data = [
-                'name' => $request->validated('name'),
+                'roleName' => $request->validated('roleName'),
                 'description' => $request->validated('description', null),
                 'is_active' => $request->validated('is_active') ?? false,
             ];
@@ -71,13 +71,13 @@ class RoleController extends Controller
     {
         try {
             $data = [
-                'name' => $request->validated('name'),
+                'roleName' => $request->validated('roleName'),
                 'description' => $request->validated('description', null),
                 'is_active' => $request->validated('is_active') ?? false,
             ];
 
             $role->update($data);
-            return redirect()->route('admin.roles.index')->with('success', __('Role updated successfully.'));
+            return redirect()->back()->with('success', __('Role updated successfully.'));
         } catch( \Exception $e) {
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
