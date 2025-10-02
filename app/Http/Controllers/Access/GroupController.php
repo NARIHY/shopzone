@@ -97,8 +97,7 @@ class GroupController extends Controller
                 ->with('success', 'Groupe supprimé avec succès.');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->withErrors(['error' => $e->getMessage()])
-                ->withInput();
+                ->with('error' , $e->getMessage());
         }
     }
 }
