@@ -58,4 +58,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function groups()
+    {
+        return $this->belongsToMany(\App\Models\Access\Group::class, 'group_user');
+    }
 }

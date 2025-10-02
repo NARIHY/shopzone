@@ -15,4 +15,10 @@ class Role extends Model
         'description',
         'is_active',
     ];
+
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
+
 }
