@@ -2,17 +2,14 @@
 
 namespace App\Livewire\Access;
 
-use App\Models\Access\Role;
+use App\Models\Access\Group;
 use Livewire\Component;
-use Livewire\WithPagination;
 
-class RoleList extends Component
+class GroupList extends Component
 {
-    use WithPagination;
-
     public string $search = '';
     public bool $showModal = false;
-    public ?Role $selectedRole = null;
+    public ?Group $selectedGroup = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -36,9 +33,9 @@ class RoleList extends Component
     public function openRoleModal($id): void
     {
         $id = (int) $id;
-        $this->selectedRole = Role::findOrFail($id);
+        $this->selectedGroup = Group::findOrFail($id);
 
-        if (! $this->selectedRole) {
+        if (! $this->selectedGroup) {
             $this->dispatchBrowserEvent('notify', [
                 'type' => 'error',
                 'message' => __('Role not found.')
@@ -55,15 +52,15 @@ class RoleList extends Component
     public function closeModal(): void
     {
         $this->showModal = false;
-        $this->selectedRole = null;
+        $this->selectedGroup = null;
     }
 
     public function render()
     {
-        return view('livewire.access.role-list', [
-            'roles' => Role::query()
+        return view('livewire.access.group-list', [
+            'groups' => Group::query()
                 ->when($this->search, fn($q) =>
-                    $q->where('roleName', 'like', "%{$this->search}%")
+                    $q->where('name', 'like', "%{$this->search}%")
                        ->orWhere('description', 'like', "%{$this->search}%")
                 )
                 ->latest()

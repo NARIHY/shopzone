@@ -55,10 +55,6 @@
                 :value="$role->description ?? ''" 
                 rows="5"
             />
-
-
-
-
             {{-- Is Active Toggle --}}
             <div class="flex items-center gap-2">
                 <input type="checkbox"
@@ -71,6 +67,7 @@
                     {{ __('Active') }}
                 </label>
             </div>
+
 
             {{-- Submit Button --}}
             <div class="flex justify-end">

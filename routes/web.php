@@ -23,6 +23,8 @@ Route::middleware([
     Route::get('contacts', [\App\Http\Controllers\Contact\ContacController::class, 'index'])->name('contact.index');
 
     Route::resource('roles', \App\Http\Controllers\Access\RoleController::class)->names('roles');
+
+    Route::resource('groups', \App\Http\Controllers\Access\GroupController::class)->names('groups');
 });
 
 

@@ -19,7 +19,10 @@ class GroupController extends Controller
     {
         $groups = Group::with('role')->paginate(10);
 
-        return view(GroupAdminView::getListView(), compact('groups'));
+        return view(GroupAdminView::getListView(), [
+            'groups' => $groups,
+            'rolesInput' => \App\Models\Access\Role::all(),
+        ]);
     }
 
     /**
@@ -62,6 +65,7 @@ class GroupController extends Controller
     {
         return view(GroupAdminView::getCreateOrEditView(), [
             'group' => $group,
+            'rolesInput' => \App\Models\Access\Role::all(),
         ]);
     }
 
@@ -73,12 +77,11 @@ class GroupController extends Controller
         try {
             $group->update($request->validated());
 
-            return redirect()->route('groups.index')
+            return redirect()->back()
                 ->with('success', 'Groupe mis à jour avec succès.');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->withErrors(['error' => $e->getMessage()])
-                ->withInput();
+                ->with('error' ,$e->getMessage());
         }
     }
 
