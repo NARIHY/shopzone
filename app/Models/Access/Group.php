@@ -13,8 +13,11 @@ class Group extends Model
     protected $fillable = [
         'name',
         'description',
-        'role_id', 
-        'is_active',
+        'role_id'
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
     ];
 
     /**

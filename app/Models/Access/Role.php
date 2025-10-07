@@ -12,8 +12,11 @@ class Role extends Model
 
     protected $fillable = [
         'roleName',
-        'description',
-        'is_active',
+        'description'
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
     ];
 
     public function groups()

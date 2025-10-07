@@ -46,15 +46,9 @@
 
                 {{-- Status --}}
                 <td class="px-6 py-4 text-sm text-center align-middle">
-                    @if($item->is_active)
-                        <span class="px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded">
-                            {{ __('Active') }}
-                        </span>
-                    @else
-                        <span class="px-2 py-1 text-xs font-semibold bg-red-100 text-red-800 rounded">
-                            {{ __('Inactive') }}
-                        </span>
-                    @endif
+                   <div class="text-sm font-medium {{ $item->is_active != 0 ? 'text-green-600' : 'text-yellow-600' }}">
+                        {{ $item->is_active != 0 ? __('Active') : __('Inactive') }}
+                    </div>
                 </td>
                 <td class="px-6 py-4 text-sm text-center align-middle">
                     {{ $item->role->roleName ?? 'N/A' }}
