@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
 use App\Models\Shop\Product;
 use App\Http\Requests\Shop\StoreProductRequest;
 use App\Http\Requests\Shop\UpdateProductRequest;
 use App\Common\ProductView;
+use App\Http\Controllers\Controller;
 use App\Models\Files\Media;
 use App\Models\Shop\ProductCategory;
 use Illuminate\Http\RedirectResponse;

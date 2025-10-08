@@ -4,6 +4,7 @@
     'options' => [],
     'placeholder' => 'Sélectionnez une option',
     'selected' => null,
+    'help' => null,
 ])
 
 <div x-data="{
@@ -35,6 +36,13 @@
         class="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm focus:ring focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200"
     >
 
+    @if($help)
+        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $help }}</p>
+    @endif
+
+    @error($name)
+        <span class="text-red-500 text-sm">{{ $message }}</span>
+    @enderror
     <input type="hidden" name="{{ $name }}" :value="selected">
 
     <div 
@@ -52,4 +60,5 @@
             </div>
         </template>
     </div>
+
 </div>

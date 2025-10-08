@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>@yield('title') | FusionGift</title>
+  <title>@yield('title') | {{config('app.name')}}</title>
   {{-- <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -78,7 +78,7 @@
           <a href="{{route('public.home')}}" class="logo d-flex align-items-center">
             <!-- Uncomment the line below if you also wish to use an image logo -->
             <!-- <img src="assets/img/logo.webp" alt=""> -->
-            <h1 class="sitename">FusionGift</h1>
+            <h1 class="sitename">{{config('app.name')}}</h1>
           </a>
 
           <!-- Actions -->
@@ -134,7 +134,7 @@
               @guest
                   <div class="dropdown-footer">
                       <a href="{{ route('login') }}" class="btn btn-primary w-100 mb-2">Sign In</a>
-                      <a href="{{ route('login') }}" class="btn btn-outline-primary w-100">Register</a>
+                      {{-- <a href="{{ route('login') }}" class="btn btn-outline-primary w-100">Register</a> --}}
                   </div>
               @endguest
           </div>
@@ -815,7 +815,7 @@
           <div class="col-lg-4 col-md-6">
             <div class="footer-widget footer-about">
               <a href="index.html" class="logo">
-                <span class="sitename">FusionGift</span>
+                <span class="sitename">{{config('app.name')}}</span>
               </a>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in nibh vehicula, facilisis magna ut, consectetur lorem. Proin eget tortor risus.</p>
 

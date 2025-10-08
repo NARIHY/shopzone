@@ -4,7 +4,8 @@
     'label' => null,
     'multiple' => false,
     'accept' => '*/*',          // ajuste si tu veux limiter les types (ex: 'image/*')
-    'value' => null             // optionnel : URL string or array of URLs (fichiers déjà présents)
+    'value' => null,             // optionnel : URL string or array of URLs (fichiers déjà présents)
+    'help' => null,
 ])
 
 <div
@@ -101,6 +102,11 @@
         </template>
     </div>
 
+     {{-- Message d’aide facultatif --}}
+    @if($help)
+        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $help }}</p>
+    @endif
+    
     {{-- Erreur serveur (si Laravel renvoie) --}}
     @error($name)
         <span class="text-red-500 text-sm">{{ $message }}</span>

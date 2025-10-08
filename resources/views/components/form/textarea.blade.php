@@ -4,6 +4,7 @@
     'label' => null,
     'rows' => 4,
     'value' => '',
+    'help'=>''
 ])
 
 <div class="flex flex-col gap-1">
@@ -27,6 +28,11 @@
         ]) }}
     >{{ old($name, $value) }}</textarea>
 
+     {{-- Message d’aide facultatif --}}
+    @if($help)
+        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $help }}</p>
+    @endif
+    
     @error($name)
         <span class="text-red-500 text-sm">{{ $message }}</span>
     @enderror

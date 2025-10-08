@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
     {
          View::composer('*', function ($view) {
             $view->with('rolesInput', Role::all());
+            $view->with('productCategoriesInput', \App\Models\Shop\ProductCategory::all());
+            $view->with('mediaInput', \App\Models\Files\Media::all());
         });
     }
 }

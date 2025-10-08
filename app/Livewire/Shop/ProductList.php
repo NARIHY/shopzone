@@ -2,48 +2,41 @@
 
 namespace App\Livewire\Shop;
 
-use App\Models\Shop\ProductCategory;
+use App\Models\Shop\Product;
 use Livewire\Component;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\WithPagination;
 
-class ProductCategoryList extends Component
+class ProductList extends Component
 {
     use WithPagination;
 
-    // UI / state
     public string $search = '';
  
     protected $queryString = [
         'search' => ['except' => ''], // ne pas inclure dans l'URL si vide
     ];
+
     public bool $showModal = false;
-    public ?ProductCategory $selectedCategory = null;
 
 
-    // listeners — ne pas typer (conflit avec Livewire\Component)
+    public ?Product $selectedProduct = null;
+
+
     protected $listeners = [
         'showCategoryModal' => 'openCategoryModal',
     ];
 
-    /**
-     * Quand on tape dans la recherche, on revient à la 1ère page.
-     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    /**
-     * Ouvre la modal de détail avec l'ID de catégorie.
-     * On caste l'id en int pour être tolérant si Livewire envoie une string.
-     */
     public function openCategoryModal($id): void
     {
         $id = (int) $id;
-        $this->selectedCategory = ProductCategory::findOrFail($id);
+        $this->selectedProduct = Product::findOrFail($id);
 
-        if (! $this->selectedCategory) {
+        if (! $this->selectedProduct) {
             $this->dispatchBrowserEvent('notify', [
                 'type' => 'error',
                 'message' => 'Catégorie introuvable.'
@@ -54,25 +47,19 @@ class ProductCategoryList extends Component
         $this->showModal = true;
     }
 
-    /**
-     * Ferme la modal et reset la catégorie sélectionnée.
-     */
     public function closeModal(): void
     {
         $this->showModal = false;
-        $this->selectedCategory = null;
+        $this->selectedProduct = null;
     }
 
-    /**
-     * Supprime une catégorie (attention : suppression définitive).
-     */
-    public function deleteCategory($id): void
+    public function deleteProduct($id): void
     {
         $id = (int) $id;
 
-        $category = ProductCategory::find($id);
+        $product = Product::findOrFail($id);
 
-        if (! $category) {
+        if (! $product) {
             $this->dispatchBrowserEvent('notify', [
                 'type' => 'error',
                 'message' => 'Catégorie introuvable.'
@@ -81,10 +68,10 @@ class ProductCategoryList extends Component
         }
 
         try {
-            $category->delete();
+            $product->delete();
 
             // si modal ouvert pour cette catégorie → fermer
-            if ($this->selectedCategory?->id === $id) {
+            if ($this->selectedProduct?->id === $id) {
                 $this->closeModal();
             }
 
@@ -102,17 +89,11 @@ class ProductCategoryList extends Component
         }
     }
 
-    /**
-     * Render principal du composant.
-     */
     public function render()
     {
-       $categories = ProductCategory::orderBy('created_at', 'desc')
+        $products = Product::orderBy('created_at', 'desc')
             ->where('name', 'like', "%{$this->search}%")
             ->paginate(10);
-
-        return view('livewire.shop.product-category-list', [
-            'categories' => $categories,
-        ]);
+        return view('livewire.shop.product-list', compact('products'));
     }
 }

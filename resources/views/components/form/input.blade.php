@@ -4,6 +4,7 @@
     'label' => null,
     'type' => 'text',
     'value' => '',
+    'help'=>null
 ])
 
 <div class="flex flex-col gap-1">
@@ -28,6 +29,12 @@
         ]) }}
     />
 
+     {{-- Message d’aide facultatif --}}
+    @if($help)
+        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $help }}</p>
+    @endif
+    
+    {{-- Message d’erreur --}}
     @error($name)
         <span class="text-red-500 text-sm">{{ $message }}</span>
     @enderror

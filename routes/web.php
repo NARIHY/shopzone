@@ -19,12 +19,10 @@ Route::middleware([
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::resource('product-categories', \App\Http\Controllers\Shop\ProductCategoryController::class)->names('product-categories');
     Route::resource('media', \App\Http\Controllers\Files\MediaController::class)->parameters(['media' => 'media'])->names('media');
-
     Route::get('contacts', [\App\Http\Controllers\Contact\ContacController::class, 'index'])->name('contact.index');
-
     Route::resource('roles', \App\Http\Controllers\Access\RoleController::class)->names('roles');
-
     Route::resource('groups', \App\Http\Controllers\Access\GroupController::class)->names('groups');
+    Route::resource('products', \App\Http\Controllers\Shop\ProductController::class)->names('products');
 });
 
 
