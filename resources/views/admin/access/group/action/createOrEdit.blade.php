@@ -46,6 +46,7 @@
                 name="name" 
                 label="{{ __('Group Name') }}" 
                 :value="$group->name ?? ''"
+                help="Provide a unique name for the user group."
             />
 
             {{-- Role Description --}}
@@ -54,6 +55,7 @@
                 label="{{ __('Group Description') }}" 
                 :value="$group->description ?? ''" 
                 rows="5"
+                help="Provide a brief description of the user group."
             />
 
             {{-- Is Active Toggle --}}
@@ -78,6 +80,7 @@
                     :options="$rolesInput->pluck('roleName', 'id')->toArray()" 
                     :selected="old('role_id', $group->role_id ?? null)" 
                     placeholder="{{ __('Select a role...') }}"
+                    help="Select a role to assign to this user group."
                 />
             </div>
 

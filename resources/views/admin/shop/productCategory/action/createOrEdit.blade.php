@@ -46,6 +46,7 @@
                 name="name" 
                 label="{{ __('Category Name') }}" 
                 :value="$category->name ?? ''"
+                help="Enter the name of the product category."
             />
 
             {{-- Category Description --}}
@@ -54,6 +55,7 @@
                 label="{{ __('Description') }}" 
                 :value="$category->description ?? ''" 
                 rows="5"
+                help="Provide a brief description of the product category."
             />
 
 

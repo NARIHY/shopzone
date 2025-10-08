@@ -46,6 +46,7 @@
                 name="roleName" 
                 label="{{ __('Role Name') }}" 
                 :value="$role->roleName ?? ''"
+                help="Provide a unique name for the role."
             />
 
             {{-- Role Description --}}
@@ -54,6 +55,7 @@
                 label="{{ __('Role Description') }}" 
                 :value="$role->description ?? ''" 
                 rows="5"
+                help="Provide a brief description of the role."
             />
             {{-- Is Active Toggle --}}
             <div class="flex items-center gap-2">

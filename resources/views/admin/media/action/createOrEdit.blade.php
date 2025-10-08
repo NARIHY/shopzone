@@ -46,9 +46,10 @@
                 name="title" 
                 label="{{ __('Media title') }}" 
                 :value="$media->title ?? ''"
+                help="Enter a descriptive title for the media file."
             />
 
-            <x-form.file :value="$media->path ?? null" name="file" />
+            <x-form.file :value="$media->path ?? null" help="drag and drop the file (*pdf, *png, *jpg, *mp4)" name="file" />
 
             {{-- Submit Button --}}
             <div class="flex justify-end">
