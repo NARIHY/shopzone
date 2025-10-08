@@ -4,9 +4,11 @@ namespace App\Livewire\Access;
 
 use App\Models\Access\Group;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class GroupList extends Component
 {
+    use WithPagination;
     public string $search = '';
     public bool $showModal = false;
     public ?Group $selectedGroup = null;
@@ -23,6 +25,10 @@ class GroupList extends Component
      * Reset pagination quand on tape dans la recherche
      */
     public function updatingSearch(): void
+    {
+        $this->resetPage();
+    }
+    public function applySearch(): void
     {
         $this->resetPage();
     }

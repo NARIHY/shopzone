@@ -34,6 +34,11 @@ class ProductCategoryList extends Component
         $this->resetPage();
     }
 
+    public function applySearch(): void
+    {
+        $this->resetPage();
+    }
+
     /**
      * Ouvre la modal de détail avec l'ID de catégorie.
      * On caste l'id en int pour être tolérant si Livewire envoie une string.
@@ -105,14 +110,19 @@ class ProductCategoryList extends Component
     /**
      * Render principal du composant.
      */
-    public function render()
-    {
-       $categories = ProductCategory::orderBy('created_at', 'desc')
-            ->where('name', 'like', "%{$this->search}%")
-            ->paginate(10);
+        public function render()
+        {
+            $categories = ProductCategory::query()
+                ->when($this->search, function(Builder $query) {
+                    $query->where(function(Builder $q) {
+                        $q->where('name', 'like', "%{$this->search}%");
+                    });
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
 
-        return view('livewire.shop.product-category-list', [
-            'categories' => $categories,
-        ]);
-    }
+            return view('livewire.shop.product-category-list', [
+                'categories' => $categories,
+            ]);
+        }
 }

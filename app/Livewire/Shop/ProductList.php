@@ -30,6 +30,10 @@ class ProductList extends Component
     {
         $this->resetPage();
     }
+    public function applySearch(): void
+    {
+        $this->resetPage();
+    }
 
     public function openCategoryModal($id): void
     {
