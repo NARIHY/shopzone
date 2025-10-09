@@ -31,6 +31,11 @@ class MediaList extends Component
         $this->resetPage();
     }
 
+    public function applySearch(): void
+    {
+        $this->resetPage();
+    }
+
     /**
      * Ouvre la modal pour un media donné
      */
