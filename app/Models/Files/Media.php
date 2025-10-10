@@ -17,6 +17,7 @@ class Media extends Model
         'mime_type',
         'size',
         'original_name',
+        'product_id',
     ];
 
     /**

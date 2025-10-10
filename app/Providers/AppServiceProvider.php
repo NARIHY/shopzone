@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('rolesInput', Role::all());
             $view->with('productCategoriesInput', \App\Models\Shop\ProductCategory::all());
             $view->with('mediaInput', \App\Models\Files\Media::all());
+
         });
     }
 }

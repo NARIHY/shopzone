@@ -35,8 +35,8 @@ class UpdateProductRequest extends FormRequest
                 Rule::unique('products', 'slug')->ignore($productId),
             ],
             'description'         => ['nullable', 'string'],
-            'price'               => ['required', 'numeric', 'min:0'],
-            'discount_price'      => ['nullable', 'numeric', 'lt:price'],
+            'price'               => ['required', 'min:0'],
+            'discount_price'      => ['nullable', 'lt:price'],
             'stock'               => ['required', 'integer', 'min:0'],
             'sku'                 => [
                 'nullable',
@@ -46,6 +46,8 @@ class UpdateProductRequest extends FormRequest
             ],
             'is_active'           => ['boolean'],
             'product_category_id' => ['nullable', 'exists:product_categories,id'],
+            'media'=> ['array', 'required'],
+            'media.*' => ['exists:media,id', 'required', 'min:1']
         ];
     }
 
