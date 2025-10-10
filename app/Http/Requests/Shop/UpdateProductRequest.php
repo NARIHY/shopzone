@@ -7,24 +7,65 @@ use Illuminate\Validation\Rule;
 
 class UpdateProductRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        // Autoriser l'accès (tu peux remplacer par une vérification via Policy si besoin)
-        // Exemple : return $this->user()?->can('update', $this->route('product'));
+        // Autoriser l'accès (remplace par Policy si besoin)
         return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * Préparer les données avant validation
      */
+    protected function prepareForValidation()
+{
+    $productId = $this->route('product')?->id;
+
+    // Normaliser les prix
+    if ($this->has('price_raw')) {
+        $this->merge([
+            'price' => $this->normalizePrice($this->input('price_raw', $this->price)),
+        ]);
+    }
+
+    if ($this->has('discount_price_raw')) {
+        $this->merge([
+            'discount_price' => $this->normalizePrice($this->input('discount_price_raw', $this->discount_price)),
+        ]);
+    }
+
+    // Décoder media JSON si nécessaire
+    if ($this->has('media')) {
+        $media = $this->input('media');
+        $decoded = [];
+
+        foreach ($media as $item) {
+            if (is_string($item) && str_starts_with($item, '[')) {
+                $json = json_decode($item, true);
+
+                if (is_array($json)) {
+                    $decoded = array_merge($decoded, $json); // OK si c'est un tableau
+                } elseif ($json !== null) {
+                    $decoded[] = $json; // si c’est int ou autre
+                }
+                // Si json_decode retourne null, on ignore
+            } else {
+                $decoded[] = $item;
+            }
+        }
+
+        // S’assurer que tous les IDs sont des entiers
+        $decoded = array_map('intval', $decoded);
+
+        $this->merge([
+            'media' => $decoded,
+        ]);
+    }
+}
+
+
     public function rules(): array
     {
-        $productId = $this->route('product')?->id; // Récupère l’ID du produit depuis la route
+        $productId = $this->route('product')?->id;
 
         return [
             'name'                => ['required', 'string', 'max:255'],
@@ -35,8 +76,8 @@ class UpdateProductRequest extends FormRequest
                 Rule::unique('products', 'slug')->ignore($productId),
             ],
             'description'         => ['nullable', 'string'],
-            'price'               => ['required', 'min:0'],
-            'discount_price'      => ['nullable', 'lt:price'],
+            'price'               => ['required', 'numeric', 'min:0'],
+            'discount_price'      => ['nullable', 'numeric', 'lt:price'],
             'stock'               => ['required', 'integer', 'min:0'],
             'sku'                 => [
                 'nullable',
@@ -46,14 +87,11 @@ class UpdateProductRequest extends FormRequest
             ],
             'is_active'           => ['boolean'],
             'product_category_id' => ['nullable', 'exists:product_categories,id'],
-            'media'=> ['array', 'required'],
-            'media.*' => ['exists:media,id', 'required', 'min:1']
+            'media'               => ['required', 'array', 'min:1'],
+            'media.*'             => ['integer', 'exists:media,id'],
         ];
     }
 
-    /**
-     * Custom error messages.
-     */
     public function messages(): array
     {
         return [
@@ -63,6 +101,22 @@ class UpdateProductRequest extends FormRequest
             'price.required'            => 'The price is mandatory.',
             'discount_price.lt'         => 'The promotional price must be lower than the regular price.',
             'product_category_id.exists'=> 'The selected category is invalid.',
+            'media.required'            => 'Please select at least one media.',
+            'media.*.exists'            => 'One of the selected media is invalid.',
         ];
+    }
+
+    /**
+     * Convertit une valeur en float en nettoyant les espaces et les virgules
+     */
+    private function normalizePrice($value): ?float
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        // Supprime espaces et remplace virgules par points
+        $clean = str_replace([',', ' '], ['.', ''], $value);
+        return (float) preg_replace('/[^\d.]/', '', $clean);
     }
 }

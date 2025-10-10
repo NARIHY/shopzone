@@ -174,6 +174,30 @@
                 help="{{ __('Enter a unique code for the product, e.g., TSH-RED-M.') }}"
             />
 
+            {{-- Product category --}}
+<div class="flex items-center gap-2">
+                @if(isset($product))
+                <x-select-typeahead 
+                    name="product_category_id" 
+                    label="{{ __('Assign Product category') }}" 
+                    :options="$productCategoriesInput->pluck('name', 'id')->toArray()" 
+                    :selected="old('product_category_id', $product->category()->id ?? null)" 
+                    placeholder="{{ __('Select a role...') }}"
+                    help="Select a category to assign to this product."
+                />
+                @else 
+                <x-select-typeahead 
+                    name="product_category_id" 
+                    label="{{ __('Assign Product category') }}" 
+                    :options="$productCategoriesInput->pluck('name', 'id')->toArray()" 
+                    :selected="old('product_category_id', old('product_category_id') ?? null)" 
+                    placeholder="{{ __('Select a category...') }}"
+                    help="Select a category to assign to this product."
+                />
+                @endif
+            </div>
+
+
             {{-- Is Active Toggle --}}
             <div class="flex items-center gap-2">
                 <input type="hidden" name="is_active" value="0">

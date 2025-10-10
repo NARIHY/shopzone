@@ -9,10 +9,15 @@ class PriceInput extends Component
     public string $name;
     public ?float $value;
 
-    public function __construct(string $name, ?float $value = null)
+    /**
+     * @param string $name
+     * @param float|string|null $value Peut être float ou string numérique
+     */
+    public function __construct(string $name, $value = null)
     {
         $this->name = $name;
-        $this->value = $value;
+        // On convertit toute valeur en float si possible
+        $this->value = $value !== null ? floatval(str_replace([',', ' '], ['.', ''], $value)) : null;
     }
 
     public function render()

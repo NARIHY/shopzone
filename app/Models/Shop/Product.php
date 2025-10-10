@@ -37,9 +37,9 @@ class Product extends Model
      * A product can have multiple media files (images, videos, etc.)
      */
     public function media()
-    {
-        return $this->hasMany(Media::class, 'product_id');
-    }
+{
+    return $this->belongsToMany(Media::class, 'media_product', 'product_id', 'media_id');
+}
 
     /**
      * A product belongs to a single category

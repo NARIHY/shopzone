@@ -11,23 +11,17 @@ use App\Models\Files\Media;
 use App\Models\Shop\ProductCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Throwable;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of products.
-     */
     public function index(): View
     {
         return view(ProductView::getListView());
     }
 
-    /**
-     * Show the form for creating a new product.
-     */
     public function create(): View
     {
         return view(ProductView::getCreateOrEditView(), [
@@ -36,48 +30,105 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Here’s the logic:
-     * 1. Validate the incoming data (already done by StoreProductRequest).
-     * 2. Create the product with the validated data.
-     * 3. Associate the selected media to the product (one or more, but re-check if each media exists).
-     * 4. If the slug is already taken, create a new slug and append suffixes to make it unique.
-     * 5. The product price must be greater than the discount price.
-     * 6. Quantity in stock must be greater than or equal to 0.
-     * 7. SKU must be unique if provided. If not, generate a unique SKU based on the provided one.
-     * 
-     * Important: Loop through this logic in a try-catch block to handle errors.
-     */
-
     public function store(StoreProductRequest $request): RedirectResponse
-    {
-        dd($request->validated());
-        return $this->persistProduct(new Product(), $request->validated(), 'created');
+{
+    $data = $request->validated();
+
+    // On prend les valeurs "raw" si elles existent, sinon on nettoie les autres
+    $data['price'] = $this->normalizePrice($request->input('price_raw', $data['price'] ?? 0));
+    $data['discount_price'] = $this->normalizePrice($request->input('discount_price_raw', $data['discount_price'] ?? null));
+
+    try {
+        if (isset($data['discount_price']) && $data['discount_price'] >= $data['price']) {
+            return back()->withInput()->with('error', 'The discount price must be lower than the regular price.');
+        }
+
+        if (isset($data['stock']) && $data['stock'] < 0) {
+            return back()->withInput()->with('error', 'Stock must be zero or greater.');
+        }
+
+        $mediaIds = $data['media'] ?? [];
+
+        if (is_array($mediaIds)) {
+        $mediaIds = array_map(function ($item) {
+            // Si c'est JSON, decode
+            if (is_string($item) && str_starts_with($item, '[')) {
+                return json_decode($item, true);
+            }
+            return $item;
+        }, $mediaIds);
+
+        // Aplatir si besoin
+        $mediaIds = array_merge(...$mediaIds);
     }
 
-    /**
-     * Show the form for editing the specified product.
-     */
+        DB::transaction(function () use ($data, $mediaIds) {
+            $data['slug'] = $this->generateUniqueSlug($data['slug'] ?? $data['name']);
+            $data['sku'] = $this->generateUniqueSku($data['sku'] ?? null);
+
+            $product = Product::create($data);
+
+            if (!empty($mediaIds) && is_array($mediaIds)) {
+                $product->media()->sync($mediaIds);
+            }
+        });
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Product successfully created.');
+
+    } catch (Throwable $e) {
+        report($e);
+        return back()->withInput()->with('error', 'An error occurred: ' . $e->getMessage());
+    }
+}
+
+
     public function edit(Product $product): View
     {
         return view(ProductView::getCreateOrEditView(), [
-            'product' => Product::findOrFail($product->id),
+            'product' => $product,
             'productCategoriesInput' => ProductCategory::all(),
             'mediaInput' => Media::all()
         ]);
     }
 
-    /**
-     * Update the specified product in storage.
-     */
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
-        return $this->persistProduct($product, $request->validated(), 'updated');
+        $data = $request->validated();
+
+        try {
+            if (isset($data['discount_price']) && $data['discount_price'] >= $data['price']) {
+                return back()->withInput()->with('error', 'The discount price must be lower than the regular price.');
+            }
+
+            if (isset($data['stock']) && $data['stock'] < 0) {
+                return back()->withInput()->with('error', 'Stock must be zero or greater.');
+            }
+
+            $mediaIds = $data['media'] ?? [];
+
+            DB::transaction(function () use ($product, $data, $mediaIds) {
+                $data['slug'] = $this->generateUniqueSlug($data['slug'] ?? $data['name'], $product->id);
+                $data['sku'] = $this->generateUniqueSku($data['sku'] ?? null, $product->id);
+
+                $product->update($data);
+
+                if (!empty($mediaIds) && is_array($mediaIds)) {
+                    $product->media()->sync($mediaIds);
+                }
+            });
+
+            return redirect()
+                ->route('admin.products.index')
+                ->with('success', 'Product successfully updated.');
+
+        } catch (Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'An error occurred: ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified product from storage.
-     */
     public function destroy(Product $product): RedirectResponse
     {
         try {
@@ -87,72 +138,20 @@ class ProductController extends Controller
                 ->route('admin.products.index')
                 ->with('success', 'Produit supprimé avec succès.');
         } catch (Throwable $e) {
-            return $this->redirectBackWithError($e);
-        }
-    }
-
-    /* -----------------------------------------------------------------
-     |  Private Helpers
-     |----------------------------------------------------------------- */
-
-    /**
-     * Handle create/update logic in a single reusable method.
-     */
-    protected function persistProduct(Product $product, array $data, string $action): RedirectResponse
-    {
-        try {
-            // Pré-validation côté contrôleur (défensive)
-            if (isset($data['discount_price']) && $data['discount_price'] >= $data['price']) {
-                return redirect()->back()->withInput()->with('error', 'The discount price must be lower than the regular price.');
-            }
-            if (isset($data['stock']) && $data['stock'] < 0) {
-                return redirect()->back()->withInput()->with('error', 'Stock must be zero or greater.');
-            }
-
-            // Normaliser la clé media pour la suite
-            $mediaIds = $data['media[]'] ?? [];
-
-            dd($mediaIds);
-
-            DB::transaction(function () use ($product, $data, $mediaIds) {
-                // Génération slug/sku avant save
-                $data['slug'] = $this->generateUniqueSlug($data['slug'] ?? ($data['name'] ?? ''), $product->id ?? null);
-                $data['sku']  = $this->generateUniqueSku($data['sku'] ?? null, $product->id ?? null);
-
-                // Fill & save
-                $product->fill($data);
-                $product->save();
-
-                // Association médias (si fournis)
-                if (!empty($mediaIds) && is_array($mediaIds)) {
-                    $product->media()->sync($mediaIds);
-                }
-            });
-
-            dd($product);
-            // redirection cohérente (utilise le namespace de tes routes)
-            return redirect()->route('admin.products.index')
-                ->with('success', "Product successfully {$action}.");
-
-        } catch (\Throwable $e) {
             report($e);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Une erreur est survenue : ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Une erreur est survenue : ' . $e->getMessage());
         }
     }
 
-
-    /* ------------------------------
- | Helpers pour slug et SKU
- |------------------------------- */
     private function generateUniqueSlug(string $slug, ?int $ignoreId = null): string
     {
         $baseSlug = Str::slug($slug);
         $newSlug = $baseSlug;
         $i = 1;
 
-        while (Product::where('slug', $newSlug)->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))->exists()) {
+        while (Product::where('slug', $newSlug)
+            ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+            ->exists()) {
             $newSlug = "{$baseSlug}-{$i}";
             $i++;
         }
@@ -170,7 +169,9 @@ class ProductController extends Controller
         $newSku = $baseSku;
         $i = 1;
 
-        while (Product::where('sku', $newSku)->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))->exists()) {
+        while (Product::where('sku', $newSku)
+            ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+            ->exists()) {
             $newSku = "{$baseSku}-{$i}";
             $i++;
         }
@@ -178,16 +179,18 @@ class ProductController extends Controller
         return $newSku;
     }
 
-    /**
-     * Return a redirect with an error message.
-     */
-    private function redirectBackWithError(Throwable $e): RedirectResponse
+    private function normalizePrice($value): ?float
     {
-        report($e); // good practice: logs the exception
+        if ($value === null || $value === '') {
+            return null;
+        }
 
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', 'Une erreur est survenue : ' . $e->getMessage());
+        // Supprime espaces classiques et espaces fines (U+202F), remplace virgules par points
+        $clean = str_replace([','], ['.'], $value);
+        $clean = preg_replace('/[^\d.]/u', '', $clean);
+
+        return (float) $clean;
     }
+
+
 }
