@@ -14,58 +14,11 @@ class UpdateProductRequest extends FormRequest
     }
 
     /**
-     * Préparer les données avant validation
+     * Définition des règles de validation pour la mise à jour d’un produit
      */
-    protected function prepareForValidation()
-{
-    $productId = $this->route('product')?->id;
-
-    // Normaliser les prix
-    if ($this->has('price_raw')) {
-        $this->merge([
-            'price' => $this->normalizePrice($this->input('price_raw', $this->price)),
-        ]);
-    }
-
-    if ($this->has('discount_price_raw')) {
-        $this->merge([
-            'discount_price' => $this->normalizePrice($this->input('discount_price_raw', $this->discount_price)),
-        ]);
-    }
-
-    // Décoder media JSON si nécessaire
-    if ($this->has('media')) {
-        $media = $this->input('media');
-        $decoded = [];
-
-        foreach ($media as $item) {
-            if (is_string($item) && str_starts_with($item, '[')) {
-                $json = json_decode($item, true);
-
-                if (is_array($json)) {
-                    $decoded = array_merge($decoded, $json); // OK si c'est un tableau
-                } elseif ($json !== null) {
-                    $decoded[] = $json; // si c’est int ou autre
-                }
-                // Si json_decode retourne null, on ignore
-            } else {
-                $decoded[] = $item;
-            }
-        }
-
-        // S’assurer que tous les IDs sont des entiers
-        $decoded = array_map('intval', $decoded);
-
-        $this->merge([
-            'media' => $decoded,
-        ]);
-    }
-}
-
-
     public function rules(): array
     {
-        $productId = $this->route('product')?->id;
+        $productId = $this->route('product')?->id; // Récupère l’ID du produit depuis la route
 
         return [
             'name'                => ['required', 'string', 'max:255'],
@@ -87,36 +40,47 @@ class UpdateProductRequest extends FormRequest
             ],
             'is_active'           => ['boolean'],
             'product_category_id' => ['nullable', 'exists:product_categories,id'],
-            'media'               => ['required', 'array', 'min:1'],
-            'media.*'             => ['integer', 'exists:media,id'],
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'name.required'             => 'The product name is required.',
-            'slug.required'             => 'The slug is mandatory.',
-            'slug.unique'               => 'This slug already exists.',
-            'price.required'            => 'The price is mandatory.',
-            'discount_price.lt'         => 'The promotional price must be lower than the regular price.',
-            'product_category_id.exists'=> 'The selected category is invalid.',
-            'media.required'            => 'Please select at least one media.',
-            'media.*.exists'            => 'One of the selected media is invalid.',
+            'media'               => ['required'],
+            'media.*'             => [],
         ];
     }
 
     /**
-     * Convertit une valeur en float en nettoyant les espaces et les virgules
+     * Messages d’erreur personnalisés
      */
-    private function normalizePrice($value): ?float
+    public function messages(): array
     {
-        if ($value === null || $value === '') {
+        return [
+            'name.required'              => 'The product name is required.',
+            'slug.required'              => 'The slug is mandatory.',
+            'slug.unique'                => 'This slug already exists.',
+            'price.required'             => 'The price is mandatory.',
+            'price.numeric'              => 'The price must be a numeric value.',
+            'discount_price.lt'          => 'The promotional price must be lower than the regular price.',
+            'stock.required'             => 'Stock is required.',
+            'stock.integer'              => 'Stock must be an integer.',
+            'stock.min'                  => 'Stock must be zero or greater.',
+            'sku.unique'                 => 'This SKU already exists.',
+            'product_category_id.exists' => 'The selected category is invalid.',
+            'media.required'             => 'Please select at least one media.',
+            'media.array'                => 'Media must be an array.',
+            'media.*.exists'             => 'One of the selected media is invalid.',
+        ];
+    }
+
+    /**
+     * Convertit une valeur de prix en float en nettoyant les caractères inutiles
+     */
+    private function normalizePrice(mixed $value): ?float
+    {
+        if (empty($value)) {
             return null;
         }
 
-        // Supprime espaces et remplace virgules par points
-        $clean = str_replace([',', ' '], ['.', ''], $value);
-        return (float) preg_replace('/[^\d.]/', '', $clean);
+        // Supprime les espaces, remplace les virgules par des points, et enlève les caractères non numériques
+        $normalized = str_replace(',', '.', $value);
+        $normalized = preg_replace('/[^\d.]/', '', $normalized);
+
+        return (float) $normalized;
     }
 }

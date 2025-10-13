@@ -38,7 +38,8 @@ class Product extends Model
      */
     public function media()
 {
-    return $this->belongsToMany(Media::class, 'media_product', 'product_id', 'media_id');
+    return $this->belongsToMany(Media::class, 'media_product', 'product_id', 'media_id')
+                ->withTimestamps();
 }
 
     /**

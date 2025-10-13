@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Shop;
 
-use App\Models\Shop\Product;
-use App\Http\Requests\Shop\StoreProductRequest;
-use App\Http\Requests\Shop\UpdateProductRequest;
 use App\Common\ProductView;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Shop\StoreProductRequest;
+use App\Http\Requests\Shop\UpdateProductRequest;
 use App\Models\Files\Media;
+use App\Models\Shop\Product;
 use App\Models\Shop\ProductCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -26,93 +26,87 @@ class ProductController extends Controller
     {
         return view(ProductView::getCreateOrEditView(), [
             'productCategoriesInput' => ProductCategory::all(),
-            'mediaInput' => Media::all()
+            'mediaInput' => Media::all(),
         ]);
     }
 
     public function store(StoreProductRequest $request): RedirectResponse
-{
-    $data = $request->validated();
+    {
+        $validatedData = $request->validated();
 
-    // On prend les valeurs "raw" si elles existent, sinon on nettoie les autres
-    $data['price'] = $this->normalizePrice($request->input('price_raw', $data['price'] ?? 0));
-    $data['discount_price'] = $this->normalizePrice($request->input('discount_price_raw', $data['discount_price'] ?? null));
+        $validatedData['price'] = $this->normalizePrice($request->input('price_raw', $validatedData['price'] ?? 0));
+        $validatedData['discount_price'] = $this->normalizePrice($request->input('discount_price_raw', $validatedData['discount_price'] ?? null));
 
-    try {
-        if (isset($data['discount_price']) && $data['discount_price'] >= $data['price']) {
+        if ($this->isPriceTooHigh($validatedData['price'])) {
+            return back()->withInput()->with('error', 'The price must not exceed 99,999,999.99.');
+        }
+
+        if ($this->isPriceTooHigh($validatedData['discount_price'] ?? null)) {
+            return back()->withInput()->with('error', 'The discount price must not exceed 99,999,999.99.');
+        }
+
+        if ($this->isInvalidDiscount($validatedData)) {
             return back()->withInput()->with('error', 'The discount price must be lower than the regular price.');
         }
 
-        if (isset($data['stock']) && $data['stock'] < 0) {
+        if ($this->isInvalidStock($validatedData['stock'] ?? null)) {
             return back()->withInput()->with('error', 'Stock must be zero or greater.');
         }
 
-        $mediaIds = $data['media'] ?? [];
+        $mediaInput = $validatedData['media'] ?? [];
+        $decodedMediaIds = json_decode($mediaInput[0] ?? '[]', true);
 
-        if (is_array($mediaIds)) {
-        $mediaIds = array_map(function ($item) {
-            // Si c'est JSON, decode
-            if (is_string($item) && str_starts_with($item, '[')) {
-                return json_decode($item, true);
-            }
-            return $item;
-        }, $mediaIds);
+        try {
+            DB::transaction(function () use ($validatedData, $decodedMediaIds) {
+                $validatedData['slug'] = $this->generateUniqueSlug($validatedData['slug'] ?? $validatedData['name']);
+                $validatedData['sku'] = $this->generateUniqueSku($validatedData['sku'] ?? null);
 
-        // Aplatir si besoin
-        $mediaIds = array_merge(...$mediaIds);
+                $newProduct = Product::create($validatedData);
+
+                foreach ($decodedMediaIds as $mediaId) {
+                    $newProduct->media()->attach($mediaId);
+                }
+            });
+
+            return redirect()
+                ->route('admin.products.index')
+                ->with('success', 'Product successfully created.');
+        } catch (Throwable $exception) {
+            report($exception);
+            return back()->withInput()->with('error', 'An error occurred: ' . $exception->getMessage());
+        }
     }
-
-        DB::transaction(function () use ($data, $mediaIds) {
-            $data['slug'] = $this->generateUniqueSlug($data['slug'] ?? $data['name']);
-            $data['sku'] = $this->generateUniqueSku($data['sku'] ?? null);
-
-            $product = Product::create($data);
-
-            if (!empty($mediaIds) && is_array($mediaIds)) {
-                $product->media()->sync($mediaIds);
-            }
-        });
-
-        return redirect()
-            ->route('admin.products.index')
-            ->with('success', 'Product successfully created.');
-
-    } catch (Throwable $e) {
-        report($e);
-        return back()->withInput()->with('error', 'An error occurred: ' . $e->getMessage());
-    }
-}
-
 
     public function edit(Product $product): View
     {
         return view(ProductView::getCreateOrEditView(), [
             'product' => $product,
             'productCategoriesInput' => ProductCategory::all(),
-            'mediaInput' => Media::all()
+            'mediaInput' => Media::all(),
         ]);
     }
 
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
-        $data = $request->validated();
+        $validatedData = $request->validated();
+
+        if ($this->isInvalidDiscount($validatedData)) {
+            return back()->withInput()->with('error', 'The discount price must be lower than the regular price.');
+        }
+
+        if ($this->isInvalidStock($validatedData['stock'] ?? null)) {
+            return back()->withInput()->with('error', 'Stock must be zero or greater.');
+        }
+
+        $mediaInput = $validatedData['media'] ?? [];
+        $mediaIds = array_filter(array_map('intval', json_decode($mediaInput[0] ?? '[]', true)));
 
         try {
-            if (isset($data['discount_price']) && $data['discount_price'] >= $data['price']) {
-                return back()->withInput()->with('error', 'The discount price must be lower than the regular price.');
-            }
+            DB::transaction(function () use ($product, $validatedData, $mediaIds) {
+                $validatedData['slug'] = $this->generateUniqueSlug($validatedData['slug'] ?? $validatedData['name'], $product->id);
+                $validatedData['sku'] = $this->generateUniqueSku($validatedData['sku'] ?? null, $product->id);
 
-            if (isset($data['stock']) && $data['stock'] < 0) {
-                return back()->withInput()->with('error', 'Stock must be zero or greater.');
-            }
-
-            $mediaIds = $data['media'] ?? [];
-
-            DB::transaction(function () use ($product, $data, $mediaIds) {
-                $data['slug'] = $this->generateUniqueSlug($data['slug'] ?? $data['name'], $product->id);
-                $data['sku'] = $this->generateUniqueSku($data['sku'] ?? null, $product->id);
-
-                $product->update($data);
+                $product->update($validatedData);
 
                 if (!empty($mediaIds) && is_array($mediaIds)) {
                     $product->media()->sync($mediaIds);
@@ -122,10 +116,9 @@ class ProductController extends Controller
             return redirect()
                 ->route('admin.products.index')
                 ->with('success', 'Product successfully updated.');
-
-        } catch (Throwable $e) {
-            report($e);
-            return back()->withInput()->with('error', 'An error occurred: ' . $e->getMessage());
+        } catch (Throwable $exception) {
+            report($exception);
+            return back()->withInput()->with('error', 'An error occurred: ' . $exception->getMessage());
         }
     }
 
@@ -137,60 +130,75 @@ class ProductController extends Controller
             return redirect()
                 ->route('admin.products.index')
                 ->with('success', 'Produit supprimé avec succès.');
-        } catch (Throwable $e) {
-            report($e);
-            return back()->withInput()->with('error', 'Une erreur est survenue : ' . $e->getMessage());
+        } catch (Throwable $exception) {
+            report($exception);
+            return back()->withInput()->with('error', 'Une erreur est survenue : ' . $exception->getMessage());
         }
     }
+
+    // ---------- PRIVATE HELPERS ---------- //
 
     private function generateUniqueSlug(string $slug, ?int $ignoreId = null): string
     {
         $baseSlug = Str::slug($slug);
-        $newSlug = $baseSlug;
-        $i = 1;
+        $uniqueSlug = $baseSlug;
+        $suffix = 1;
 
-        while (Product::where('slug', $newSlug)
-            ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
-            ->exists()) {
-            $newSlug = "{$baseSlug}-{$i}";
-            $i++;
+        while (
+            Product::where('slug', $uniqueSlug)
+                ->when($ignoreId, fn($query) => $query->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $uniqueSlug = "{$baseSlug}-{$suffix}";
+            $suffix++;
         }
 
-        return $newSlug;
+        return $uniqueSlug;
     }
 
     private function generateUniqueSku(?string $sku, ?int $ignoreId = null): string
     {
-        if (!$sku) {
-            $sku = 'SKU-' . strtoupper(Str::random(6));
+        $baseSku = $sku ?: 'SKU-' . strtoupper(Str::random(6));
+        $uniqueSku = $baseSku;
+        $suffix = 1;
+
+        while (
+            Product::where('sku', $uniqueSku)
+                ->when($ignoreId, fn($query) => $query->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $uniqueSku = "{$baseSku}-{$suffix}";
+            $suffix++;
         }
 
-        $baseSku = $sku;
-        $newSku = $baseSku;
-        $i = 1;
-
-        while (Product::where('sku', $newSku)
-            ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
-            ->exists()) {
-            $newSku = "{$baseSku}-{$i}";
-            $i++;
-        }
-
-        return $newSku;
+        return $uniqueSku;
     }
 
-    private function normalizePrice($value): ?float
+    private function normalizePrice($rawPrice): ?float
     {
-        if ($value === null || $value === '') {
+        if ($rawPrice === null || $rawPrice === '') {
             return null;
         }
 
-        // Supprime espaces classiques et espaces fines (U+202F), remplace virgules par points
-        $clean = str_replace([','], ['.'], $value);
-        $clean = preg_replace('/[^\d.]/u', '', $clean);
+        $normalizedValue = str_replace(',', '.', $rawPrice);
+        $normalizedValue = preg_replace('/[^\d.]/u', '', $normalizedValue);
 
-        return (float) $clean;
+        return (float) $normalizedValue;
     }
 
+    private function isPriceTooHigh(?float $price): bool
+    {
+        return !is_null($price) && $price > 99999999.99;
+    }
 
+    private function isInvalidDiscount(array $data): bool
+    {
+        return isset($data['discount_price'], $data['price'])
+            && $data['discount_price'] >= $data['price'];
+    }
+
+    private function isInvalidStock(?int $stock): bool
+    {
+        return !is_null($stock) && $stock < 0;
+    }
 }

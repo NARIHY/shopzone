@@ -16,9 +16,14 @@ class Media extends Model
         'disk',
         'mime_type',
         'size',
-        'original_name',
-        'product_id',
+        'original_name'
     ];
+
+    public function products()
+{
+    return $this->belongsToMany(\App\Models\Shop\Product::class, 'media_product', 'media_id', 'product_id')
+                ->withTimestamps();
+}
 
     /**
      * Retourne l’URL publique du fichier
