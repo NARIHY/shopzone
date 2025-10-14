@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Files\Media;
 use App\Http\Requests\Files\StoreMediaRequest;
 use App\Http\Requests\Files\UpdateMediaRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller

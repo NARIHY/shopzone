@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Access\WorkOSAuthController;
 use App\Http\Controllers\Exceptions\ErrorController;
+use App\Http\Middleware\Access\AssingUsersGroups;
 use Illuminate\Support\Facades\Route;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
 
@@ -14,6 +16,8 @@ Route::prefix('/')->name('public.')->group(function () {
 
 Route::middleware([
     'auth',
+    'web',
+    AssingUsersGroups::class,
     ValidateSessionWithWorkOS::class,
 ])->name('admin.')->prefix('nerkaly/')->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
@@ -23,6 +27,8 @@ Route::middleware([
     Route::resource('roles', \App\Http\Controllers\Access\RoleController::class)->names('roles');
     Route::resource('groups', \App\Http\Controllers\Access\GroupController::class)->names('groups');
     Route::resource('products', \App\Http\Controllers\Shop\ProductController::class)->names('products');
+
+    Route::get('utils/verify-user-groups-to-attache-client/v1/userId:{userId}-part56', [\App\Http\Controllers\Access\UtilsUsersController::class, 'verifyUserGroupsToAttacheCLient'])->name('utils.verifyUserGroupsToAttacheClient');
 });
 
 
@@ -33,6 +39,7 @@ Route::prefix('/Errors')->name('errors.')->group(function () {
     Route::get('/404', [ErrorController::class, 'error404'])->name('404');
     Route::get('/500', [ErrorController::class, 'error500'])->name('500');
 });
+
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

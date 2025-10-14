@@ -63,4 +63,18 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(\App\Models\Access\Group::class, 'group_user');
     }
+
+    public function routeNotificationFor($driver, $notification = null)
+    {
+        if ($driver === 'mail') {
+            return $this->email;
+        }
+
+        if ($driver === 'nexmo') {
+            return $this->phone_number;
+        }
+        
+        // Add other drivers as needed
+        return null;
+    }
 }
