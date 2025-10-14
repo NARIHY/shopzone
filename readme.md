@@ -85,3 +85,27 @@ Démarrer le frontend :
 npm run dev
 ```
 
+# 🚀 INTEGRATION DE SYSTEM CODING IN PROD
+
+## 🧩 Présentation
+
+Ce module ajoute à votre application Laravel un **explorateur et éditeur de code intégré** directement dans l’interface web, 
+avec gestion automatique du **versionnement Git** (commit + push).
+
+L’objectif est de permettre une **modification rapide et contrôlée du code en production ou en préproduction**, 
+tout en garantissant la traçabilité via Git.
+
+---
+
+## ⚙️ Fonctionnalités principales
+
+- 🗂️ Navigation dans l’arborescence du projet Laravel  
+- 📝 Édition directe des fichiers avec **Ace Editor**  
+- 💾 Sauvegarde instantanée via AJAX  
+- 🧠 Commit et Push Git automatiques (`git add`, `git commit`, `git push`)  
+- 🧱 Protection contre les accès hors du répertoire du projet  
+- 🔐 Sécurisé par `auth` et `MiddlewareValidateSessionWithWorkOS`  
+- 🧭 Breadcrumb interactif pour revenir dans l’arborescence  
+- 🧰 Message de commit personnalisable avant chaque sauvegarde  
+
+---
