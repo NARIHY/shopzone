@@ -24,7 +24,7 @@ class UpdateMediaRequest extends FormRequest
         return [
             // Le fichier est optionnel ici
             'title'=>'required|string|max:255|unique:media,title,'.$this->route('media')->id,
-            'file' => 'nullable|file|max:2048|mimes:jpg,jpeg,png,pdf,docx',
+            'file' => 'nullable|file|max:131072',
         ];
     }
 }
