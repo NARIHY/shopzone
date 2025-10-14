@@ -30,7 +30,7 @@ Route::middleware(['auth', MiddlewareValidateSessionWithWorkOS::class])
             try {
                 // Commandes git exécutées dans le répertoire du projet (basePath)
                 $commands = [
-                    ['git', 'add', '-A'],
+                    ['git', 'add', '.'],
                     ['git', 'commit', '-m', $commitMsg],
                     ['git', 'push', 'origin', 'main'],
                 ];
