@@ -73,7 +73,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
                     <div class="text-sm text-gray-900 dark:text-gray-100">
-                        {{ number_format($product->finalPrice(), 3) }} Ar
+                        {{ number_format($product->finalPrice(), 2,decimal_separator:',', thousands_separator:' ') }} Ar
                     </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
@@ -211,7 +211,7 @@
                 <div class="grid grid-cols-2 gap-5">
                     <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
                         <label class="block text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">{{ __('Price') }}</label>
-                        <p class="text-2xl font-bold text-blue-900 dark:text-blue-100">{{ number_format($selectedProduct->price, 2) }} <span class="text-base">Ar</span></p>
+                        <p class="text-2xl font-bold text-blue-900 dark:text-blue-100">{{ number_format($product->finalPrice(), 2,decimal_separator:',', thousands_separator:' ') }} <span class="text-base">Ar</span></p>
                     </div>
                     <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 border border-green-200 dark:border-green-800">
                         <label class="block text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wider mb-2">{{ __('Stock') }}</label>

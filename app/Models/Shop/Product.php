@@ -67,7 +67,7 @@ class Product extends Model
      */
     public function finalPrice(): float
     {
-        return $this->discount_price ?: $this->price;
+        return max(0, $this->price - ($this->discount_price ?? 0));
     }
 
     /**
