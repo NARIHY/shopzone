@@ -17,7 +17,9 @@ class DashboardTest extends TestCase
 
     public function test_authenticated_users_can_visit_the_dashboard(): void
     {
-        $this->actingAs($user = User::factory()->create());
+        //TO CONNECT USER 
+        $this->withoutVite();
+        $this->actingAs(User::factory()->create());
 
         $this->get('/nerkaly/dashboard')->assertOk();
     }

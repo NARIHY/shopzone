@@ -59,6 +59,7 @@
             />
             {{-- Is Active Toggle --}}
             <div class="flex items-center gap-2">
+                <input type="hidden" name="is_active" value="0">
                 <input type="checkbox"
                        name="is_active"
                        id="is_active"

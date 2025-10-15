@@ -34,8 +34,8 @@ class RoleController extends Controller
         try {
             $data = [
                 'roleName' => $request->validated('roleName'),
-                'description' => $request->validated('description', null),
-                'is_active' => $request->validated('is_active') ?? false,
+                'description' => $request->validated('description'),
+                'is_active' => $request->validated('is_active'),
             ];
 
             Role::create($data);

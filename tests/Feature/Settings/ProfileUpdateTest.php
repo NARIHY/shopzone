@@ -13,9 +13,11 @@ class ProfileUpdateTest extends TestCase
 
     public function test_profile_page_is_displayed(): void
     {
+        $this->withoutVite();
+
         $this->actingAs($user = User::factory()->create());
 
-        $this->get('/nerkaly/settings/profile')->assertOk();
+        $this->get('/settings/profile')->assertOk();
     }
 
     public function test_profile_information_can_be_updated(): void
