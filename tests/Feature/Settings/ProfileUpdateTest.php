@@ -41,6 +41,7 @@ class ProfileUpdateTest extends TestCase
     {
         $user = User::factory()->create();
 
+        $this->withoutVite();
         $this->actingAs($user);
 
         $response = Volt::test('settings.delete-user-form')

@@ -36,7 +36,7 @@ class GroupController extends Controller
         try {
             $group = Group::create($request->validated());
 
-            return redirect()->route('groups.index')
+            return redirect()->route('admin.groups.index')
                 ->with('success', 'Groupe créé avec succès.');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -88,7 +88,7 @@ class GroupController extends Controller
         try {
             $group->delete();
 
-            return redirect()->route('groups.index')
+            return redirect()->route('admin.groups.index')
                 ->with('success', 'Groupe supprimé avec succès.');
         } catch (\Exception $e) {
             return redirect()->back()

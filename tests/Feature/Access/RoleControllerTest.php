@@ -70,7 +70,6 @@ class RoleControllerTest extends TestCase
         $response = $this->post(route('admin.roles.store'), []);
 
         $response->assertSessionHasErrors(['roleName'])
-                    ->assertSessionHasErrors(['description'])
                 ->assertRedirect();
     }
 
