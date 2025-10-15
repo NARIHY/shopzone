@@ -15,7 +15,7 @@ class SuccessClientRegistrationNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(private User $user)
+    public function __construct(public User $user)
     {
         //
     }
