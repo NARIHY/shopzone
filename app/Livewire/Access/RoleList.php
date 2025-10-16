@@ -3,6 +3,7 @@
 namespace App\Livewire\Access;
 
 use App\Models\Access\Role;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -16,6 +17,7 @@ class RoleList extends Component
 
     protected $queryString = [
         'search' => ['except' => ''],
+        'page'   => ['except' => 1],
     ];
 
     protected $listeners = [
@@ -62,16 +64,35 @@ class RoleList extends Component
         $this->selectedRole = null;
     }
 
+    /**
+     * Requête optimisée + cache facultatif.
+     */
+    private function getRoles()
+    {
+        $cacheKey = 'roles_' . md5($this->search);
+
+        return Cache::remember($cacheKey, 60, function () {
+            return Role::select('id', 'roleName', 'description', 'created_at')
+                ->when($this->search, function ($q) {
+                    $search = "%{$this->search}%";
+                    $q->where(function ($sub) use ($search) {
+                        $sub->where('roleName', 'like', $search)
+                            ->orWhere('description', 'like', $search);
+                    });
+                })
+                ->with('groups')
+                ->latest('id')
+                ->paginate(20);
+        });
+    }
+
+    /**
+     * Rendu du composant.
+     */
     public function render()
     {
         return view('livewire.access.role-list', [
-            'roles' => Role::query()
-                ->when($this->search, fn($q) =>
-                    $q->where('roleName', 'like', "%{$this->search}%")
-                       ->orWhere('description', 'like', "%{$this->search}%")
-                )
-                ->latest()
-                ->paginate(10),
+            'roles' => $this->getRoles(),
         ]);
     }
 }

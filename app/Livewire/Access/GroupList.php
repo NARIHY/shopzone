@@ -3,6 +3,7 @@
 namespace App\Livewire\Access;
 
 use App\Models\Access\Group;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -64,13 +65,45 @@ class GroupList extends Component
     public function render()
     {
         return view('livewire.access.group-list', [
-            'groups' => Group::query()
-                ->when($this->search, fn($q) =>
-                    $q->where('name', 'like', "%{$this->search}%")
-                       ->orWhere('description', 'like', "%{$this->search}%")
-                )
-                ->latest()
-                ->paginate(10),
+            'groups' => $this->getGroups(),
         ]);
+    }
+
+    /* 
+    private function getRoles()
+    {
+        $cacheKey = 'roles_' . md5($this->search);
+
+        return Cache::remember($cacheKey, 60, function () {
+            return Role::select('id', 'roleName', 'description', 'created_at')
+                ->when($this->search, function ($q) {
+                    $search = "%{$this->search}%";
+                    $q->where(function ($sub) use ($search) {
+                        $sub->where('roleName', 'like', $search)
+                            ->orWhere('description', 'like', $search);
+                    });
+                })
+                ->latest('id')
+                ->paginate(10);
+        });
+    }
+    */
+    private function getGroups()
+    {
+        $cache = Cache::get('groups_' . md5($this->search . '_page_' . $this->page));
+
+        return Cache::remember('groups_' . md5($this->search . '_page_' . $this->page), 60, function () {
+            return Group::with('role:id,roleName')
+                ->select('id', 'name', 'description', 'role_id', 'created_at')
+                ->when($this->search, function ($q) {
+                    $search = "%{$this->search}%";
+                    $q->where(function ($sub) use ($search) {
+                        $sub->where('name', 'like', $search)
+                            ->orWhere('description', 'like', $search);
+                    });
+                })
+                ->latest()
+                ->paginate(20);
+        });
     }
 }

@@ -5,6 +5,7 @@ namespace App\Livewire\Media;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Files\Media;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class MediaList extends Component
@@ -70,7 +71,7 @@ class MediaList extends Component
     public function deleteMedia($id): void
     {
         $id = (int) $id;
-        $media = Media::find($id);
+        $media = Media::findOrFail($id);
 
         if (! $media) {
             $this->dispatchBrowserEvent('notify', [
@@ -111,16 +112,27 @@ class MediaList extends Component
      */
     public function render()
     {
-        $media = Media::query()
-            ->when($this->search, fn($q) =>
-                $q->where('title', 'like', "%{$this->search}%")
-                   ->orWhere('original_name', 'like', "%{$this->search}%")
-            )
-            ->latest()
-            ->paginate(10);
-
         return view('livewire.media.media-list', [
-            'media' => $media,
+            'media' => $this->getMedia(),
         ]);
+    }
+
+    private function getMedia()
+    {
+        $cacheKey = 'media_' . md5($this->search);
+
+        return Cache::remember($cacheKey, 60, function () {
+            return Media::select('id', 'title', 'original_name', 'path', 'disk', 'mime_type', 'size', 'created_at')
+                ->when($this->search, function ($q) {
+                    $search = "%{$this->search}%";
+                    $q->where(function ($sub) use ($search) {
+                        $sub->where('title', 'like', $search)
+                            ->orWhere('original_name', 'like', $search);
+                    });
+                })
+                ->with('products')
+                ->latest()
+                ->paginate(20);
+        });
     }
 }

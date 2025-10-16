@@ -3,6 +3,8 @@
 namespace App\Livewire\Shop;
 
 use App\Models\Shop\Product;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -95,9 +97,25 @@ class ProductList extends Component
 
     public function render()
     {
-        $products = Product::orderBy('created_at', 'desc')
-            ->where('name', 'like', "%{$this->search}%")
-            ->paginate(10);
-        return view('livewire.shop.product-list', compact('products'));
+        return view('livewire.shop.product-list', [
+            'products' => $this->getProducts()
+        ]);
+    }
+
+    private function getProducts()
+    {
+        $cacheKey = 'products_' . md5($this->search);
+
+        return Cache::remember($cacheKey, 60, function () {
+            return Product::query()
+                ->when($this->search, function ($q) {
+                    $q->where(function ($sub) {
+                        $sub->where('name', 'like', "%{$this->search}%");
+                    });
+                })
+                ->with('category')
+                ->latest()
+                ->paginate(20);
+        });
     }
 }

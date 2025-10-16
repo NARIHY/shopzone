@@ -5,6 +5,7 @@ namespace App\Livewire\Shop;
 use App\Models\Shop\ProductCategory;
 use Livewire\Component;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 use Livewire\WithPagination;
 
 class ProductCategoryList extends Component
@@ -112,17 +113,24 @@ class ProductCategoryList extends Component
      */
         public function render()
         {
-            $categories = ProductCategory::query()
+            return view('livewire.shop.product-category-list', [
+                'categories' => $this->getCategories(),
+            ]);
+        }
+
+    private function getCategories()
+    {
+        $cacheKey = 'product_categories_' . md5($this->search);
+        return Cache::remember($cacheKey, 60, function () {
+            return ProductCategory::query()
                 ->when($this->search, function(Builder $query) {
                     $query->where(function(Builder $q) {
                         $q->where('name', 'like', "%{$this->search}%");
                     });
                 })
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
-
-            return view('livewire.shop.product-category-list', [
-                'categories' => $categories,
-            ]);
-        }
+                ->with('products')
+                ->latest()
+                ->paginate(20);
+        });
+    }
 }

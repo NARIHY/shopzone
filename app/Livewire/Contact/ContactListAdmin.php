@@ -3,6 +3,7 @@
 namespace App\Livewire\Contact;
 
 use App\Models\Contact\Contact;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -62,18 +63,30 @@ class ContactListAdmin extends Component
         $this->selectedContact = null;
     }
 
-    
+
     public function render()
     {
         return view('livewire.contact.contact-list-admin', [
-            'contacts' => Contact::query()
-                ->when($this->search, fn($q) =>
+            'contacts' => $this->getContacts()
+        ]);
+    }
+
+    private function getContacts()
+    {
+        $cacheKey = 'contacts_' . md5($this->search);
+
+        return Cache::remember($cacheKey, 60, function () {
+
+            return Contact::query()
+                ->when(
+                    $this->search,
+                    fn($q) =>
                     $q->where('firstName', 'like', "%{$this->search}%")
-                       ->orWhere('lastName', 'like', "%{$this->search}%")
-                       ->orWhere('subject', 'like', "%{$this->search}%")
+                        ->orWhere('lastName', 'like', "%{$this->search}%")
+                        ->orWhere('subject', 'like', "%{$this->search}%")
                 )
                 ->latest()
-                ->paginate(10),
-        ]);
+                ->paginate(20);
+        });
     }
 }

@@ -146,6 +146,14 @@
                         <div class="w-full flex justify-center">
                             <img src="{{ $selectedMedia->url() }}" alt="{{ $selectedMedia->title ?? $selectedMedia->original_name }}" class="max-h-64 object-contain rounded" />
                         </div>
+                    @elseif(optional($selectedMedia)->mime_type && Str::startsWith($selectedMedia->mime_type, 'video/'))
+                    {{-- 🎥 Video Preview --}}
+                    <div class="w-full flex justify-center">
+                        <video controls class="max-h-64 rounded">
+                            <source src="{{ $selectedMedia->url() }}" type="{{ $selectedMedia->mime_type }}">
+                            {{_('Your browser does not support video playback.')}}
+                        </video>
+                    </div>
                     @else
                         <div class="w-full flex justify-center">
                             <div class="w-32 h-32 flex items-center justify-center rounded bg-gray-100 dark:bg-gray-700 text-sm font-medium">

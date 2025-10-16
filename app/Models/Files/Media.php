@@ -20,10 +20,10 @@ class Media extends Model
     ];
 
     public function products()
-{
-    return $this->belongsToMany(\App\Models\Shop\Product::class, 'media_product', 'media_id', 'product_id')
-                ->withTimestamps();
-}
+    {
+        return $this->belongsToMany(\App\Models\Shop\Product::class, 'media_product', 'media_id', 'product_id')
+            ->withTimestamps();
+    }
 
     /**
      * Retourne l’URL publique du fichier

@@ -32,6 +32,7 @@
             @endif
         @endforeach
 
+        
 
         {{ $slot }}
     </flux:main>
