@@ -4,17 +4,17 @@ namespace App\Common;
 
 class MediaView
 {
-    public static function getCategoryListView(): string
+    public static function getMediaListView(): string
     {
         return self::baseView().'list';
     }
 
-    public static function getCategoryCreateOrEditView(): string
+    public static function getMediaCreateOrEditView(): string
     {
         return self::baseView().'action.createOrEdit';
     }
 
-    public static function getCategoryShowView(): string
+    public static function getMediaShowView(): string
     {
         return self::baseView().'action.show';
     }

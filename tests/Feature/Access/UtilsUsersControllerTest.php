@@ -23,7 +23,7 @@ class UtilsUsersControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_attaches_group_to_authenticated_user_and_sends_notification()
+    public function test_it_attaches_group_to_authenticated_user_and_sends_notification()
     {
         // Arrange
         $user = Auth::user();
@@ -54,7 +54,7 @@ class UtilsUsersControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_if_user_id_does_not_match_authenticated_user()
+    public function test_it_fails_if_user_id_does_not_match_authenticated_user()
     {
         // Arrange
         $otherUser = User::factory()->create();

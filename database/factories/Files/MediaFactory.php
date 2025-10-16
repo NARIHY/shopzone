@@ -17,6 +17,7 @@ class MediaFactory extends Factory
     public function definition(): array
     {
         return [
+            'title'=> $this->faker->sentence(3),
             'path' => $this->faker->filePath(),
             'original_name' => $this->faker->optional()->word(),
             'disk' => 'public',

@@ -13,7 +13,7 @@ class RoleControllerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function index_displays_roles_list()
+    public function test_index_displays_roles_list()
     {
         $this->withoutVite();
         $this->actingAs(User::factory()->create());
@@ -25,7 +25,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function create_displays_create_form()
+    public function test_create_displays_create_form()
     {
         $this->withoutVite();
         $this->actingAs(User::factory()->create());
@@ -37,7 +37,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function store_creates_role_successfully()
+    public function test_store_creates_role_successfully()
     {
         //TO CONNECT USER 
         $this->withoutVite();
@@ -62,7 +62,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function store_validates_required_fields()
+    public function test_store_validates_required_fields()
     {
         //TO CONNECT USER 
         $this->withoutVite();
@@ -74,7 +74,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function store_creates_role_with_optional_description()
+    public function test_store_creates_role_with_optional_description()
     {
         //TO CONNECT USER 
         $this->withoutVite();
@@ -95,7 +95,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function store_creates_inactive_role()
+    public function test_store_creates_inactive_role()
     {
         //TO CONNECT USER 
         $this->withoutVite();
@@ -114,7 +114,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function store_handles_duplicate_role_name()
+    public function test_store_handles_duplicate_role_name()
     {
         //TO CONNECT USER 
         $this->withoutVite();
@@ -135,7 +135,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function edit_displays_edit_form()
+    public function test_edit_displays_edit_form()
     {
         //TO CONNECT USER 
         $this->withoutVite();
@@ -151,7 +151,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function update_modifies_role_successfully()
+    public function test_update_modifies_role_successfully()
     {
         //TO CONNECT USER 
         $this->withoutVite();
@@ -181,7 +181,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function update_validates_required_fields()
+    public function test_update_validates_required_fields()
     {
         //TO CONNECT USER 
         $this->withoutVite();
@@ -196,7 +196,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function update_removes_description_when_null()
+    public function test_update_removes_description_when_null()
     {
         //TO CONNECT USER 
         $this->withoutVite();
@@ -222,7 +222,7 @@ class RoleControllerTest extends TestCase
     }
 
     /** @test */
-    public function update_handles_duplicate_role_name()
+    public function test_update_handles_duplicate_role_name()
     {
         //TO CONNECT USER 
         $this->withoutVite();

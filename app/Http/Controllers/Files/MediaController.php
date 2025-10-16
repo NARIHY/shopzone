@@ -17,7 +17,7 @@ class MediaController extends Controller
      */
     public function index()
     {
-        return view(MediaView::getCategoryListView());
+        return view(MediaView::getMediaListView());
     }
 
     /**
@@ -25,7 +25,7 @@ class MediaController extends Controller
      */
     public function create()
     {
-        return view(MediaView::getCategoryCreateOrEditView());
+        return view(MediaView::getMediaCreateOrEditView());
     }
 
     /**
@@ -71,7 +71,7 @@ class MediaController extends Controller
      */
     public function edit(Media $media)
     {
-        return view(MediaView::getCategoryCreateOrEditView(), compact('media'));
+        return view(MediaView::getMediaCreateOrEditView(), compact('media'));
     }
 
     /**

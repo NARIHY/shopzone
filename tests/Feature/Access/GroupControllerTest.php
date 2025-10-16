@@ -23,7 +23,7 @@ class GroupControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_displays_the_groups_index_page()
+    public function test_it_displays_the_groups_index_page()
     {
         $response = $this->get(route('admin.groups.index'));
 
@@ -32,7 +32,7 @@ class GroupControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_displays_the_group_create_page()
+    public function test_it_displays_the_group_create_page()
     {
         $response = $this->get(route('admin.groups.create'));
 
@@ -41,7 +41,7 @@ class GroupControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_store_a_new_group()
+    public function test_it_can_store_a_new_group()
     {
         $role = Role::factory()->create();
         $data = [
@@ -63,7 +63,7 @@ class GroupControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_to_store_group_with_invalid_data()
+    public function test_it_fails_to_store_group_with_invalid_data()
     {
         $response = $this->post(route('admin.groups.store'), [
             'name' => '', // Invalid: name is required
@@ -78,7 +78,7 @@ class GroupControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_displays_the_group_edit_page()
+    public function test_it_displays_the_group_edit_page()
     {
         $group = Group::factory()->create();
         $role = Role::factory()->create();
@@ -92,7 +92,7 @@ class GroupControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_update_a_group()
+    public function test_it_can_update_a_group()
     {
         $group = Group::factory()->create();
         $role = Role::factory()->create();
@@ -116,7 +116,7 @@ class GroupControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_to_update_group_with_invalid_data()
+    public function test_it_fails_to_update_group_with_invalid_data()
     {
         $group = Group::factory()->create();
         $data = [
@@ -135,7 +135,7 @@ class GroupControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_delete_a_group()
+    public function test_it_can_delete_a_group()
     {
         $group = Group::factory()->create();
 
