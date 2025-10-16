@@ -28,8 +28,11 @@ class PublicController extends Controller
 
     public function storeContact(ContactRequest $contactRequest)
     {        // Store in database
-        Contact::create($contactRequest->validated());
+        $contact = Contact::create($contactRequest->validated());
 
+        if($contactRequest->validated('email')){
+            $contact->notify(new \App\Notifications\Public\AnswerContactSendNotification($contact));
+        }
         // Redirect with success message
         return redirect()->back()->with('success', 'Your message has been sent successfully!');
     }
