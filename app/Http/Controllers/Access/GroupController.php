@@ -36,6 +36,7 @@ class GroupController extends Controller
         try {
             $group = Group::create($request->validated());
 
+            unset($group);
             return redirect()->route('admin.groups.index')
                 ->with('success', 'Groupe créé avec succès.');
         } catch (\Exception $e) {

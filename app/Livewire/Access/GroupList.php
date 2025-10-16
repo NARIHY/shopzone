@@ -20,7 +20,16 @@ class GroupList extends Component
 
     protected $listeners = [
         'showRoleModal' => 'openRoleModal',
+        'destroyGroupList'=> 'cleanup'
     ];
+
+    public function cleanup(): void
+    {
+        $this->resetPage();
+        $this->search = '';
+        $this->selectedGroup = null;
+        Cache::flush();
+    }
 
     /**
      * Reset pagination quand on tape dans la recherche
@@ -69,31 +78,12 @@ class GroupList extends Component
         ]);
     }
 
-    /* 
-    private function getRoles()
-    {
-        $cacheKey = 'roles_' . md5($this->search);
-
-        return Cache::remember($cacheKey, 60, function () {
-            return Role::select('id', 'roleName', 'description', 'created_at')
-                ->when($this->search, function ($q) {
-                    $search = "%{$this->search}%";
-                    $q->where(function ($sub) use ($search) {
-                        $sub->where('roleName', 'like', $search)
-                            ->orWhere('description', 'like', $search);
-                    });
-                })
-                ->latest('id')
-                ->paginate(10);
-        });
-    }
-    */
     private function getGroups()
     {
-        $cache = Cache::get('groups_' . md5($this->search . '_page_' . $this->page));
+        $cache = Cache::get('groups_' . md5($this->search));
 
-        return Cache::remember('groups_' . md5($this->search . '_page_' . $this->page), 60, function () {
-            return Group::with('role:id,roleName')
+        return Cache::remember('groups_' . md5($this->search), 60, function () {
+            return Group::with(['role:id,roleName', 'users:id,name'])
                 ->select('id', 'name', 'description', 'role_id', 'created_at')
                 ->when($this->search, function ($q) {
                     $search = "%{$this->search}%";
