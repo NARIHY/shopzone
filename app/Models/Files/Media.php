@@ -90,4 +90,21 @@ class Media extends Model
         }
     }
 
+    private function generateUniqueTitle($title)
+{
+    $base = pathinfo($title, PATHINFO_FILENAME);
+    $ext = pathinfo($title, PATHINFO_EXTENSION);
+
+    $counter = 1;
+    $newTitle = $title;
+
+    while (Media::where('title', $newTitle)->exists()) {
+        $newTitle = "{$base}_{$counter}." . $ext;
+        $counter++;
+    }
+
+    return $newTitle;
+}
+
+
 }

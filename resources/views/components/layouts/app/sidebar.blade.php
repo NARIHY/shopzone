@@ -150,5 +150,6 @@
         {{ $slot }}
         
         @fluxScripts
+        @yield('livewire-scripts')
     </body>
 </html>
