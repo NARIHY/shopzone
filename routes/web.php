@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Access\WorkOSAuthController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Exceptions\ErrorController;
 use App\Http\Middleware\Access\AssingUsersGroups;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +21,7 @@ Route::middleware([
     AssingUsersGroups::class,
     ValidateSessionWithWorkOS::class,
 ])->name('admin.')->prefix('nerkaly/')->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::resource('product-categories', \App\Http\Controllers\Shop\ProductCategoryController::class)->names('product-categories');
     Route::resource('media', \App\Http\Controllers\Files\MediaController::class)->parameters(['media' => 'media'])->names('media');
     Route::get('contacts', [\App\Http\Controllers\Contact\ContacController::class, 'index'])->name('contact.index');

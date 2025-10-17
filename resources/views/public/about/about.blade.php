@@ -416,6 +416,10 @@
             </div>
         </div>
     </section>
+
+    <section>
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdUSu5aejmn9mgO7P3EHalF7sqhVF4BB-2d8NxV5483r70kMg/viewform?embedded=true" width="640" height="1886" frameborder="0" marginheight="0" marginwidth="0">Chargement…</iframe>
+    </section>
 @endsection
 
 @section('customjs')
