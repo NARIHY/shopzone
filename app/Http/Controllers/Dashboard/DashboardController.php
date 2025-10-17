@@ -13,4 +13,9 @@ class DashboardController extends Controller
     {
         return view('dashboard');
     }
+
+    public function adminDashboard(): View
+    {
+        return view('admin.pulse.pulse');
+    }
 }

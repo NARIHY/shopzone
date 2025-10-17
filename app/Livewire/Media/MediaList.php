@@ -65,47 +65,6 @@ class MediaList extends Component
         $this->selectedMedia = null;
     }
 
-    /**
-     * Supprimer un fichier média + son enregistrement
-     */
-    public function deleteMedia($id): void
-    {
-        $id = (int) $id;
-        $media = Media::findOrFail($id);
-
-        if (! $media) {
-            $this->dispatchBrowserEvent('notify', [
-                'type' => 'error',
-                'message' => __('Media not found.')
-            ]);
-            return;
-        }
-
-        try {
-            // supprime le fichier physique si existe
-            if ($media->path && Storage::disk($media->disk)->exists($media->path)) {
-                Storage::disk($media->disk)->delete($media->path);
-            }
-
-            $media->delete();
-
-            // si modal ouverte pour ce fichier, fermer
-            if ($this->selectedMedia?->id === $id) {
-                $this->closeModal();
-            }
-
-            $this->resetPage();
-
-            session()->flash('success', __("Media deleted successfully."));
-            $this->dispatchBrowserEvent('notify', [
-                'type' => 'success',
-                'message' => __("Media deleted successfully.")
-            ]);
-        } catch (\Throwable $e) {
-            report($e);
-            session()->flash('error', $e->getMessage());
-        }
-    }
 
     /**
      * Render principal

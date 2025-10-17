@@ -19,6 +19,10 @@ class MediaView
         return self::baseView().'action.show';
     }
 
+    public static function getMediaDriveView(): string
+    {
+        return self::baseView().'drive';
+    }
     private static function baseView(): string
     {
         return "admin.media.";

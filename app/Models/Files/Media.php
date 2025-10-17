@@ -72,4 +72,22 @@ class Media extends Model
             'original_name' => $file->getClientOriginalName(),
         ]);
     }
+
+    public static function syncWithDrive(string $path = 'drive')
+    {
+        $files = Storage::disk('public')->allFiles($path);
+
+        foreach ($files as $file) {
+            self::firstOrCreate([
+                'path' => $file,
+            ], [
+                'title'         => basename($file),
+                'disk'          => 'public',
+                'mime_type'     => Storage::mimeType($file),
+                'size'          => Storage::disk('public')->size($file),
+                'original_name' => basename($file),
+            ]);
+        }
+    }
+
 }

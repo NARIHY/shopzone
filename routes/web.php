@@ -22,8 +22,10 @@ Route::middleware([
     ValidateSessionWithWorkOS::class,
 ])->name('admin.')->prefix('nerkaly/')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('revalis', [DashboardController::class, 'adminDashboard'])->name('adminDashboard');
     Route::resource('product-categories', \App\Http\Controllers\Shop\ProductCategoryController::class)->names('product-categories');
     Route::resource('media', \App\Http\Controllers\Files\MediaController::class)->parameters(['media' => 'media'])->names('media');
+    Route::get('drive/manager', [\App\Http\Controllers\Files\MediaController::class, 'drive'])->name('media.drive');
     Route::get('contacts', [\App\Http\Controllers\Contact\ContacController::class, 'index'])->name('contact.index');
     Route::resource('roles', \App\Http\Controllers\Access\RoleController::class)->names('roles');
     Route::resource('groups', \App\Http\Controllers\Access\GroupController::class)->names('groups');

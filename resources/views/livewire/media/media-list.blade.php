@@ -95,24 +95,32 @@
 
                 {{-- Actions --}}
                 <td class="px-6 py-4 text-center align-middle">
-                    <div class="flex flex-col sm:flex-row justify-center gap-2">
-                        <a href="{{ route('admin.media.edit', $item )}}" class="px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700">
-                            {{ __('edit') }}
-                        </a>
+    <div class="flex flex-col sm:flex-row justify-center gap-2">
+        <!-- Edit Button -->
+        <a href="{{ route('admin.media.edit', $item) }}" 
+           class="px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700">
+            {{ __('Edit') }}
+        </a>
 
-                        <button wire:click="openMediaModal({{ $item->id }})"
-                                class="px-3 py-1 text-sm font-medium border border-blue-600 text-blue-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900">
-                            {{ __('Details') }}
-                        </button>
+        <!-- Details Button -->
+        <button wire:click="openMediaModal({{ $item->id }})"
+                class="px-3 py-1 text-sm font-medium border border-blue-600 text-blue-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900">
+            {{ __('Details') }}
+        </button>
 
-                        <button
-                            onclick="if(!confirm('{{ __('Are you sure you want to delete this file?') }}')) return event.stopImmediatePropagation();"
-                            wire:click="deleteMedia({{ $item->id }})"
-                            class="px-3 py-1 text-sm font-medium border border-red-600 text-red-600 rounded hover:bg-red-50 dark:hover:bg-red-900">
-                            {{ __('Delete') }}
-                        </button>
-                    </div>
-                </td>
+        <!-- Delete Form -->
+        <form method="POST" action="{{ route('admin.media.destroy', $item) }}"
+              class="inline-block">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                    class="px-3 py-1 text-sm font-medium border border-red-600 text-red-600 rounded hover:bg-red-50 dark:hover:bg-red-900">
+                {{ __('Delete') }}
+            </button>
+        </form>
+    </div>
+</td>
+
             </tr>
         @empty
             <tr>

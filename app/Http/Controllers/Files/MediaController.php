@@ -29,6 +29,14 @@ class MediaController extends Controller
     }
 
     /**
+     * Show the drive manager view.
+     */
+    public function drive()
+    {
+        return view(MediaView::getMediaDriveView());
+    }
+
+    /**
      * Store a newly uploaded media file.
      */
     public function store(StoreMediaRequest $request)
