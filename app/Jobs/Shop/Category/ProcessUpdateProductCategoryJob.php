@@ -4,6 +4,7 @@ namespace App\Jobs\Shop\Category;
 
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductCategory;
+use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
@@ -11,10 +12,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class ProcessUpdateProductCategoryJob implements ShouldQueue
+class ProcessUpdateProductCategoryJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $uniqueFor = 3600;
     public function __construct(
         public ProductCategory $productCategory,
         public array $data
