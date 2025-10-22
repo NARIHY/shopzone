@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Validate;
 
 class DriveManager extends Component
 {
@@ -83,7 +84,7 @@ class DriveManager extends Component
     public function handleUpload()
     {
         $this->validate([
-            'uploadingFiles.*' => 'required|file|max:131072',
+            'uploadingFiles.*' => 'required|file|max:102400', // max 100 MB par fichier
         ]);
         $total = count($this->uploadingFiles);
         if ($total === 0) return;

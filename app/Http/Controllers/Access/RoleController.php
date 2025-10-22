@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Access\Role;
 use App\Http\Requests\Access\StoreRoleRequest;
 use App\Http\Requests\Access\UpdateRoleRequest;
+use App\Jobs\Access\Role\ProcessCreateRoleJob;
+use App\Jobs\Access\Role\ProcessUpdateRoleJob;
 
 class RoleController extends Controller
 {
@@ -31,19 +33,9 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        try {
-            $data = [
-                'roleName' => $request->validated('roleName'),
-                'description' => $request->validated('description'),
-                'is_active' => $request->validated('is_active'),
-            ];
+        ProcessCreateRoleJob::dispatch($request->validated());
 
-            Role::create($data);
-            return redirect()->route('admin.roles.index')->with('success', __('Role created successfully.'));
-
-        } catch( \Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
-        }
+        return redirect()->route('admin.roles.index')->with('success', __('Queued. Waiting for confirmation to finalize role create registration.'));
     }
 
     /**
@@ -69,18 +61,8 @@ class RoleController extends Controller
      */
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        try {
-            $data = [
-                'roleName' => $request->validated('roleName'),
-                'description' => $request->validated('description', null),
-                'is_active' => $request->validated('is_active') ?? false,
-            ];
-
-            $role->update($data);
-            return redirect()->back()->with('success', __('Role updated successfully.'));
-        } catch( \Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage())->withInput();
-        }
+        ProcessUpdateRoleJob::dispatch($role, $request->validated());
+        return redirect()->back()->with('success', __('Queued. Waiting for confirmation to finalize role update registration.'));
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Access;
+namespace App\Jobs\Access\Group;
 
 use App\Models\Access\Group;
 use Illuminate\Contracts\Broadcasting\ShouldBeUnique;

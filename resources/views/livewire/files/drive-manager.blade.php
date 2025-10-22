@@ -51,20 +51,20 @@
         onclick="document.getElementById('fileInput').click()"
         ondrop="dropHandler(event)" 
         ondragover="dragOverHandler(event)">
-        <p class="text-gray-600 dark:text-gray-300">🚀 Glissez-déposez vos fichiers ici ou cliquez pour importer</p>
+        <p class="text-gray-600 dark:text-gray-300">{{__('🚀 Drag and drop your files here or click to import')}}</p>
         <input type="file" multiple wire:model="uploadingFiles" class="hidden" id="fileInput">
     </div>
 
     @if ($uploadingFiles)
         <button id="btn-upload" wire:click="handleUpload" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition">
-            Téléverser
+            {{__('Upload')}}
         </button>
     @endif
 
     <!-- PROGRESS UPLOAD (DOM contrôlé par JS via events) -->
     <div id="uploadProgressWrapper" class="hidden w-full mt-3">
         <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-            <div id="uploadProgressBar" class="h-2.5 rounded-full" style="width: 0%;"></div>
+            <div id="uploadProgressBar" class="h-2.5 rounded-full" style="width: 0%;background-color: #1e3a8a;"></div>
         </div>
         <div id="uploadProgressText" class="text-xs text-gray-600 mt-1"></div>
     </div>
