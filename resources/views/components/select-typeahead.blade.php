@@ -24,7 +24,13 @@
             this.open = false;
         }
     }" 
-    x-init="if(selected) search = options[selected]" 
+    x-init="
+    if (selected && options[selected]) {
+        search = options[selected];
+    } else if (typeof selected === 'string' && Object.keys(options).includes(selected)) {
+        search = options[selected];
+    }
+"
     class="relative w-full">
 
     <input 

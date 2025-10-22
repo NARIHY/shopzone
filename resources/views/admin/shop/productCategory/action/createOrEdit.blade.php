@@ -58,21 +58,20 @@
                 help="Provide a brief description of the product category."
             />
 
-
-
-
             {{-- Is Active Toggle --}}
             <div class="flex items-center gap-2">
+                <input type="hidden" name="is_active" value="0">
                 <input type="checkbox"
-                       name="is_active"
-                       id="is_active"
-                       value="1"
-                       {{ old('is_active', $category->is_active ?? false) ? 'checked' : '' }}
-                       class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600">
+                    name="is_active"
+                    id="is_active"
+                    value="1"
+                    {{ old('is_active', $category->is_active ?? false) ? 'checked' : '' }}
+                    class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600">
                 <label for="is_active" class="text-gray-700 dark:text-gray-200 font-medium">
                     {{ __('Active') }}
                 </label>
             </div>
+
 
             {{-- Submit Button --}}
             <div class="flex justify-end">
