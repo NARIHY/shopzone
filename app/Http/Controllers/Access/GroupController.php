@@ -6,9 +6,12 @@ use App\Common\GroupAdminView;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Access\StoreGroupRequest;
 use App\Http\Requests\Access\UpdateGroupRequest;
+use App\Jobs\Access\ProcessCreateGroupJob;
+use App\Jobs\Access\ProcessUpdateGroupJob;
 use App\Models\Access\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Process;
 
 class GroupController extends Controller
 {
@@ -17,7 +20,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return view(GroupAdminView::getListView(), );
+        return view(GroupAdminView::getListView(),);
     }
 
     /**
@@ -33,17 +36,9 @@ class GroupController extends Controller
      */
     public function store(StoreGroupRequest $request)
     {
-        try {
-            $group = Group::create($request->validated());
-
-            unset($group);
-            return redirect()->route('admin.groups.index')
-                ->with('success', 'Groupe créé avec succès.');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => $e->getMessage()])
-                ->withInput();
-        }
+        ProcessCreateGroupJob::dispatch($request->validated());
+        return redirect()->route('admin.groups.index')
+            ->with('success', 'Queued. Waiting for confirmation to finalize group create registration.');
     }
 
     /**
@@ -70,15 +65,10 @@ class GroupController extends Controller
      */
     public function update(UpdateGroupRequest $request, Group $group)
     {
-        try {
-            $group->update($request->validated());
+        ProcessUpdateGroupJob::dispatch($group, $request->validated());
 
-            return redirect()->back()
-                ->with('success', 'Groupe mis à jour avec succès.');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error' ,$e->getMessage());
-        }
+        return redirect()->back()
+            ->with('success', 'Queued. Waiting for confirmation to finalize group update registration.');
     }
 
     /**
@@ -93,7 +83,7 @@ class GroupController extends Controller
                 ->with('success', 'Groupe supprimé avec succès.');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error' , $e->getMessage());
+                ->with('error', $e->getMessage());
         }
     }
 }

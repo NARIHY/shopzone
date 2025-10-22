@@ -22,6 +22,10 @@ class ProcessUpdateProductCategoryJob implements ShouldQueue, ShouldBeUnique
         public array $data
     ) {}
 
+    public function uniqueId(): string
+    {
+        return $this->productCategory->id;
+    }
     public function handle(): void
     {
         try {
