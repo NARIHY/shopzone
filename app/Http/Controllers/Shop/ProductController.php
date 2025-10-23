@@ -50,7 +50,7 @@ class ProductController extends Controller
 
             return redirect()
                 ->route('admin.products.index')
-                ->with('success', 'Product successfully created.');
+                ->with('success', 'Product creation queued. Waiting for processing to complete.');
         } catch (Throwable $e) {
             report($e);
             return back()->withInput()->with('error', 'Error: ' . $e->getMessage());
@@ -82,7 +82,7 @@ class ProductController extends Controller
 
             return redirect()
                 ->route('admin.products.index')
-                ->with('success', 'Product successfully updated.');
+                ->with('success', 'Product update is in progress. Please wait for confirmation once completed.');
         } catch (Throwable $e) {
             report($e);
             return back()->withInput()->with('error', 'Error: ' . $e->getMessage());

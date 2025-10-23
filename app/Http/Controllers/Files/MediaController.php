@@ -94,7 +94,7 @@ class MediaController extends Controller
 
                 return redirect()
                     ->route('admin.media.index')
-                    ->with('success', 'Media update queued and will be processed shortly.');
+                    ->with('success', 'Media update queued. Waiting for processing to finalize the update.');
             } else {
                 // no file: update title synchronously (fast)
                 $media->update([
