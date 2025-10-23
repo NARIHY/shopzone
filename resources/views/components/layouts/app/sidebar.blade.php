@@ -22,7 +22,9 @@
                     <flux:navlist.item icon="folder" :href="route('admin.media.drive')" :current="request()->routeIs('admin.media.drive')" wire:navigate> {{ __('Drive') }} </flux:navlist.item>
                     <flux:navlist.item icon="information-circle" :href="route('admin.contact.index')" :current="request()->routeIs('admin.contact.index')" wire:navigate> {{ __('Contacts') }} </flux:navlist.item>
                     <flux:navlist.item icon="user" :href="route('admin.roles.index')" :current="request()->routeIs('admin.roles.index')" wire:navigate> {{ __('Roles') }} </flux:navlist.item>
-                    <flux:navlist.item icon="user-group" :href="route('admin.groups.index')" :current="request()->routeIs('admin.groups.index')" wire:navigate> {{ __('Groups Users') }} </flux:navlist.item>
+                    <flux:navlist.item icon="signal" :href="route('admin.groups.index')" :current="request()->routeIs('admin.groups.index')" wire:navigate> {{ __('Groups Users') }} </flux:navlist.item>
+                    <flux:navlist.item icon="user-group" :href="route('admin.groupUsers.index')" :current="request()->routeIs('admin.groupUsers.index')" wire:navigate> {{ __('User in a group') }} </flux:navlist.item>
+                    
                     {{-- SIDE BAR ITEMS --}}
                 </flux:navlist.group>
             </flux:navlist>
