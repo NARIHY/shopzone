@@ -6,6 +6,8 @@ use App\Common\ProductView;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\StoreProductRequest;
 use App\Http\Requests\Shop\UpdateProductRequest;
+use App\Jobs\Shop\Product\ProcessCreateProductJob;
+use App\Jobs\Shop\Product\ProcessUpdateProductJob;
 use App\Models\Files\Media;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductCategory;
@@ -33,47 +35,25 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request): RedirectResponse
     {
         $validatedData = $request->validated();
-
         $validatedData['price'] = $this->normalizePrice($request->input('price_raw', $validatedData['price'] ?? 0));
         $validatedData['discount_price'] = $this->normalizePrice($request->input('discount_price_raw', $validatedData['discount_price'] ?? null));
 
-        if ($this->isPriceTooHigh($validatedData['price'])) {
-            return back()->withInput()->with('error', 'The price must not exceed 99,999,999.99.');
-        }
-
-        if ($this->isPriceTooHigh($validatedData['discount_price'] ?? null)) {
-            return back()->withInput()->with('error', 'The discount price must not exceed 99,999,999.99.');
-        }
-
-        if ($this->isInvalidDiscount($validatedData)) {
-            return back()->withInput()->with('error', 'The discount price must be lower than the regular price.');
-        }
-
-        if ($this->isInvalidStock($validatedData['stock'] ?? null)) {
-            return back()->withInput()->with('error', 'Stock must be zero or greater.');
+        if ($this->isInvalidDiscount($validatedData) || $this->isInvalidStock($validatedData['stock'] ?? null)) {
+            return back()->withInput()->with('error', 'Invalid data provided.');
         }
 
         $mediaInput = $validatedData['media'] ?? [];
         $decodedMediaIds = json_decode($mediaInput[0] ?? '[]', true);
 
         try {
-            DB::transaction(function () use ($validatedData, $decodedMediaIds) {
-                $validatedData['slug'] = $this->generateUniqueSlug($validatedData['slug'] ?? $validatedData['name']);
-                $validatedData['sku'] = $this->generateUniqueSku($validatedData['sku'] ?? null);
-
-                $newProduct = Product::create($validatedData);
-
-                foreach ($decodedMediaIds as $mediaId) {
-                    $newProduct->media()->attach($mediaId);
-                }
-            });
+            ProcessCreateProductJob::dispatchSync($validatedData, $decodedMediaIds);
 
             return redirect()
                 ->route('admin.products.index')
                 ->with('success', 'Product successfully created.');
-        } catch (Throwable $exception) {
-            report($exception);
-            return back()->withInput()->with('error', 'An error occurred: ' . $exception->getMessage());
+        } catch (Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Error: ' . $e->getMessage());
         }
     }
 
@@ -90,35 +70,22 @@ class ProductController extends Controller
     {
         $validatedData = $request->validated();
 
-        if ($this->isInvalidDiscount($validatedData)) {
-            return back()->withInput()->with('error', 'The discount price must be lower than the regular price.');
-        }
-
-        if ($this->isInvalidStock($validatedData['stock'] ?? null)) {
-            return back()->withInput()->with('error', 'Stock must be zero or greater.');
+        if ($this->isInvalidDiscount($validatedData) || $this->isInvalidStock($validatedData['stock'] ?? null)) {
+            return back()->withInput()->with('error', 'Invalid data provided.');
         }
 
         $mediaInput = $validatedData['media'] ?? [];
         $mediaIds = array_filter(array_map('intval', json_decode($mediaInput[0] ?? '[]', true)));
 
         try {
-            DB::transaction(function () use ($product, $validatedData, $mediaIds) {
-                $validatedData['slug'] = $this->generateUniqueSlug($validatedData['slug'] ?? $validatedData['name'], $product->id);
-                $validatedData['sku'] = $this->generateUniqueSku($validatedData['sku'] ?? null, $product->id);
-
-                $product->update($validatedData);
-
-                if (!empty($mediaIds) && is_array($mediaIds)) {
-                    $product->media()->sync($mediaIds);
-                }
-            });
+            ProcessUpdateProductJob::dispatchSync($product, $validatedData, $mediaIds);
 
             return redirect()
                 ->route('admin.products.index')
                 ->with('success', 'Product successfully updated.');
-        } catch (Throwable $exception) {
-            report($exception);
-            return back()->withInput()->with('error', 'An error occurred: ' . $exception->getMessage());
+        } catch (Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Error: ' . $e->getMessage());
         }
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public;
 use App\Common\CommonPublicView;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contact\ContactRequest;
+use App\Jobs\Contact\ProcesseCreateContactJob;
 use App\Models\Contact\Contact;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -27,15 +28,9 @@ class PublicController extends Controller
     }
 
     public function storeContact(ContactRequest $contactRequest)
-    {        // Store in database
-        $contact = Contact::create($contactRequest->validated());
-
-        if($contactRequest->validated('email')){
-            $contact->notify(new \App\Notifications\Public\AnswerContactSendNotification($contact));
-        }
+    {       
+        ProcesseCreateContactJob::dispatch($contactRequest->validated());
         // Redirect with success message
         return redirect()->back()->with('success', 'Your message has been sent successfully!');
     }
-
-
 }
