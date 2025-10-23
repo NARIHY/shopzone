@@ -15,6 +15,16 @@ class MvolaAPI
     private string $accessToken;
     private string $partnerName;
 
+    public string $currency = 'Ar';
+    private string $version = '1.0';
+
+    private string $userLanguage = 'mg';
+    private string $cacheControl = 'no-cache';
+
+    private string $userAccountIdentifierPrefix = 'msisdn;';
+
+    private string $creditPartnerPhoneNumber;
+
     public function __construct()
     {
         $this->apiKey = getenv('MVOLA_API_KEY') ?: '';
@@ -22,6 +32,7 @@ class MvolaAPI
         $this->accessToken = getenv('MVOLA_ACCESS_TOKEN') ?: '';
         $this->partnerName = getenv('MVOLA_PARTNER_NAME') ?: 'TESTPARTNER';
         $this->baseUrl = rtrim("https://devapi.mvola.mg/mvola/mm/transactions/type/merchantpay/1.0.0/", '/');
+        $this->creditPartnerPhoneNumber = getenv('MVOLA_CREDIT_PARTNER_PHONE_NUMBER') ?: '';
     }
 
     public function __destruct()
@@ -40,33 +51,33 @@ class MvolaAPI
     /**
      * 💰 Crée un paiement marchand MVola (identique à la version Python)
      */
-    public function createPayment(string $amount, string $currency, string $senderMsisdn, string $receiverMsisdn, string $description = 'Test MVola'): array
+    public function createPayment(string $amount, string $senderMsisdn, string $description = 'Test MVola'): array
     {
         $transactionId = Uuid::uuid4()->toString();
 
         // 🧾 Corps de la requête
         $payload = [
-            'currency' => $currency,
+            'currency' => $this->currency,
             'amount' => $amount,
             'requestingOrganisationTransactionReference' => $transactionId,
             'requestDate' => $this->createValidISODATE(),
             'descriptionText' => $description,
             'originalTransactionReference' => $transactionId,
             'debitParty' => [['key' => 'msisdn', 'value' => $senderMsisdn]],
-            'creditParty' => [['key' => 'msisdn', 'value' => $receiverMsisdn]],
+            'creditParty' => [['key' => 'msisdn', 'value' => $this->creditPartnerPhoneNumber]],
             'metadata' => [['key' => 'partnerName', 'value' => $this->partnerName]],
         ];
 
         // 📦 En-têtes HTTP (strictement alignés avec le Python)
         $headers = [
-            'Version' => '1.0',
+            'Version' => $this->version,
             'X-CorrelationID' => Uuid::uuid4()->toString(),
-            'UserLanguage' => 'mg',
-            'UserAccountIdentifier' => "msisdn;{$receiverMsisdn}",
+            'UserLanguage' => $this->userLanguage,
+            'UserAccountIdentifier' => "msisdn;{$this->creditPartnerPhoneNumber}",
             'partnerName' => $this->partnerName,
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer {$this->accessToken}",
-            'Cache-Control' => 'no-cache',
+            'Cache-Control' => $this->cacheControl,
         ];
 
         // 🚀 Envoi de la requête
