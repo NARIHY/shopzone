@@ -159,7 +159,7 @@
                     <div class="w-full flex justify-center">
                         <video controls class="max-h-64 rounded">
                             <source src="{{ $selectedMedia->url() }}" type="{{ $selectedMedia->mime_type }}">
-                            {{_('Your browser does not support video playback.')}}
+                            {{__('Your browser does not support video playback.')}}
                         </video>
                     </div>
                     @else

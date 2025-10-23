@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Files\Media;
 use App\Http\Requests\Files\StoreMediaRequest;
 use App\Http\Requests\Files\UpdateMediaRequest;
+use App\Jobs\Files\ProcessCreateMediaJob;
+use App\Jobs\Files\ProcessUpdateMediaJob;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -42,22 +44,17 @@ class MediaController extends Controller
     public function store(StoreMediaRequest $request)
     {
         try {
-            $file = $request->file('file'); 
-            $mediaPath = 'media'. DIRECTORY_SEPARATOR. date('D-M-Y').DIRECTORY_SEPARATOR.$request->validated('title'); // Dossier où les fichiers seront stockés
-            $path = $file->store($mediaPath, 'public');
+            $file = $request->file('file');
+            // stocker localement en temp (disk 'local') pour éviter problèmes d'import immédiat
+            $localPath = $file->store('uploads/temp', 'local'); // exemple: uploads/temp/xxxxx
 
-            Media::create([
-                'title'         => $request->title,
-                'path'          => $path,
-                'disk'          => 'public',
-                'mime_type'     => $file->getMimeType(),
-                'size'          => $file->getSize(),
-                'original_name' => $file->getClientOriginalName(),
-            ]);
+            // dispatch job qui va copier vers 'public' et créer l'enregistrement DB
+            $userId = Auth::id();
+            ProcessCreateMediaJob::dispatch($localPath, $request->validated('title'), $userId); // optionnel: mettre sur queue 'media'
 
             return redirect()
                 ->route('admin.media.index')
-                ->with('success', 'File uploaded successfully.');
+                ->with('success', 'File uploaded and queued for processing.');
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -89,32 +86,25 @@ class MediaController extends Controller
     {
         try {
             if ($request->hasFile('file')) {
-                // Delete old file if it exists
-                if ($media->path && Storage::disk($media->disk)->exists($media->path)) {
-                    Storage::disk($media->disk)->delete($media->path);
-                }
+                // store new uploaded file first on local disk
+                $localPath = $request->file('file')->store('uploads/temp', 'local');
 
-                $file = $request->file('file');
-                $path = $file->store('', 'public');
+                // dispatch job to handle replacing the file and updating DB
+                ProcessUpdateMediaJob::dispatch($media->id, $request->validated('title'), $localPath);
 
-                $media->update([
-                    'title'         => $request->title,
-                    'path'          => $path,
-                    'disk'          => 'public',
-                    'mime_type'     => $file->getMimeType(),
-                    'size'          => $file->getSize(),
-                    'original_name' => $file->getClientOriginalName(),
-                ]);
+                return redirect()
+                    ->route('admin.media.index')
+                    ->with('success', 'Media update queued and will be processed shortly.');
             } else {
-                // update juste le titre si pas de nouveau fichier
+                // no file: update title synchronously (fast)
                 $media->update([
-                    'title' => $request->title,
+                    'title' => $request->validated('title'),
                 ]);
-            }
 
-            return redirect()
-                ->route('admin.media.index')
-                ->with('success', 'Media updated successfully.');
+                return redirect()
+                    ->route('admin.media.index')
+                    ->with('success', 'Media updated successfully.');
+            }
         } catch (\Exception $e) {
             return redirect()
                 ->back()
