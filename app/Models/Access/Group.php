@@ -36,4 +36,9 @@ class Group extends Model
     {
         return $this->belongsToMany(\App\Models\User::class, 'group_user');
     }
+
+    public function hasPermission(string $permissionName): bool
+    {
+        return $this->role && $this->role->hasPermission($permissionName);
+    }
 }

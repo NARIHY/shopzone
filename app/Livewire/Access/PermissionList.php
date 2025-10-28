@@ -2,18 +2,18 @@
 
 namespace App\Livewire\Access;
 
-use App\Models\Access\Role;
+use App\Models\Access\Permission;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class RoleList extends Component
+class PermissionList extends Component
 {
     use WithPagination;
 
     public string $search = '';
     public bool $showModal = false;
-    public ?Role $selectedRole = null;
+    public ?Permission $selectedPermission = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -21,7 +21,7 @@ class RoleList extends Component
     ];
 
     protected $listeners = [
-        'showRoleModal' => 'openRoleModal',
+        'showPermissionModal' => 'openPermissionModal',
     ];
 
     /**
@@ -36,18 +36,19 @@ class RoleList extends Component
     {
         $this->resetPage();
     }
+
     /**
-     * Ouvre la modal pour un rôle donné
+     * Ouvre la modal pour une permission donnée
      */
-    public function openRoleModal($id): void
+    public function openPermissionModal($id): void
     {
         $id = (int) $id;
-        $this->selectedRole = Role::findOrFail($id);
+        $this->selectedPermission = Permission::find($id);
 
-        if (! $this->selectedRole) {
+        if (! $this->selectedPermission) {
             $this->dispatchBrowserEvent('notify', [
                 'type' => 'error',
-                'message' => __('Role not found.')
+                'message' => __('Permission not found.')
             ]);
             return;
         }
@@ -61,38 +62,37 @@ class RoleList extends Component
     public function closeModal(): void
     {
         $this->showModal = false;
-        $this->selectedRole = null;
+        $this->selectedPermission = null;
     }
 
     /**
-     * Requête optimisée + cache facultatif.
+     * Requête optimisée + cache facultatif
      */
-    private function getRoles()
+    private function getPermissions()
     {
-        $cacheKey = 'roles_' . md5($this->search);
+        $cacheKey = 'permissions_' . md5($this->search);
 
         return Cache::remember($cacheKey, 60, function () {
-            return Role::select('id', 'roleName', 'description', 'is_active', 'created_at')
+            return Permission::select('id', 'name', 'description', 'is_active', 'created_at')
                 ->when($this->search, function ($q) {
                     $search = "%{$this->search}%";
                     $q->where(function ($sub) use ($search) {
-                        $sub->where('roleName', 'like', $search)
+                        $sub->where('name', 'like', $search)
                             ->orWhere('description', 'like', $search);
                     });
                 })
-                ->with('groups')
                 ->latest('id')
                 ->paginate(20);
         });
     }
 
     /**
-     * Rendu du composant.
+     * Rendu du composant
      */
     public function render()
     {
-        return view('livewire.access.role-list', [
-            'roles' => $this->getRoles(),
+        return view('livewire.access.permission-list', [
+            'permissions' => $this->getPermissions(),
         ]);
     }
 }

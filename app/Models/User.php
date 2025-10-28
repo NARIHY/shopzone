@@ -77,4 +77,24 @@ class User extends Authenticatable
         // Add other drivers as needed
         return null;
     }
+
+    public function roles()
+    {
+        return $this->hasManyThrough(
+            \App\Models\Access\Role::class,
+            \App\Models\Access\Group::class,
+            'id',         // clé locale du groupe
+            'id',         // clé locale du rôle
+            'id',         // clé locale de l'utilisateur
+            'role_id'     // clé étrangère dans Group
+        );
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return $this->roles
+            ->flatMap(fn($role) => $role->permissions)
+            ->pluck('name')
+            ->contains($permission);
+    }
 }
