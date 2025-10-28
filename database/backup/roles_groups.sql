@@ -1,13 +1,13 @@
-INSERT INTO roles (roleName, description, is_active, created_at, updated_at) VALUES
-('visitor', 'User with minimal access — can only browse public content.', true, NOW(), NOW()),
-('customer', 'Registered user who can purchase or interact with products and services.', true, NOW(), NOW()),
-('seller', 'User allowed to list and manage their own products or services.', true, NOW(), NOW()),
-('public', 'Generic role for unauthenticated or public users.', true, NOW(), NOW()),
-('advertiser', 'User or company responsible for managing advertisements or campaigns.', true, NOW(), NOW()),
-('moderator', 'User responsible for overseeing content and managing community interactions.', true, NOW(), NOW()),
-('administrator', 'User with management permissions over most system functions.', true, NOW(), NOW()),
-('owner', 'Business or property owner with specific management rights.', true, NOW(), NOW()),
-('super-admin', 'Highest-level role with full access to all system modules and configurations.', true, NOW(), NOW());
+INSERT INTO roles (id, roleName, description, is_active, created_at, updated_at) VALUES
+(1,'visitor', 'User with minimal access — can only browse public content.', true, NOW(), NOW()),
+(2,'customer', 'Registered user who can purchase or interact with products and services.', true, NOW(), NOW()),
+(3,'seller', 'User allowed to list and manage their own products or services.', true, NOW(), NOW()),
+(4,'public', 'Generic role for unauthenticated or public users.', true, NOW(), NOW()),
+(5,'advertiser', 'User or company responsible for managing advertisements or campaigns.', true, NOW(), NOW()),
+(6,'moderator', 'User responsible for overseeing content and managing community interactions.', true, NOW(), NOW()),
+(7,'administrator', 'User with management permissions over most system functions.', true, NOW(), NOW()),
+(8,'owner', 'Business or property owner with specific management rights.', true, NOW(), NOW()),
+(9,'super-admin', 'Highest-level role with full access to all system modules and configurations.', true, NOW(), NOW());
 
 INSERT INTO groups (name, description, role_id, is_active, created_at, updated_at) VALUES
 ('General Users', 'Group for casual visitors and new users of the platform.', 1, true, NOW(), NOW()),
