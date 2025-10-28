@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Access;
 use App\Common\RoleAdminView;
 use App\Http\Controllers\Controller;
 use App\Models\Access\Role;
-use App\Http\Requests\Access\StoreRoleRequest;
-use App\Http\Requests\Access\UpdateRoleRequest;
+use App\Http\Requests\Access\Group\StoreRoleRequest;
+use App\Http\Requests\Access\Group\UpdateRoleRequest;
 use App\Jobs\Access\Role\ProcessCreateRoleJob;
 use App\Jobs\Access\Role\ProcessUpdateRoleJob;
 

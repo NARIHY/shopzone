@@ -7,32 +7,56 @@
     </div>
 
     {{-- Search --}}
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-        <div class="relative w-full sm:w-96">
-            <input
-                type="text"
-                wire:model.defer="search"
-                placeholder="{{ __('Search group or user...') }}"
-                class="border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 w-full pr-32
-                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                       bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition"
-            >
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
 
-            <div wire:loading wire:target="search" class="absolute inset-y-0 right-16 flex items-center pr-3">
-                <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                </svg>
-            </div>
+    <!-- Search Bar -->
+    <div class="relative flex-1 max-w-lg">
+        <input
+            type="text"
+            wire:model.defer="search"
+            placeholder="{{ __('Search group or user...') }}"
+            class="w-full rounded-xl border border-gray-300 dark:border-gray-700 
+                   bg-white dark:bg-gray-900 px-4 py-2.5 pr-28
+                   text-sm text-gray-900 dark:text-gray-100
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                   placeholder:text-gray-400 dark:placeholder:text-gray-500 transition"
+        >
 
-            <button
-                wire:click="applySearch"
-                class="absolute inset-y-0 right-0 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r-md text-sm font-medium transition"
-            >
-                {{ __('Search') }}
-            </button>
+        <!-- Spinner -->
+        <div wire:loading wire:target="search" class="absolute inset-y-0 right-20 flex items-center pr-3">
+            <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
         </div>
+
+        <!-- Search Button -->
+        <button
+            wire:click="applySearch"
+            class="absolute inset-y-0 right-0 bg-blue-600 hover:bg-blue-700 
+                   text-white text-sm font-medium rounded-r-xl px-4 transition flex items-center justify-center"
+        >
+            <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            {{ __('Search') }}
+        </button>
     </div>
+
+    <!-- Add user to group button -->
+    <a href="{{ route('admin.groupUsers.create') }}"
+       class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 
+              text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm 
+              transition whitespace-nowrap">
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v16m8-8H4" />
+        </svg>
+        {{ __('Add user in a group') }}
+    </a>
+</div>
+
 
     {{-- Table --}}
     <x-table.card 
@@ -59,7 +83,7 @@
                 </td>
 
                 <td class="px-6 py-4 text-sm text-center">
-                    {{ $group->role->roleName ?? 'N/A' }}
+                    {{ $group->roles->roleName ?? 'N/A' }}
                 </td>
 
                 <td class="px-6 py-4 text-sm text-center">

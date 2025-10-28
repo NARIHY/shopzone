@@ -33,10 +33,10 @@ Route::middleware([
     Route::resource('products', \App\Http\Controllers\Shop\ProductController::class)->names('products');
     Route::resource('permissions', \App\Http\Controllers\Access\PermissionController::class)->names('permissions');
 
-
     Route::get('utils/verify-user-groups-to-attache-client/v1/userId:{userId}-part56', [\App\Http\Controllers\Access\UtilsUsersController::class, 'verifyUserGroupsToAttacheCLient'])->name('utils.verifyUserGroupsToAttacheClient');
 
-    Route::prefix('workingos/manage-users/group-users/')->name('groupUsers.')->group(function () {
+    Route::prefix('workingos/manage-users/group-users/')->group(function () {
+        Route::resource('userGroups', \App\Http\Controllers\Access\GroupUserController::class)->names('groupUsers');
         Route::get('', [\App\Http\Controllers\Access\GroupUserController::class, 'index'])->name('index');
     });
 });

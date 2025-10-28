@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Access;
+namespace App\Http\Requests\Access\Group;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRoleRequest extends FormRequest
+class UpdateRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class StoreRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'roleName' => 'required|string|max:255|unique:roles,roleName',
+            'roleName' => 'required|string|max:255|unique:roles,roleName,' . $this->role->id,
             'description' => 'nullable|string',
             'is_active' => 'boolean',
         ];

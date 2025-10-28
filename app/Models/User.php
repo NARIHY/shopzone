@@ -80,15 +80,22 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->hasManyThrough(
+        return $this->belongsToMany(
             \App\Models\Access\Role::class,
-            \App\Models\Access\Group::class,
-            'id',         // clé locale du groupe
-            'id',         // clé locale du rôle
-            'id',         // clé locale de l'utilisateur
-            'role_id'     // clé étrangère dans Group
-        );
+            'group_role',      // table pivot entre groups et roles
+            'group_id',        // clé dans la table pivot pour le group
+            'role_id'          // clé dans la table pivot pour le role
+        )->whereIn('group_id', $this->groups->pluck('id'));
     }
+
+
+    public function getAllRolesAttribute()
+    {
+        return \App\Models\Access\Role::whereHas('groups.users', function ($query) {
+            $query->where('users.id', $this->id);
+        })->get();
+    }
+
 
     public function hasPermission(string $permission): bool
     {

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Access;
 
 use App\Common\GroupAdminView;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Access\StoreGroupRequest;
-use App\Http\Requests\Access\UpdateGroupRequest;
+use App\Http\Requests\Access\Group\StoreGroupRequest;
+use App\Http\Requests\Access\Group\UpdateGroupRequest;
 use App\Jobs\Access\Group\ProcessCreateGroupJob;
 use App\Jobs\Access\Group\ProcessUpdateGroupJob;
 use App\Models\Access\Group;

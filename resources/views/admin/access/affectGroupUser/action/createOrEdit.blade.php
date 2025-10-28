@@ -32,7 +32,7 @@
         </h1>
 
         {{-- Form --}}
-        <form action="{{ isset($affectUserToGroup) ? route('', $affectUserToGroup->id) : route('') }}"
+        <form action="{{ isset($affectUserToGroup) ? route('admin.groupUsers.update', $affectUserToGroup->id) : route('admin.groupUsers.store') }}"
               method="POST"
               class="flex flex-col gap-4">
 
@@ -41,7 +41,29 @@
                 @method('PUT')
             @endif
 
-            
+            {{-- groups --}}
+            <div class="flex items-center gap-2">
+                <x-select-typeahead 
+                    name="group_id" 
+                    label="{{ __('Assign Role') }}" 
+                    :options="$groupsInput->pluck('name', 'id')->toArray()" 
+                    :selected="old('group_id', $affectUserToGroup->group_id ?? null)" 
+                    placeholder="{{ __('Select a group...') }}"
+                    help="Select group to assign user to this group."
+                />
+            </div>
+
+            {{-- Users groups --}}
+            <div class="flex items-center gap-2">
+                <x-select-typeahead 
+                    name="user_id" 
+                    label="{{ __('Assign Role') }}" 
+                    :options="$usersInput->pluck('name', 'id')->toArray()" 
+                    :selected="old('user_id', $affectUserToGroup->user_id ?? null)" 
+                    placeholder="{{ __('Select a user...') }}"
+                    help="Select a user to assign this user to this group chosen if above."
+                />
+            </div>
 
 
             {{-- Submit Button --}}
@@ -50,7 +72,7 @@
                         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded
                                transition-colors duration-200
                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                    {{ isset($affectUserToGroup) ? __('Update affect User to Group') : __('Create affect User to Group') }}
+                    {{ isset($affectUserToGroup) ? __('Modify User to Group') : __('Affect User to Group') }}
                 </button>
             </div>
 

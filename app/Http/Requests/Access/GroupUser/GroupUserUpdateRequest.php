@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Access;
+namespace App\Http\Requests\Access\GroupUser;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateGroupRequest extends FormRequest
+class GroupUserUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,8 @@ class UpdateGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:groups,name,' . $this->group->id],
-            'description' => ['nullable', 'string'],
-            'role_id' => ['required', 'exists:roles,id'],
-            'is_active' => ['boolean','nullable'],
+            'group_id' => 'required|exists:groups,id',
+            'user_id' => 'required|exists:users,id',
         ];
     }
 }

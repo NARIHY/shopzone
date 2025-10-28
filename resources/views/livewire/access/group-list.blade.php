@@ -73,7 +73,7 @@
                     </div>
                 </td>
                 <td class="px-6 py-4 text-sm text-center align-middle">
-                    {{ $item->role->roleName ?? 'N/A' }}
+                    {{ $item->roles->roleName ?? 'N/A' }}
                 </td>
 
                 {{-- Actions --}}
@@ -133,7 +133,7 @@
                     <p><strong>
                         {{ __('Roles') }}: 
                         </strong>
-                        {{ $selectedGroup->role->roleName ?? 'N/A' }}
+                        {{ $selectedGroup->roles->roleName ?? 'N/A' }}
                     </p>
                     <p><strong>{{ __('Created at') }}: </strong> {{ $selectedGroup->created_at?->format('d/m/Y H:i') }}</p>
                 </div>

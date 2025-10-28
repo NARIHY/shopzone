@@ -83,7 +83,7 @@ class GroupList extends Component
         $cache = Cache::get('groups_' . md5($this->search));
 
         return Cache::remember('groups_' . md5($this->search), 60, function () {
-            return Group::with(['role:id,roleName', 'users:id,name'])
+            return Group::with(['roles:id,roleName', 'users:id,name'])
                 ->select('id', 'name', 'description', 'role_id', 'is_active', 'created_at')
                 ->when($this->search, function ($q) {
                     $search = "%{$this->search}%";

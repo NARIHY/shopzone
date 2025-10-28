@@ -24,9 +24,9 @@ class Group extends Model
     /**
      * Un groupe a un rôle.
      */
-    public function role()
+    public function roles()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     /**

@@ -22,7 +22,7 @@ class Role extends Model
 
     public function groups()
     {
-        return $this->hasMany(Group::class);
+        return $this->hasMany(Group::class,'role_id');
     }
 
     public function permissions()

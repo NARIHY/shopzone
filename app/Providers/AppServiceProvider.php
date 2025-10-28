@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Access\Group;
 use App\Models\Access\Role;
+use App\Models\User;
 use App\Services\CachedData;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
@@ -31,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
             return Role::with('groups:id,name')->get(); // limiter les colonnes si possible
         });
 
+        $groupsInput = Cache::remember('groups_input', 600, function () {
+            return Group::with('roles:id,roleName','users:id,name')->get();
+        });
+
         $productCategoriesInput = Cache::remember('product_categories_input', 600, function () {
             return \App\Models\Shop\ProductCategory::with('products:id,name')->get();
         });
@@ -39,10 +45,16 @@ class AppServiceProvider extends ServiceProvider
             return \App\Models\Files\Media::with('products:id,name')->get();
         });
 
+        $usersInput = Cache::remember('users_input', 600, function() {
+            return User::with(['groups.roles'])->get();
+        });
+
         $view->with([
             'rolesInput' => $rolesInput,
             'productCategoriesInput' => $productCategoriesInput,
             'mediaInput' => $mediaInput,
+            'groupsInput' => $groupsInput,
+            'usersInput' => $usersInput
         ]);
     });
 }
