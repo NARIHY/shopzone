@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Access;
+namespace App\Http\Controllers\Access\Role;
 
 use App\Common\RoleAdminView;
 use App\Http\Controllers\Controller;

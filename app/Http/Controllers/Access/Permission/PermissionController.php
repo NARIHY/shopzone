@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Access;
+namespace App\Http\Controllers\Access\Permission;
 
 use App\Common\PermissionView;
 use App\Http\Controllers\Controller;

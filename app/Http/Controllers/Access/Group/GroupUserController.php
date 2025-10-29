@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Access;
+namespace App\Http\Controllers\Access\Group;
 
 use App\Common\AffectGroupUserView;
 use App\Http\Controllers\Controller;
