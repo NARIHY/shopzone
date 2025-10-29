@@ -7,16 +7,18 @@
     </div>
 
     {{-- Search and Actions --}}
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
     <div class="relative w-full sm:w-96">
         <!-- Input with embedded button -->
         <input
             type="text"
             wire:model.defer="search"
             placeholder="{{ __('Search product...') }}"
-            class="border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 w-full pr-32
+            class="w-full rounded-xl border border-gray-300 dark:border-gray-700 
+                   bg-white dark:bg-gray-900 px-4 py-2.5 pr-28
+                   text-sm text-gray-900 dark:text-gray-100
                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                   bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition"
+                   placeholder:text-gray-400 dark:placeholder:text-gray-500 transition"
         >
 
         <!-- Loader -->
@@ -30,8 +32,13 @@
         <!-- Search Button inside input -->
         <button
             wire:click="applySearch"
-            class="absolute inset-y-0 right-0 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r-md text-sm font-medium transition"
+            class="absolute inset-y-0 right-0 bg-blue-600 hover:bg-blue-700 
+                   text-white text-sm font-medium rounded-r-xl px-4 transition flex items-center justify-center"
         >
+        <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
             {{ __('Search') }}
         </button>
     </div>

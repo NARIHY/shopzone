@@ -10,7 +10,8 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
 
     <!-- Search Bar -->
-    <div class="relative flex-1 max-w-lg">
+    <div class="relative w-full sm:w-96">
+        
         <input
             type="text"
             wire:model.defer="search"
