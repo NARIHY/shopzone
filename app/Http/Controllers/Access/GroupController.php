@@ -37,6 +37,7 @@ class GroupController extends Controller
     public function store(StoreGroupRequest $request)
     {
         ProcessCreateGroupJob::dispatch($request->validated());
+        unset($request);
         return redirect()->route('admin.groups.index')
             ->with('success', 'Queued. Waiting for confirmation to finalize group create registration.');
     }
@@ -66,7 +67,7 @@ class GroupController extends Controller
     public function update(UpdateGroupRequest $request, Group $group)
     {
         ProcessUpdateGroupJob::dispatch($group, $request->validated());
-
+        unset($group, $request);
         return redirect()->back()
             ->with('success', 'Queued. Waiting for confirmation to finalize group update registration.');
     }

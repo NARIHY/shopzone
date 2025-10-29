@@ -4,44 +4,100 @@ namespace App\Http\Controllers\Access;
 
 use App\Common\PermissionView;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Access\Permission\PermissionStoreRequest;
+use App\Http\Requests\Access\Permission\PermissionUpdateRequest;
 use App\Models\Access\Permission;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class PermissionController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the permissions.
+     */
+    public function index(): View
     {
-        // Logic to list permissions
         return view(PermissionView::getPermissionListView());
     }
 
+    /**
+     * Show the form for creating a new permission.
+     */
+    public function create(): View
+    {
+        return view(PermissionView::getPermissionCreateOrEditView());
+    }
+
+    /**
+     * Store a newly created permission in storage.
+     */
+    public function store(PermissionStoreRequest $request): RedirectResponse
+    {
+        try {
+            Permission::create($request->validated());
+            return redirect()
+                ->route('admin.permissions.index')
+                ->with('success', 'Permission created successfully.');
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error saving permission: ' . $e->getMessage());
+        } finally {
+            unset($request);
+        }
+    }
+
+    /**
+     * Display the specified permission.
+     */
     public function show(Permission $permission)
     {
-        // Logic to show a specific permission
+        //Nothing to do here
     }
 
-    public function create()
+    /**
+     * Show the form for editing the specified permission.
+     */
+    public function edit(Permission $permission): View
     {
-        // Logic to show form for creating a permission
+        return view(PermissionView::getPermissionCreateOrEditView(), compact('permission'));
     }
 
-    public function store(Request $request)
+    /**
+     * Update the specified permission in storage.
+     */
+    public function update(PermissionUpdateRequest $request, Permission $permission): RedirectResponse
     {
-        // Logic to store a new permission
+        try {
+            $permission->update($request->validated());
+            return redirect()
+                ->back()
+                ->with('success', 'Permission updated successfully.');
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error updating permission: ' . $e->getMessage());
+        } finally {
+            unset($request, $permission);
+        }
     }
 
-    public function edit(Permission $permission)
+    /**
+     * Remove the specified permission from storage.
+     */
+    public function destroy(Permission $permission): RedirectResponse
     {
-        // Logic to show form for editing a permission
-    }
-
-    public function update(Request $request, Permission $permission)
-    {
-        // Logic to update a specific permission
-    }
-
-    public function destroy(Permission $permission)
-    {
-        // Logic to delete a specific permission
+        try {
+            $permission->delete();
+            return redirect()
+                ->back()
+                ->with('success', 'Permission deleted successfully.');
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error deleting permission: ' . $e->getMessage());
+        } finally {
+            unset($permission);
+        }
     }
 }
