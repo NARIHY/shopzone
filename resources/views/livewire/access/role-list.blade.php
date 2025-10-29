@@ -88,6 +88,10 @@
                         <a href="{{ route('admin.roles.edit', $item )}}" class="px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700">
                             {{ __('edit') }}
                         </a>
+
+                        <a href="{{ route('admin.roleToPermission.index', $item )}}" class="px-3 py-1 text-sm font-medium bg-green-600 text-white rounded hover:bg-green-700">
+                            {{ __('affect permission') }}
+                        </a>
                         {{-- UNCOMMENT FOR allow delet --}}
 
                         {{-- <button
