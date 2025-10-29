@@ -31,11 +31,19 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRoleRequest $request)
+    public function store(StoreRoleRequest $storeRoleRequest)
     {
-        ProcessCreateRoleJob::dispatch($request->validated());
+        try {
+        ProcessCreateRoleJob::dispatch($storeRoleRequest->validated());
 
         return redirect()->route('admin.roles.index')->with('success', __('Queued. Waiting for confirmation to finalize role create registration.'));
+        } catch(\Throwable $e)
+        {
+            return redirect()->back()->with('warning', 'There was an error during the request. Reason: '.$e->getMessage());
+        } finally{
+            unset($storeRoleRequest);
+        } 
+       
     }
 
     /**
@@ -59,10 +67,18 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRoleRequest $request, Role $role)
+    public function update(UpdateRoleRequest $updateRoleRequest, Role $role)
     {
-        ProcessUpdateRoleJob::dispatch($role, $request->validated());
+        try {
+            ProcessUpdateRoleJob::dispatch($role, $updateRoleRequest->validated());
         return redirect()->back()->with('success', __('Queued. Waiting for confirmation to finalize role update registration.'));
+        } catch(\Throwable $e)
+        {
+            return redirect()->back()->with('warning', 'There was an error during the request. Reason: '.$e->getMessage());
+        } finally{
+            unset($updateRoleRequest, $role);
+        } 
+        
     }
 
     /**

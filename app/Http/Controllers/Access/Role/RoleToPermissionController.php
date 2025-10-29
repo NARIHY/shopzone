@@ -42,22 +42,26 @@ class RoleToPermissionController extends Controller
      */
     public function update(RoleToPermissionUpdateRequest $request, Role $role)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        // 🔄 Synchronise les permissions cochées
-        $role->permissions()->sync($validated['permissions'] ?? []);
+            // 🔄 Synchronise les permissions cochées
+            $role->permissions()->sync($validated['permissions'] ?? []);
 
-        // 🧹 Invalide les caches concernés
-        Cache::forget("role_{$role->id}_permissions");
+            // 🧹 Invalide les caches concernés
+            Cache::forget("role_{$role->id}_permissions");
 
-        // Optionnel : si tu veux forcer la régénération globale
-        // Cache::forget('permissions_all');
+            // Optionnel : si tu veux forcer la régénération globale
+            // Cache::forget('permissions_all');
 
-        // 🚿 Libère la mémoire
-        unset($validated);
 
-        return redirect()
-            ->route('admin.roleToPermission.index', $role->id)
-            ->with('success', __('Permissions updated successfully.'));
+            return redirect()
+                ->route('admin.roleToPermission.index', $role->id)
+                ->with('success', __('Permissions updated successfully.'));
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('warning', 'There was an error during the request. Reason: ' . $e->getMessage());
+        } finally {
+            unset($validated);
+        }
     }
 }

@@ -41,16 +41,16 @@ class MediaController extends Controller
     /**
      * Store a newly uploaded media file.
      */
-    public function store(StoreMediaRequest $request)
+    public function store(StoreMediaRequest $storeMediaRequest)
     {
         try {
-            $file = $request->file('file');
+            $file = $storeMediaRequest->file('file');
             // stocker localement en temp (disk 'local') pour éviter problèmes d'import immédiat
             $localPath = $file->store('uploads/temp', 'local'); // exemple: uploads/temp/xxxxx
 
             // dispatch job qui va copier vers 'public' et créer l'enregistrement DB
             $userId = Auth::id();
-            ProcessCreateMediaJob::dispatch($localPath, $request->validated('title'), $userId); // optionnel: mettre sur queue 'media'
+            ProcessCreateMediaJob::dispatch($localPath, $storeMediaRequest->validated('title'), $userId); // optionnel: mettre sur queue 'media'
 
             return redirect()
                 ->route('admin.media.index')
@@ -60,6 +60,8 @@ class MediaController extends Controller
                 ->back()
                 ->withErrors(['file' => 'File upload failed: ' . $e->getMessage()])
                 ->withInput();
+        } finally {
+            unset($storeMediaRequest, $file, $localPath, $userId);
         }
     }
 
@@ -82,15 +84,15 @@ class MediaController extends Controller
     /**
      * Update an existing media file.
      */
-    public function update(UpdateMediaRequest $request, Media $media)
+    public function update(UpdateMediaRequest $updateMediaRequest, Media $media)
     {
         try {
-            if ($request->hasFile('file')) {
+            if ($updateMediaRequest->hasFile('file')) {
                 // store new uploaded file first on local disk
-                $localPath = $request->file('file')->store('uploads/temp', 'local');
+                $localPath = $updateMediaRequest->file('file')->store('uploads/temp', 'local');
 
                 // dispatch job to handle replacing the file and updating DB
-                ProcessUpdateMediaJob::dispatch($media->id, $request->validated('title'), $localPath);
+                ProcessUpdateMediaJob::dispatch($media->id, $updateMediaRequest->validated('title'), $localPath);
 
                 return redirect()
                     ->route('admin.media.index')
@@ -98,7 +100,7 @@ class MediaController extends Controller
             } else {
                 // no file: update title synchronously (fast)
                 $media->update([
-                    'title' => $request->validated('title'),
+                    'title' => $updateMediaRequest->validated('title'),
                 ]);
 
                 return redirect()
@@ -110,6 +112,8 @@ class MediaController extends Controller
                 ->back()
                 ->withErrors(['file' => 'Media update failed: ' . $e->getMessage()])
                 ->withInput();
+        } finally {
+            unset($updateMediaRequest, $localPath, $media);
         }
     }
 
@@ -132,6 +136,8 @@ class MediaController extends Controller
             return redirect()
                 ->back()
                 ->with('error', 'Failed to delete media: ' . $e->getMessage());
+        } finally {
+            unset($media);
         }
     }
 }

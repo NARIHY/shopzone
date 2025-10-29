@@ -23,8 +23,15 @@ class GroupUserController extends Controller
 
     public function store(GroupUserStoreRequest $groupUserStoreRequest)
     {
-        GroupUser::create($groupUserStoreRequest->validated());
-        return redirect()->route('admin.groupUsers.index')->with('success', __('Group user created successfully.'));
+        try {
+             GroupUser::create($groupUserStoreRequest->validated());
+            return redirect()->route('admin.groupUsers.index')->with('success', __('Group user created successfully.'));
+        } catch(\Throwable $e)
+        {
+            return redirect()->back()->with('warning', 'There was an error during the request. Reason: '.$e->getMessage());
+        } finally{
+            unset($groupUserStoreRequest);
+        }       
     }
 
     public function edit(GroupUser $groupUser)
@@ -36,16 +43,30 @@ class GroupUserController extends Controller
 
     public function update(GroupUserUpdateRequest $groupUserUpdateRequest, GroupUser $groupUser)
     {
-        $groupUser->update($groupUserUpdateRequest->validated());
+        try {
+            $groupUser->update($groupUserUpdateRequest->validated());
 
-        return redirect()->route('admin.groupUsers.index')->with('success', __('Group user updated successfully.'));
+            return redirect()->route('admin.groupUsers.index')->with('success', __('Group user updated successfully.'));
+        } catch(\Throwable $e)
+        {
+            return redirect()->back()->with('warning', 'There was an error during the request. Reason: '.$e->getMessage());
+        } finally{
+            unset($groupUserUpdateRequest, $groupUser);
+        }        
     }
 
     public function destroy(GroupUser $groupUser)
     {
-        $groupUser->delete();
+        try {
+           $groupUser->delete();
 
-        return redirect()->route('admin.groupUsers.index')->with('success', __('Group user deleted successfully.'));
+            return redirect()->route('admin.groupUsers.index')->with('success', __('Group user deleted successfully.'));
+        } catch(\Throwable $e)
+        {
+            return redirect()->back()->with('warning', 'There was an error during the request. Reason: '.$e->getMessage());
+        } finally{
+            unset($groupUser);
+        }            
     }
 
 }

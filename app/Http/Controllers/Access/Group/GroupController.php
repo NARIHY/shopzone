@@ -36,10 +36,17 @@ class GroupController extends Controller
      */
     public function store(StoreGroupRequest $request)
     {
-        ProcessCreateGroupJob::dispatch($request->validated());
-        unset($request);
-        return redirect()->route('admin.groups.index')
-            ->with('success', 'Queued. Waiting for confirmation to finalize group create registration.');
+        try {
+            ProcessCreateGroupJob::dispatch($request->validated());
+            
+            return redirect()->route('admin.groups.index')
+                ->with('success', 'Queued. Waiting for confirmation to finalize group create registration.');
+        } catch(\Throwable $e)
+        {
+            return redirect()->back()->with('warning', 'There was an error during the request. Reason: '.$e->getMessage());
+        } finally{
+            unset($request);
+        }
     }
 
     /**
@@ -66,10 +73,18 @@ class GroupController extends Controller
      */
     public function update(UpdateGroupRequest $request, Group $group)
     {
-        ProcessUpdateGroupJob::dispatch($group, $request->validated());
-        unset($group, $request);
-        return redirect()->back()
-            ->with('success', 'Queued. Waiting for confirmation to finalize group update registration.');
+        try {
+            ProcessUpdateGroupJob::dispatch($group, $request->validated());
+            
+            return redirect()->back()
+                ->with('success', 'Queued. Waiting for confirmation to finalize group update registration.');
+        } catch(\Throwable $e)
+        {
+            return redirect()->back()->with('warning', 'There was an error during the request. Reason: '.$e->getMessage());
+        } finally{
+            unset($request);
+        }
+        
     }
 
     /**

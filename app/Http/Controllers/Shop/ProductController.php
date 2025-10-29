@@ -53,7 +53,9 @@ class ProductController extends Controller
                 ->with('success', 'Product creation queued. Waiting for processing to complete.');
         } catch (Throwable $e) {
             report($e);
-            return back()->withInput()->with('error', 'Error: ' . $e->getMessage());
+            return back()->withInput()->with('warning', 'There was an error during the request. Reason: ' . $e->getMessage());
+        } finally{
+            unset($request, $validatedData, $mediaInput, $decodedMediaIds);
         }
     }
 
@@ -85,7 +87,9 @@ class ProductController extends Controller
                 ->with('success', 'Product update is in progress. Please wait for confirmation once completed.');
         } catch (Throwable $e) {
             report($e);
-            return back()->withInput()->with('error', 'Error: ' . $e->getMessage());
+            return back()->withInput()->with('warning', 'There was an error during the request. Reason: ' . $e->getMessage());
+        } finally {
+            unset($validatedData, $request, $mediaInput, $mediaIds, $product);
         }
     }
 
@@ -100,6 +104,8 @@ class ProductController extends Controller
         } catch (Throwable $exception) {
             report($exception);
             return back()->withInput()->with('error', 'Une erreur est survenue : ' . $exception->getMessage());
+        } finally {
+            unset($product);
         }
     }
 

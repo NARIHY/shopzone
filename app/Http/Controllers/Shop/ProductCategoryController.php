@@ -32,10 +32,16 @@ class ProductCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductCategoryRequest $request)
+    public function store(StoreProductCategoryRequest $storeProductCategoryRequest)
     {
-        ProcessCreateProductCategoryJob::dispatch($request->validated());
-        return redirect()->route('admin.product-categories.index')->with('success', __('Your product category is now queued for creation. You will be notified once it is done.'));
+        try {
+            ProcessCreateProductCategoryJob::dispatch($storeProductCategoryRequest->validated());
+            return redirect()->route('admin.product-categories.index')->with('success', __('Your product category is now queued for creation. You will be notified once it is done.'));
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('warning', 'There was an error during the request. Reason: ' . $e->getMessage());
+        } finally {
+            unset($storeProductCategoryRequest);
+        }
     }
 
     /**
@@ -59,13 +65,20 @@ class ProductCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductCategoryRequest $request, ProductCategory $productCategory)
+    public function update(UpdateProductCategoryRequest $updateProductCategoryRequest, ProductCategory $productCategory)
     {
-        $data = $request->validated();
-        ProcessUpdateProductCategoryJob::dispatch($productCategory, $data);
 
-        return redirect()->back()
-                        ->with('success', __('Your product category is now queued for update.  You will be notified once it is done.'));
+        try {
+            $data = $updateProductCategoryRequest->validated();
+            ProcessUpdateProductCategoryJob::dispatch($productCategory, $data);
+
+            return redirect()->back()
+                ->with('success', __('Your product category is now queued for update.  You will be notified once it is done.'));
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('warning', 'There was an error during the request. Reason: ' . $e->getMessage());
+        } finally {
+            unset($updateProductCategoryRequest, $productCategory, $data);
+        }
     }
 
     /**
@@ -76,9 +89,12 @@ class ProductCategoryController extends Controller
         try {
             $productCategory->delete();
             return redirect()->route('admin.product-categories.index')
-                            ->with('success', __('shop.Product category deleted successfully.'));
+                ->with('success', __('shop.Product category deleted successfully.'));
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        } finally
+        {
+            unset($productCategory);
         }
     }
 }
