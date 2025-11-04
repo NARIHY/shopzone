@@ -5,23 +5,28 @@ namespace App\Http\Middleware\Access;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
-
-use function PHPUnit\Framework\isEmpty;
+use Symfony\Component\HttpFoundation\Response;
+use App\Notifications\Access\ConfirmeClientAccountNotification;
+use Carbon\Carbon;
 
 class AssingUsersGroups
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user()->groups === null || Auth::user()->groups->isEmpty()) {
-            $user = User::findOrFail(Auth::id());
-            $user->notify(new \App\Notifications\Access\ConfirmeClientAccountNotification($user));
+        $user = User::findOrFail(Auth::user()->id);
+
+        if ($user && ($user->groups === null || $user->groups->isEmpty())) {
+
+            if (
+                !$user->email_confirm_notification_sent_at ||
+                Carbon::parse($user->updated_at)->addHours(2)->isPast()
+            ) {
+                $user->notify(new ConfirmeClientAccountNotification($user));
+                $user->update([
+                    'email_confirm_notification_sent_at' => now(),
+                ]);
+            }
         }
 
         return $next($request);

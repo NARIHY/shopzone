@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'workos_id',
         'avatar',
+        'email_confirm_notification_sent'
     ];
 
     /**
