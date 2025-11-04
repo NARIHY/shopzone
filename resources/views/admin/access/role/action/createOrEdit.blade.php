@@ -23,7 +23,7 @@
     </div>
 
 
-    <div class="flex h-full w-full flex-1 flex-col gap-6 rounded-xl p-6 bg-white dark:bg-gray-800 shadow-md">
+    <div class="flex flex-col gap-6 rounded-xl p-6 bg-white dark:bg-gray-800 shadow-md">
 
 
         {{-- Form Title --}}
