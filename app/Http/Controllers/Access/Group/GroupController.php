@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Access\Group;
 
 use App\Common\GroupAdminView;
+use App\Events\Utils\NotificationSent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Access\Group\StoreGroupRequest;
 use App\Http\Requests\Access\Group\UpdateGroupRequest;
@@ -39,11 +40,11 @@ class GroupController extends Controller
         try {
             ProcessCreateGroupJob::dispatch($request->validated());
             
-            return redirect()->route('admin.groups.index')
-                ->with('success', 'Queued. Waiting for confirmation to finalize group create registration.');
+            return redirect()->route('admin.groups.index');
         } catch(\Throwable $e)
         {
-            return redirect()->back()->with('warning', 'There was an error during the request. Reason: '.$e->getMessage());
+            event(new NotificationSent('warning', 'There was an error during the request. Reason: '.$e->getMessage()));
+            return redirect()->back();
         } finally{
             unset($request);
         }
@@ -80,7 +81,8 @@ class GroupController extends Controller
                 ->with('success', 'Queued. Waiting for confirmation to finalize group update registration.');
         } catch(\Throwable $e)
         {
-            return redirect()->back()->with('warning', 'There was an error during the request. Reason: '.$e->getMessage());
+            event(new NotificationSent('warning', 'There was an error during the request. Reason: '.$e->getMessage()));
+            return redirect()->back();
         } finally{
             unset($request);
         }
@@ -94,12 +96,11 @@ class GroupController extends Controller
     {
         try {
             $group->delete();
-
-            return redirect()->route('admin.groups.index')
-                ->with('success', 'Groupe supprimé avec succès.');
+            event(new NotificationSent('success','Group successfully deleted.' ));
+            return redirect()->route('admin.groups.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', $e->getMessage());
+            event(new NotificationSent('warning', 'There was an error during the request. Reason: '.$e->getMessage()));
+            return redirect()->back();
         }
     }
 }

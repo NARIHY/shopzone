@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Access\Group;
 
+use App\Events\Utils\NotificationSent;
 use App\Models\Access\Group;
 use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,6 +33,8 @@ class ProcessUpdateGroupJob implements ShouldQueue, ShouldBeUnique
         if(Group::findOrFail($this->group->id)) {
             $group = Group::find($this->group->id);
             $group->update($this->data);
+            event(new NotificationSent('success', 'Group are updated.'));
         }
+        event(new NotificationSent('error', 'An erro occured, please contact your Administrator.'));
     }
 }

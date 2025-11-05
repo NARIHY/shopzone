@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Access\Role;
 
+use App\Events\Utils\NotificationSent;
 use App\Models\Access\Role;
 use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,6 +33,6 @@ class ProcessCreateRoleJob implements ShouldQueue, ShouldBeUnique
     public function handle(): void
     {
         $this->role = Role::create($this->data);
-        //IF SUCCESS DO NOTHING
+        event(new NotificationSent('success', 'Role was created succefully.'));
     }
 }

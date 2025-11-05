@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Shop\Product;
 
+use App\Events\Utils\NotificationSent;
 use App\Models\Shop\Product;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
@@ -45,6 +46,8 @@ class ProcessUpdateProductJob implements ShouldQueue
             if (!empty($this->mediaIds)) {
                 $this->product->media()->sync($this->mediaIds);
             }
+
+            event(new NotificationSent('success', 'Product updated succeffuly.'));
         });
     }
 

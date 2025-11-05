@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Access\Group;
 
+use App\Events\Utils\NotificationSent;
 use App\Models\Access\Group;
 use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,6 +35,6 @@ class ProcessCreateGroupJob implements ShouldQueue, ShouldBeUnique
     public function handle(): void
     {
         $this->group = Group::create($this->data);
-        //IF SUCCESS DO NOTHING
+        event(new NotificationSent('success','Queued. Waiting for confirmation to finalize group create registration.'));
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Common\CategoryProductView;
+use App\Events\Utils\NotificationSent;
 use App\Http\Controllers\Controller;
 use App\Models\Shop\ProductCategory;
 use App\Http\Requests\Shop\StoreProductCategoryRequest;
@@ -36,7 +37,7 @@ class ProductCategoryController extends Controller
     {
         try {
             ProcessCreateProductCategoryJob::dispatch($storeProductCategoryRequest->validated());
-            return redirect()->route('admin.product-categories.index')->with('success', __('Your product category is now queued for creation. You will be notified once it is done.'));
+            return redirect()->route('admin.product-categories.index');
         } catch (\Throwable $e) {
             return redirect()->back()->with('warning', 'There was an error during the request. Reason: ' . $e->getMessage());
         } finally {
@@ -71,11 +72,10 @@ class ProductCategoryController extends Controller
         try {
             $data = $updateProductCategoryRequest->validated();
             ProcessUpdateProductCategoryJob::dispatch($productCategory, $data);
-
-            return redirect()->back()
-                ->with('success', __('Your product category is now queued for update.  You will be notified once it is done.'));
+            return redirect()->back();
         } catch (\Throwable $e) {
-            return redirect()->back()->with('warning', 'There was an error during the request. Reason: ' . $e->getMessage());
+            event(new NotificationSent('warning', 'There was an error during the request. Reason: ' . $e->getMessage()));
+            return redirect()->back();
         } finally {
             unset($updateProductCategoryRequest, $productCategory, $data);
         }
@@ -88,10 +88,11 @@ class ProductCategoryController extends Controller
     {
         try {
             $productCategory->delete();
-            return redirect()->route('admin.product-categories.index')
-                ->with('success', __('shop.Product category deleted successfully.'));
+            event(new NotificationSent('success', __('shop.Product category deleted successfully.')));
+            return redirect()->route('admin.product-categories.index');
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            event(new NotificationSent('warning', 'There was an error during the request. Reason: ' . $e->getMessage()));
+            return redirect()->back();
         } finally
         {
             unset($productCategory);

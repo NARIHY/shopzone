@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Shop\Category;
 
+use App\Events\Utils\NotificationSent;
 use App\Models\Shop\ProductCategory;
 use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -48,8 +49,8 @@ class ProcessCreateProductCategoryJob implements ShouldQueue, ShouldBeUnique
             // Exemple : tu peux aussi lancer d'autres actions ici
             // event(new ProductCategoryCreated($category));
             // dispatch(new IndexCategoryInSearchEngine($category));
-
-            session()->flash('success', __('Product category create queued successfully.'));
+            event(new NotificationSent('success', 'Product category created succefully'));
+            
 
             Log::info('Product category created successfully via job', [
                 'category_id' => $category->id,
@@ -59,6 +60,7 @@ class ProcessCreateProductCategoryJob implements ShouldQueue, ShouldBeUnique
             Log::error('Failed to create product category via job', [
                 'error' => $e->getMessage(),
             ]);
+            event(new NotificationSent('warning', 'An error occured. Raison: ' .$e->getMessage()));
 
             // Si tu veux relancer le job automatiquement en cas d’échec
             $this->fail($e);

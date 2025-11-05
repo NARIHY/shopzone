@@ -152,7 +152,52 @@
 
         {{ $slot }}
         
+        <livewire:utils.notifications/>
         @fluxScripts
         @yield('livewire-scripts')
+
+        <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Echo:', window.Echo);
+
+        // Fonction pour jouer un BIP court
+        const playBeep = () => {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(ctx.destination);
+
+                oscillator.frequency.value = 800; // Fréquence (800 Hz = son clair)
+                oscillator.type = 'sine';        // Forme d'onde douce
+
+                gainNode.gain.setValueAtTime(0.3, ctx.currentTime); // Volume bas
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+
+                oscillator.start(ctx.currentTime);
+                oscillator.stop(ctx.currentTime + 0.1); // Durée : 100ms
+            } catch (e) {
+                console.warn("Impossible de jouer le son (AudioContext bloqué)", e);
+            }
+        };
+
+        // Écoute WebSocket
+        Echo.channel('notifications')
+            .listen('.NotificationSent', (e) => {
+                console.log('Notification reçue:', e);
+                Livewire.dispatch('notify', [e.type, e.message]);
+
+                // Joue le bip
+                playBeep();
+            });
+
+        // Écoute l'événement Livewire (au cas où tu veux déclencher depuis ailleurs)
+        document.addEventListener('play-beep', () => {
+            playBeep();
+        });
+    });
+</script>
     </body>
 </html>

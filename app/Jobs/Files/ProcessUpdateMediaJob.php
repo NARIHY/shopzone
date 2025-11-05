@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Files;
 
+use App\Events\Utils\NotificationSent;
 use App\Models\Files\Media;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -94,6 +95,7 @@ class ProcessUpdateMediaJob implements ShouldQueue
                 ]);
             }
 
+            event(new NotificationSent('success', 'Media updated'));
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

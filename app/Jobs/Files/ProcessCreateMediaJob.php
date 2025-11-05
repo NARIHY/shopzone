@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Files;
 
+use App\Events\Utils\NotificationSent;
 use App\Models\Files\Media;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -89,6 +90,7 @@ class ProcessCreateMediaJob implements ShouldQueue
 
             DB::commit();
 
+            event(new NotificationSent('success', 'Media Saved succefully'));
             // cleanup local temp
             Storage::disk($localDisk)->delete($this->localPath);
         } catch (Exception $e) {
@@ -104,6 +106,7 @@ class ProcessCreateMediaJob implements ShouldQueue
                 if ($logger) {
                     $logger->warning("Failed to clean target file after error: " . $inner->getMessage());
                 }
+                event(new NotificationSent('warning', "Failed to clean target file after error: " . $inner->getMessage()));
             }
 
             // log then rethrow so the job can be retried or failed properly
@@ -113,6 +116,7 @@ class ProcessCreateMediaJob implements ShouldQueue
                     'targetPath' => $targetPath,
                 ]);
             }
+
 
             throw $e;
         }

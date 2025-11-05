@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-       $this->app->singleton('cachedData', function () {
+        $this->app->singleton('cachedData', function () {
             return new CachedData();
         });
     }
@@ -25,38 +25,50 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-{
-    View::composer('*', function ($view) {
-        // Charger et mettre en cache pendant 10 minutes
-        $rolesInput = Cache::remember('roles_input', 600, function () {
-            return Role::with('groups:id,name')->get(); // limiter les colonnes si possible
-        });
+   public function boot(): void
+    {
+        View::composer('*', function ($view) {
 
-        $groupsInput = Cache::remember('groups_input', 600, function () {
-            return Group::with('roles:id,roleName','users:id,name')->get();
-        });
+            // Roles avec groupes (limité aux colonnes nécessaires)
+            $rolesInput = Cache::remember('roles_input', 600, function () {
+                return Role::with(['groups:id,name'])->get(['id','roleName']);
+            });
 
-        $productCategoriesInput = Cache::remember('product_categories_input', 600, function () {
-            return \App\Models\Shop\ProductCategory::with('products:id,name')->get();
-        });
+            // Groups avec roles et users (limité)
+            $groupsInput = Cache::remember('groups_input', 600, function () {
+                return Group::with([
+                    'roles:id,roleName',
+                    'users:id,name'
+                ])->get(['id','name']);
+            });
 
-        $mediaInput = Cache::remember('media_input', 600, function () {
-            return \App\Models\Files\Media::with('products:id,name')->get();
-        });
+            // Product Categories avec produits
+            $productCategoriesInput = Cache::remember('product_categories_input', 600, function () {
+                return \App\Models\Shop\ProductCategory::with([
+                    'products:id,name'
+                ])->get(['id','name']);
+            });
 
-        $usersInput = Cache::remember('users_input', 600, function() {
-            return User::with(['groups.roles'])->get();
-        });
+            // Media avec produits liés
+            $mediaInput = Cache::remember('media_input', 600, function () {
+                return \App\Models\Files\Media::with([
+                    'products:id,name'
+                ])->get(['id','title']); // ou 'name' selon ta colonne
+            });
 
-        $view->with([
-            'rolesInput' => $rolesInput,
-            'productCategoriesInput' => $productCategoriesInput,
-            'mediaInput' => $mediaInput,
-            'groupsInput' => $groupsInput,
-            'usersInput' => $usersInput
-        ]);
-    });
-}
+            // Users avec leurs groupes et rôles
+            $usersInput = Cache::remember('users_input', 600, function () {
+                return User::with(['groups.roles:id,roleName'])->get(['id','name','email']);
+            });
+
+            $view->with(compact(
+                'rolesInput',
+                'productCategoriesInput',
+                'mediaInput',
+                'groupsInput',
+                'usersInput'
+            ));
+        });
+    }
 
 }

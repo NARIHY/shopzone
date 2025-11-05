@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Shop\Product;
 
+use App\Events\Utils\NotificationSent;
 use App\Models\Shop\Product;
 use App\Models\Files\Media;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -40,6 +41,7 @@ class ProcessCreateProductJob implements ShouldQueue
             if (!empty($validIds)) {
                 $product->media()->attach($validIds);
             }
+            event(new NotificationSent('success', 'Product created succeffuly.'));
         });
     }
 

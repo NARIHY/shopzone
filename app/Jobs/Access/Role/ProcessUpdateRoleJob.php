@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Access\Role;
 
+use App\Events\Utils\NotificationSent;
 use App\Models\Access\Role;
 use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -29,6 +30,7 @@ class ProcessUpdateRoleJob implements ShouldQueue, ShouldBeUnique
         {
             $role = Role::find($this->role->id);
             $role->update($this->data);
+            event(new NotificationSent('success', 'Role are updated succefully.'));
         }
     }
 }
