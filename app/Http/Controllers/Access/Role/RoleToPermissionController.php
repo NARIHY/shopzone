@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Access\Role;
 
 use App\Common\RoleToPermissionView;
+use App\Events\Utils\NotificationSent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Access\Role\RolePermission\RoleToPermissionUpdateRequest;
 use App\Models\Access\Role;
@@ -18,23 +19,9 @@ class RoleToPermissionController extends Controller
     public function index(Role $role)
     {
         // 🧠 Cache global des permissions (collection brute)
-        $allPermissions = Cache::rememberForever('permissions_all', function () {
+        $allPermissions = Cache::remember('permissions_all', 600, function () {
             return Permission::orderBy('name')->get(['id', 'name', 'description', 'is_active']);
         });
-
-        // Pagination "manuelle" sur la collection
-        $perPage = 20;
-        $currentPage = LengthAwarePaginator::resolveCurrentPage(); // récupère ?page=X
-        $permissions = new LengthAwarePaginator(
-            $allPermissions->forPage($currentPage, $perPage), // items pour la page
-            $allPermissions->count(), // total items
-            $perPage,
-            $currentPage,
-            [
-                'path' => request()->url(),          // conserve le chemin actuel
-                'query' => request()->query()        // conserve les query params (page=2, etc.)
-            ]
-        );
 
         // Permissions déjà assignées au rôle
         $assignedPermissions = Cache::remember("role_{$role->id}_permissions", 600, function () use ($role) {
@@ -44,11 +31,11 @@ class RoleToPermissionController extends Controller
         // Préparer la vue
         $view = view(
             RoleToPermissionView::getListRoleToPermissionView(),
-            compact('role', 'permissions', 'assignedPermissions')
+            compact('role', 'allPermissions', 'assignedPermissions')
         );
 
         // Libération mémoire
-        unset($allPermissions, $permissions, $assignedPermissions);
+        unset($allPermissions, $assignedPermissions);
 
         return $view;
     }
@@ -70,12 +57,13 @@ class RoleToPermissionController extends Controller
             // Optionnel : si tu veux forcer la régénération globale
             // Cache::forget('permissions_all');
 
+            event(new NotificationSent('success', 'Permissions updated for role: ' . $role->roleName));
 
             return redirect()
-                ->route('admin.roleToPermission.index', $role->id)
-                ->with('success', __('Permissions updated successfully.'));
+                ->route('admin.roleToPermission.index', $role->id);
         } catch (\Throwable $e) {
-            return redirect()->back()->with('warning', 'There was an error during the request. Reason: ' . $e->getMessage());
+            event(new NotificationSent('warning', 'There was an error during the request. Reason: ' . $e->getMessage()));
+            return redirect()->back();
         } finally {
             unset($validated);
         }

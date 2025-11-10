@@ -8,11 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckPermission
+class CheckPermissionMiddleware
 {
     protected array $ignoredRoutes = [
         'admin.unhautorize.users',
         'admin.dashboard',
+        'admin.roleToPermission.index',//only super admin
+        'admin.roleToPermission.update',//only super admin
         'login',
         'logout',
     ];

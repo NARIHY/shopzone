@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Notifications\Access\ConfirmeClientAccountNotification;
 use Carbon\Carbon;
 
-class AssingUsersGroups
+class AssingUsersGroupsMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {

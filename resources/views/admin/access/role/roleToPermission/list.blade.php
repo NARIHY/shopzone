@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800">
-                    @foreach($permissions as $permission)
+                    @foreach($allPermissions as $permission)
                         <tr class="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <td class="px-4 py-2 text-gray-800 dark:text-gray-100">{{ $permission->name }}</td>
                             <td class="px-4 py-2 text-gray-600 dark:text-gray-300">{{ $permission->description }}</td>
@@ -33,9 +33,9 @@
             </table>
 
             <!-- Pagination -->
-            <div class="mt-4">
+            {{-- <div class="mt-4">
                 {{ $permissions->links() }} <!-- Affiche les liens de pagination -->
-            </div>
+            </div> --}}
 
             <div class="flex justify-end mt-4">
                 <button type="submit"
