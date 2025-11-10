@@ -21,7 +21,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return view(GroupAdminView::getListView(),);
+        return view(GroupAdminView::getListView());
     }
 
     /**

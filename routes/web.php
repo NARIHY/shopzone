@@ -3,7 +3,9 @@
 use App\Http\Controllers\Access\WorkOSAuthController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Exceptions\ErrorController;
+use App\Http\Controllers\Guard\GuardController;
 use App\Http\Middleware\Access\AssingUsersGroups;
+use App\Http\Middleware\Access\CheckPermission;
 use Illuminate\Support\Facades\Route;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
 
@@ -20,6 +22,7 @@ Route::middleware([
     'web',
     AssingUsersGroups::class,
     ValidateSessionWithWorkOS::class,
+    CheckPermission::class
 ])->name('admin.')->prefix('nerkaly/')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('revalis', [DashboardController::class, 'adminDashboard'])->name('adminDashboard');
@@ -40,9 +43,10 @@ Route::middleware([
 
     Route::get('utils/verify-user-groups-to-attache-client/v1/userId:{userId}-part56', [\App\Http\Controllers\Access\UtilsUsersController::class, 'verifyUserGroupsToAttacheCLient'])->name('utils.verifyUserGroupsToAttacheClient');
 
-    Route::prefix('workingos/manage-users/group-users/')->group(function () {
-        Route::resource('userGroups', \App\Http\Controllers\Access\Group\GroupUserController::class)->names('groupUsers');
-    });
+    Route::resource('userGroups', \App\Http\Controllers\Access\Group\GroupUserController::class)->names('groupUsers');
+
+    Route::get('/unhautorize-users', [GuardController::class , 'unAuthorizeUsers'])
+    ->name('unhautorize.users');
 });
 
 
