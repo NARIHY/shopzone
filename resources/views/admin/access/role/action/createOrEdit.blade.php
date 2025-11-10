@@ -7,7 +7,7 @@
         <nav>
             <ol class="breadcrumb flex space-x-2 text-gray-600 dark:text-gray-400">
             <li class="breadcrumb-item">
-                <a href="{{route('admin.dashboard')}}" class="hover:text-blue-600 dark:hover:text-blue-400">
+                <a href="{{route('admin.dashboard.index')}}" class="hover:text-blue-600 dark:hover:text-blue-400">
                     {{__('Dashboard')}}
                 </a>
             </li>

@@ -8,7 +8,6 @@ use App\Http\Middleware\Access\AssingUsersGroups;
 use App\Http\Middleware\Access\AssingUsersGroupsMiddleware;
 use App\Http\Middleware\Access\CheckPermission;
 use App\Http\Middleware\Access\CheckPermissionMiddleware;
-use App\Http\Middleware\Access\SuperAdminMiddleware;
 use Illuminate\Support\Facades\Route;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
 
@@ -27,7 +26,7 @@ Route::middleware([
     ValidateSessionWithWorkOS::class,
     CheckPermissionMiddleware::class,
 ])->name('admin.')->prefix('nerkaly/')->group(function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('revalis', [DashboardController::class, 'adminDashboard'])->name('adminDashboard');
     Route::get('drive/manager', [\App\Http\Controllers\Files\MediaController::class, 'drive'])->name('media.drive');
     Route::get('contacts', [\App\Http\Controllers\Contact\ContacController::class, 'index'])->name('contact.index');
@@ -41,7 +40,7 @@ Route::middleware([
 
     //affect role to permission
     Route::get('roles/{role}/permissions', [\App\Http\Controllers\Access\Role\RoleToPermissionController::class, 'index'])->name('roleToPermission.index');
-    Route::post('roles/{role}/permissions', [\App\Http\Controllers\Access\Role\RoleToPermissionController::class, 'update'])->name('roleToPermission.update')->middleware(SuperAdminMiddleware::class);
+    Route::post('roles/{role}/permissions', [\App\Http\Controllers\Access\Role\RoleToPermissionController::class, 'update'])->name('roleToPermission.update');
     //to verify
 
     Route::get('utils/verify-user-groups-to-attache-client/v1/userId:{userId}-part56', [\App\Http\Controllers\Access\UtilsUsersController::class, 'verifyUserGroupsToAttacheCLient'])->name('utils.verifyUserGroupsToAttacheClient');

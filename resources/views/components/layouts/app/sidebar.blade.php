@@ -7,14 +7,14 @@
         <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-            <a href="{{ route('admin.dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+            <a href="{{ route('admin.dashboard.index') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
                 <x-app-logo />
                 {{-- APPLICATIONS LOGO --}}
             </a>
 
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
-                    <flux:navlist.item icon="home" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    <flux:navlist.item icon="home" :href="route('admin.dashboard.index')" :current="request()->routeIs('admin.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     <flux:navlist.item icon="chart-pie" :href="route('admin.adminDashboard')" :current="request()->routeIs('admin.adminDashboard')" wire:navigate>{{ __('Heart application') }}</flux:navlist.item>
                     <flux:navlist.item icon="ticket" :href="route('admin.product-categories.index')" :current="request()->routeIs('admin.product-categories.index')" wire:navigate>{{ __('Product Categories') }}</flux:navlist.item>
                     <flux:navlist.item icon="ticket" :href="route('admin.products.index')" :current="request()->routeIs('admin.products.index')" wire:navigate> {{ __('Product') }} </flux:navlist.item>

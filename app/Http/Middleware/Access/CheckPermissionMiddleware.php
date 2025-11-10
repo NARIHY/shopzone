@@ -12,9 +12,6 @@ class CheckPermissionMiddleware
 {
     protected array $ignoredRoutes = [
         'admin.unhautorize.users',
-        'admin.dashboard',
-        'admin.roleToPermission.index',//only super admin
-        'admin.roleToPermission.update',//only super admin
         'login',
         'logout',
     ];
