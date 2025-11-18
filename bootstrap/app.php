@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->prepend(App\Http\Middleware\Setting\SetLocal::class);
     })
+    ->withEvents(
+        [
+          __DIR__.'/../app/Listeners/HandleNotificationSent.php',  
+        ]
+    )
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })

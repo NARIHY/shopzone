@@ -77,6 +77,11 @@
                     <livewire:pulse.slow-outgoing-requests cols="6" />
                 </div>
 
+                <div class="col-span-full">
+                    <livewire:reverb.connections cols="full" />
+                    <livewire:reverb.messages cols="full" />
+                </div>
+
             </div>
         </main>
 

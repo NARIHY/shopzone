@@ -2,7 +2,7 @@
 
 namespace App\Events\Utils;
 
-use Illuminate\Broadcasting\Channel; // public channel pour tester rapidement
+use Illuminate\Broadcasting\Channel; // Public channel pour test rapide
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -12,23 +12,34 @@ class NotificationSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $type;
-    public $message;
+    public string $type;
+    public string $message;
 
-    public function __construct($type, $message)
+    /**
+     * Create a new event instance.
+     */
+    public function __construct(string $type, string $message)
     {
         $this->type = $type;
         $this->message = $message;
     }
 
-    public function broadcastOn(): array
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return Channel|array
+     */
+    public function broadcastOn(): array|Channel
     {
-        // Utiliser Channel (public) pour test rapide
+        // Channel public pour test rapide
         return [new Channel('notifications')];
     }
 
-    public function broadcastAs()
+    /**
+     * Nom de l'événement côté JS
+     */
+    public function broadcastAs(): string
     {
-        return 'NotificationSent'; // nom de l’événement JS
+        return 'NotificationSent';
     }
 }
