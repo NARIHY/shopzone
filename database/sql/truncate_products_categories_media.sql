@@ -1,0 +1,9 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE media;
+TRUNCATE TABLE media_product;
+TRUNCATE TABLE products; 
+TRUNCATE TABLE product_categories;
+TRUNCATE TABLE categories;
+
+SET FOREIGN_KEY_CHECKS = 1;
