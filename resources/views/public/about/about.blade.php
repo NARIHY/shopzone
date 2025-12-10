@@ -417,9 +417,17 @@
         </div>
     </section>
 
-    <section>
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdUSu5aejmn9mgO7P3EHalF7sqhVF4BB-2d8NxV5483r70kMg/viewform?embedded=true" width="640" height="1886" frameborder="0" marginheight="0" marginwidth="0">Chargement…</iframe>
-    </section>
+    <section class="d-flex justify-content-center py-4">
+    <div class="shadow-lg rounded-4 overflow-hidden" style="max-width: 640px; width: 100%;">
+        <iframe 
+            src="https://docs.google.com/forms/d/e/1FAIpQLSdUSu5aejmn9mgO7P3EHalF7sqhVF4BB-2d8NxV5483r70kMg/viewform?embedded=true"
+            style="border:0; width:100%; height:1850px;"
+            allowfullscreen>
+        </iframe>
+    </div>
+</section>
+
+
 @endsection
 
 @section('customjs')
