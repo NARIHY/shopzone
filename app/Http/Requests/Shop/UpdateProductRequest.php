@@ -23,8 +23,6 @@ class UpdateProductRequest extends FormRequest
         return [
             'name'                => ['required', 'string', 'max:255'],
             'slug'                => [
-                'required',
-                'string',
                 'max:255',
                 Rule::unique('products', 'slug')->ignore($productId),
             ],

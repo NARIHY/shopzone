@@ -35,6 +35,9 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request): RedirectResponse
     {
         $validatedData = $request->validated();
+        if (empty($validatedData['slug'])) {
+            $validatedData['slug'] = $this->generateSlug($validatedData['name']);
+        }
         $validatedData['price'] = $this->normalizePrice($request->input('price_raw', $validatedData['price'] ?? 0));
         $validatedData['discount_price'] = $this->normalizePrice($request->input('discount_price_raw', $validatedData['discount_price'] ?? null));
 
@@ -72,6 +75,9 @@ class ProductController extends Controller
     {
         $validatedData = $request->validated();
 
+        if (empty($validatedData['slug'])) {
+            $validatedData['slug'] = $this->generateSlug($validatedData['name']);
+        }
         if ($this->isInvalidDiscount($validatedData) || $this->isInvalidStock($validatedData['stock'] ?? null)) {
             return back()->withInput()->with('error', 'Invalid data provided.');
         }
@@ -173,5 +179,10 @@ class ProductController extends Controller
     private function isInvalidStock(?int $stock): bool
     {
         return !is_null($stock) && $stock < 0;
+    }
+
+    private function generateSlug(string $title): string
+    {
+        return Str::slug($title, '-');
     }
 }
