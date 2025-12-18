@@ -107,3 +107,11 @@ preloadNotificationSound();
 
     document.addEventListener('play-beep', playBeep);
 })();
+
+
+// Redirige l'event vers Livewire
+Echo.channel('product-categories')
+    .listen('.ProductCategoryChanged', e => {
+        console.log('Event reçu', e);
+        Livewire.emit('echo:product-categories,ProductCategoryChanged', e);
+    });

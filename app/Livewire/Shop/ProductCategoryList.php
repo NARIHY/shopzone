@@ -18,6 +18,7 @@ class ProductCategoryList extends Component
     protected $queryString = [
         'search' => ['except' => ''], // ne pas inclure dans l'URL si vide
     ];
+
     public bool $showModal = false;
     public ?ProductCategory $selectedCategory = null;
 
@@ -25,7 +26,18 @@ class ProductCategoryList extends Component
     // listeners — ne pas typer (conflit avec Livewire\Component)
     protected $listeners = [
         'showCategoryModal' => 'openCategoryModal',
+        'echo:product-category-changed,ProductCategoryChanged' => 'refreshTable',
     ];
+
+    public function refreshTable(): void
+    {
+        // Vider le cache
+        Cache::forget('product_categories_' . md5($this->search));
+
+        // Rafraîchir Livewire
+        $this->resetPage();
+        $this->dispatch('$refresh');
+    }
 
     /**
      * Quand on tape dans la recherche, on revient à la 1ère page.

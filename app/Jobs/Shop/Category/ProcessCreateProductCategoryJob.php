@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Shop\Category;
 
+use App\Events\Shop\ProductCategory\PorductCategoryChangedEvent;
 use App\Events\Utils\NotificationSent;
 use App\Models\Shop\ProductCategory;
 use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
@@ -50,6 +51,10 @@ class ProcessCreateProductCategoryJob implements ShouldQueue, ShouldBeUnique
             // event(new ProductCategoryCreated($category));
             // dispatch(new IndexCategoryInSearchEngine($category));
             event(new NotificationSent('success', 'Product category created succefully'));
+            event(new PorductCategoryChangedEvent(
+                action: 'created',
+                categoryId: $category->id,
+            ));
             
 
             Log::info('Product category created successfully via job', [

@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Shop\Category;
 
+use App\Events\Shop\ProductCategory\PorductCategoryChangedEvent;
 use App\Events\Utils\NotificationSent;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductCategory;
@@ -35,7 +36,10 @@ class ProcessUpdateProductCategoryJob implements ShouldQueue, ShouldBeUnique
             $productCategory->update($this->data);
             event(new NotificationSent('success', 'Product category updated queued successfully.'));
             
-            
+            event(new PorductCategoryChangedEvent(
+                action: 'updated',
+                categoryId: $productCategory->id,
+            ));
         } catch (\Exception $e) {
             // Gestion complète de l'erreur
         event(new NotificationSent('warning', "Error updating ProductCategory [{$this->productCategory->id}]: " . $e->getMessage()));
