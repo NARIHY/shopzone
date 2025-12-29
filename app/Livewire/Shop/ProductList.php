@@ -104,18 +104,13 @@ class ProductList extends Component
 
     private function getProducts()
     {
-        $cacheKey = 'products_' . md5($this->search);
-
-        return Cache::remember($cacheKey, 60, function () {
-            return Product::query()
-                ->when($this->search, function ($q) {
-                    $q->where(function ($sub) {
-                        $sub->where('name', 'like', "%{$this->search}%");
-                    });
-                })
-                ->with('category')
-                ->latest()
-                ->paginate(20);
-        });
+        return Product::query()
+            ->when($this->search, function ($q) {
+                $q->where('name', 'like', "%{$this->search}%");
+            })
+            ->with('category')
+            ->latest()
+            ->paginate(20);
     }
+
 }

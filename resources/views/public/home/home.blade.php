@@ -1,164 +1,151 @@
 @extends('layout')
 
-@section('title', 'Bienvenue sur FusionGift - Votre Boutique en Ligne')
-
-
+@section('title', 'Bienvenue sur Shopzone - Votre Boutique en Ligne')
 
 @section('content')
-        {{-- Hero --}}
-<section id="hero" class="hero section">
 
-      <div class="hero-container">
-        <div class="hero-content">
-          <div class="content-wrapper" data-aos="fade-up" data-aos-delay="100">
-            <h1 class="hero-title">Discover Amazing Products</h1>
-            <p class="hero-description">Explore our curated collection of premium items designed to enhance your lifestyle. From fashion to tech, find everything you need with exclusive deals and fast shipping.</p>
-            <div class="hero-actions" data-aos="fade-up" data-aos-delay="200">
-              <a href="#products" class="btn-primary">Shop Now</a>
-              <a href="#categories" class="btn-secondary">Browse Categories</a>
-            </div>
-            <div class="features-list" data-aos="fade-up" data-aos-delay="300">
-              <div class="feature-item">
-                <i class="bi bi-truck"></i>
-                <span>Free Shipping</span>
-              </div>
-              <div class="feature-item">
-                <i class="bi bi-award"></i>
-                <span>Quality Guarantee</span>
-              </div>
-              <div class="feature-item">
-                <i class="bi bi-headset"></i>
-                <span>24/7 Support</span>
-              </div>
-            </div>
-          </div>
-        </div>
+<div class="container py-5">
 
-        <div class="hero-visuals">
-          <div class="product-showcase" data-aos="fade-left" data-aos-delay="200">
-            <div class="product-card featured">
-              <img src="{{asset('assets/img/product/product-2.webp')}}" alt="Featured Product" class="img-fluid">
-              <div class="product-badge">Best Seller</div>
-              <div class="product-info">
-                <h4>Premium Wireless Headphones</h4>
-                <div class="price">
-                  <span class="sale-price">$299</span>
-                  <span class="original-price">$399</span>
-                </div>
-              </div>
-            </div>
+    {{-- HERO --}}
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">
+            Bienvenue sur <span class="text-primary">Shopzone</span>
+        </h1>
+        <p class="text-muted">Découvrez nos produits classés par catégorie</p>
+    </div>
 
-            <div class="product-grid">
-              <div class="product-mini" data-aos="zoom-in" data-aos-delay="400">
-                <img src="{{asset('assets/img/product/product-3.webp')}}" alt="Product" class="img-fluid">
-                <span class="mini-price">$89</span>
-              </div>
-              <div class="product-mini" data-aos="zoom-in" data-aos-delay="500">
-                <img src="{{asset('assets/img/product/product-5.webp')}}" alt="Product" class="img-fluid">
-                <span class="mini-price">$149</span>
-              </div>
-            </div>
-          </div>
+    {{-- CATEGORIES --}}
+    @foreach($categories as $category)
+        @if($category->products->count())
 
-          <div class="floating-elements">
-            <div class="floating-icon cart" data-aos="fade-up" data-aos-delay="600">
-              <i class="bi bi-cart3"></i>
-              <span class="notification-dot">3</span>
-            </div>
-            <div class="floating-icon wishlist" data-aos="fade-up" data-aos-delay="700">
-              <i class="bi bi-heart"></i>
-            </div>
-            <div class="floating-icon search" data-aos="fade-up" data-aos-delay="800">
-              <i class="bi bi-search"></i>
-            </div>
-          </div>
-        </div>
-      </div>
+            <div class="mb-5">
 
-    </section>
-        {{-- End hero --}}
-
-        {{-- For promotion --}}
-        <section id="promo-cards" class="promo-cards section">
-            <div class="container" data-aos="fade-up" data-aos-delay="100">
-                <div class="row gy-4">
-
-                <div class="col-lg-6">
-                    <div class="category-featured" data-aos="fade-right" data-aos-delay="200">
-                    <div class="category-image">
-                        <img src="{{asset('assets/img/product/product-f-2.webp')}}" alt="Women's Collection" class="img-fluid">
-                    </div>
-                    <div class="category-content">
-                        <span class="category-tag">Trending Now</span>
-                        <h2>New Summer Collection</h2>
-                        <p>Discover our latest arrivals designed for the modern lifestyle. Elegant, comfortable, and sustainable fashion for every occasion.</p>
-                        <a href="#" class="btn-shop">Explore Collection <i class="bi bi-arrow-right"></i></a>
-                    </div>
-                    </div>
+                {{-- CATEGORY HEADER --}}
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="fw-semibold">{{ $category->name }}</h3>
+                    <a href="#" class="btn btn-outline-primary btn-sm">
+                        Voir plus
+                    </a>
                 </div>
 
-                <div class="col-lg-6">
+                {{-- CARROUSEL DE PRODUITS --}}
+                <div id="carouselCategory{{ $category->id }}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
 
-                    <div class="row gy-4">
+                        @foreach($category->products->chunk(4) as $chunkIndex => $productsChunk)
+                            <div class="carousel-item {{ $chunkIndex === 0 ? 'active' : '' }}">
+                                <div class="row g-4">
 
-                    <div class="col-xl-6">
-                        <div class="category-card cat-men" data-aos="fade-up" data-aos-delay="300">
-                        <div class="category-image">
-                            <img src="{{asset('assets/img/product/product-m-5.webp')}}" alt="Men's Fashion" class="img-fluid">
-                        </div>
-                        <div class="category-content">
-                            <h4>Men's Wear</h4>
-                            <p>242 products</p>
-                            <a href="#" class="card-link">Shop Now <i class="bi bi-arrow-right"></i></a>
-                        </div>
-                        </div>
+                                    @foreach($productsChunk as $product)
+                                        <div class="col-12 col-sm-6 col-md-3">
+
+                                            {{-- CARD PRODUIT --}}
+                                            <div class="card h-100 shadow-sm border-0">
+
+                                                {{-- CARROUSEL IMAGES PRODUIT --}}
+                                                @if($product->media->count() > 1)
+                                                    <div id="carouselProduct{{ $product->id }}"
+                                                         class="carousel slide"
+                                                         data-bs-ride="carousel"
+                                                         data-bs-interval="4000">
+
+                                                        <div class="carousel-inner">
+                                                            @foreach($product->media as $index => $media)
+                                                                @if(str_starts_with($media->mime_type, 'image'))
+                                                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                                                        <img src="{{ $media->url() }}"
+                                                                             class="d-block w-100"
+                                                                             style="height:180px; object-fit:cover;">
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+
+                                                        {{-- Controls --}}
+                                                        <button class="carousel-control-prev" type="button"
+                                                                data-bs-target="#carouselProduct{{ $product->id }}"
+                                                                data-bs-slide="prev">
+                                                            <span class="carousel-control-prev-icon"></span>
+                                                        </button>
+
+                                                        <button class="carousel-control-next" type="button"
+                                                                data-bs-target="#carouselProduct{{ $product->id }}"
+                                                                data-bs-slide="next">
+                                                            <span class="carousel-control-next-icon"></span>
+                                                        </button>
+                                                    </div>
+
+                                                @elseif($product->media->first())
+                                                    <img src="{{ $product->media->first()->url() }}"
+                                                         class="card-img-top"
+                                                         style="height:180px; object-fit:cover;">
+                                                @else
+                                                    <img src="/pictures/shopzone.png"
+                                                         class="card-img-top"
+                                                         style="height:180px; object-fit:cover;">
+                                                @endif
+
+                                                {{-- CONTENU PRODUIT --}}
+                                                <div class="card-body d-flex flex-column">
+
+                                                    <h6 class="fw-bold mb-1">
+                                                        {{ Str::limit($product->name, 40) }}
+                                                    </h6>
+
+                                                    <small class="text-muted mb-2">
+                                                        {{ $product->category?->name ?? '—' }}
+                                                    </small>
+
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <span class="fw-bold text-primary">
+                                                            {{ number_format($product->finalPrice(), 0, ',', ' ') }} Ar
+                                                        </span>
+
+                                                        <span class="badge bg-success">
+                                                            {{ $product->stock }} unités
+                                                        </span>
+                                                    </div>
+
+                                                    @if($product->description)
+                                                        <p class="text-muted small mb-3">
+                                                            {{ Str::limit($product->description, 70) }}
+                                                        </p>
+                                                    @endif
+
+                                                    <a href="#"
+                                                       class="btn btn-primary btn-sm mt-auto w-100">
+                                                        Voir le produit
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                </div>
+                            </div>
+                        @endforeach
+
                     </div>
 
-                    <div class="col-xl-6">
-                        <div class="category-card cat-kids" data-aos="fade-up" data-aos-delay="400">
-                        <div class="category-image">
-                            <img src="{{asset('assets/img/product/product-8.webp')}}" alt="Kid's Fashion" class="img-fluid">
-                        </div>
-                        <div class="category-content">
-                            <h4>Kid's Fashion</h4>
-                            <p>185 products</p>
-                            <a href="#" class="card-link">Shop Now <i class="bi bi-arrow-right"></i></a>
-                        </div>
-                        </div>
-                    </div>
+                    {{-- CONTROLS PRODUITS --}}
+                    <button class="carousel-control-prev" type="button"
+                            data-bs-target="#carouselCategory{{ $category->id }}"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bg-dark rounded-circle"></span>
+                    </button>
 
-                    <div class="col-xl-6">
-                        <div class="category-card cat-cosmetics" data-aos="fade-up" data-aos-delay="500">
-                        <div class="category-image">
-                            <img src="{{asset('assets/img/product/product-3.webp')}}" alt="Cosmetics" class="img-fluid">
-                        </div>
-                        <div class="category-content">
-                            <h4>Beauty Products</h4>
-                            <p>127 products</p>
-                            <a href="#" class="card-link">Shop Now <i class="bi bi-arrow-right"></i></a>
-                        </div>
-                        </div>
-                    </div>
+                    <button class="carousel-control-next" type="button"
+                            data-bs-target="#carouselCategory{{ $category->id }}"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-dark rounded-circle"></span>
+                    </button>
 
-                    <div class="col-xl-6">
-                        <div class="category-card cat-accessories" data-aos="fade-up" data-aos-delay="600">
-                        <div class="category-image">
-                            <img src="{{asset('assets/img/product/product-12.webp')}}" alt="Accessories" class="img-fluid">
-                        </div>
-                        <div class="category-content">
-                            <h4>Accessories</h4>
-                            <p>308 products</p>
-                            <a href="#" class="card-link">Shop Now <i class="bi bi-arrow-right"></i></a>
-                        </div>
-                        </div>
-                    </div>
-
-                    </div>
                 </div>
-
-                </div>
-
             </div>
-            </section>
-        {{-- End promotion --}}
+        @endif
+    @endforeach
+
+</div>
+
 @endsection

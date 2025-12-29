@@ -73,11 +73,7 @@ class ContactListAdmin extends Component
 
     private function getContacts()
     {
-        $cacheKey = 'contacts_' . md5($this->search);
-
-        return Cache::remember($cacheKey, 60, function () {
-
-            return Contact::query()
+        return Contact::query()
                 ->when(
                     $this->search,
                     fn($q) =>
@@ -87,6 +83,5 @@ class ContactListAdmin extends Component
                 )
                 ->latest()
                 ->paginate(20);
-        });
     }
 }

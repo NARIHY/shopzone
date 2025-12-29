@@ -73,8 +73,7 @@ class ListUsersInAGroupList extends Component
 
     private function getGroups()
     {
-        return Cache::remember('group_users_' . md5($this->search), 60, function () {
-            return Group::with(['roles:id,roleName', 'users:id,name,email'])
+        return Group::with(['roles:id,roleName', 'users:id,name,email'])
                 ->select('id', 'name', 'description', 'role_id', 'is_active', 'created_at')
                 ->when($this->search, function ($q) {
                     $search = "%{$this->search}%";
@@ -89,6 +88,5 @@ class ListUsersInAGroupList extends Component
                 })
                 ->latest()
                 ->paginate(20);
-        });
     }
 }

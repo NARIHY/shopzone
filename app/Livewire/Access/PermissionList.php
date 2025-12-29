@@ -70,10 +70,7 @@ class PermissionList extends Component
      */
     private function getPermissions()
     {
-        $cacheKey = 'permissions_' . md5($this->search);
-
-        return Cache::remember($cacheKey, 60, function () {
-            return Permission::select('id', 'name', 'description', 'is_active', 'created_at')
+        return Permission::select('id', 'name', 'description', 'is_active', 'created_at')
                 ->when($this->search, function ($q) {
                     $search = "%{$this->search}%";
                     $q->where(function ($sub) use ($search) {
@@ -83,7 +80,6 @@ class PermissionList extends Component
                 })
                 ->latest('id')
                 ->paginate(20);
-        });
     }
 
     /**

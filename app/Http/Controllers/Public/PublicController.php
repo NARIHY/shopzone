@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Contact\ContactRequest;
 use App\Jobs\Contact\ProcesseCreateContactJob;
 use App\Models\Contact\Contact;
+use App\Models\Shop\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -14,7 +15,12 @@ class PublicController extends Controller
 {
     public function home(): View
     {
-        return view(CommonPublicView::getHomeView());
+         $categories = ProductCategory::with(['products' => function ($q) {
+                            $q->where('is_active', true)
+                            ->where('stock', '>', 0)
+                            ->latest();
+                        }])->get();
+        return view(CommonPublicView::getHomeView(), compact('categories'));
     }
 
     public function about(): View

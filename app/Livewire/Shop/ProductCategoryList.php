@@ -132,9 +132,7 @@ class ProductCategoryList extends Component
 
     private function getCategories()
     {
-        $cacheKey = 'product_categories_' . md5($this->search);
-        return Cache::remember($cacheKey, 60, function () {
-            return ProductCategory::query()
+        return ProductCategory::query()
                 ->when($this->search, function(Builder $query) {
                     $query->where(function(Builder $q) {
                         $q->where('name', 'like', "%{$this->search}%");
@@ -143,6 +141,5 @@ class ProductCategoryList extends Component
                 ->with('products')
                 ->latest()
                 ->paginate(20);
-        });
     }
 }
