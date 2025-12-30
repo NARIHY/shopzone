@@ -7,42 +7,67 @@
 
     <div class="row g-5">
 
-        {{-- IMAGES --}}
+        {{-- MEDIA (IMAGES + VIDEOS) --}}
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
 
                     @if($product->media->count())
-                        <div id="productCarousel" class="carousel slide">
+                        <div id="productCarousel" class="carousel slide" data-bs-ride="false">
                             <div class="carousel-inner rounded">
+
                                 @foreach($product->media as $i => $media)
                                     <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
-                                        <img src="{{ $media->url() }}"
-                                             class="d-block w-100"
-                                             style="height:420px; object-fit:contain;"
-                                             alt="{{ $product->name }}">
+
+                                        {{-- IMAGE --}}
+                                        @if(str_starts_with($media->mime_type, 'image'))
+                                            <img
+                                                src="{{ $media->url() }}"
+                                                alt="{{ $media->title ?? $product->name }}"
+                                                class="d-block w-100 rounded-lg"
+                                                style="height:420px; object-fit:contain;"
+                                            >
+
+                                        {{-- VIDEO --}}
+                                        @elseif(str_starts_with($media->mime_type, 'video'))
+                                            <video
+                                                controls
+                                                preload="metadata"
+                                                class="d-block w-100 rounded-lg"
+                                                style="height:420px; object-fit:contain;">
+                                                <source src="{{ $media->url() }}" type="{{ $media->mime_type }}">
+                                                {{ __('Your browser does not support the video tag.') }}
+                                            </video>
+                                        @endif
+
                                     </div>
                                 @endforeach
+
                             </div>
 
                             @if($product->media->count() > 1)
-                                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#productCarousel" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon"></span>
                                 </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+
+                                <button class="carousel-control-next" type="button"
+                                        data-bs-target="#productCarousel" data-bs-slide="next">
                                     <span class="carousel-control-next-icon"></span>
                                 </button>
                             @endif
                         </div>
                     @else
-                        <img src="/pictures/shopzone.png" class="img-fluid rounded">
+                        <img src="/pictures/shopzone.png"
+                             class="img-fluid rounded"
+                             alt="Shopzone">
                     @endif
 
                 </div>
             </div>
         </div>
 
-        {{-- INFOS --}}
+        {{-- INFOS PRODUIT --}}
         <div class="col-lg-6">
 
             {{-- Catégorie --}}
@@ -80,7 +105,6 @@
                 @endif
             </div>
 
-
             {{-- STOCK --}}
             @if($product->inStock())
                 <span class="badge bg-success mb-3">
@@ -109,9 +133,9 @@
                 </button>
             </div>
 
-            {{-- INFOS TECHNIQUES --}}
             <hr class="my-4">
 
+            {{-- INFOS TECHNIQUES --}}
             <livewire:product.product-features :product="$product" />
 
         </div>
