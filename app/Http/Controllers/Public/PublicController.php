@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Contact\ContactRequest;
 use App\Jobs\Contact\ProcesseCreateContactJob;
 use App\Models\Contact\Contact;
+use App\Models\Shop\Product;
 use App\Models\Shop\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -21,6 +22,15 @@ class PublicController extends Controller
                             ->latest();
                         }])->get();
         return view(CommonPublicView::getHomeView(), compact('categories'));
+    }
+
+    public function showProduct(Product $productToShow): View
+    {
+        $product = Product::with(['category', 'media'])
+                    ->where('is_active', true)
+                    ->where('stock', '>', 0)
+                    ->findOrFail($productToShow->id);
+        return view(CommonPublicView::getShowProductView(), compact('product'));
     }
 
     public function about(): View

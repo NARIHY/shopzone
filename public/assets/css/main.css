@@ -12606,3 +12606,34 @@ section,
     justify-content: center;
   }
 }
+
+
+/* Conteneur image produit */
+.product-media {
+    position: relative;
+    overflow: hidden;
+    border-radius: .5rem;
+}
+
+/* Image */
+.product-media img {
+    transition: transform .4s ease;
+}
+
+/* Zoom-in au hover */
+.product-media:hover img {
+    transform: scale(1.1);
+}
+
+/* Badge promo */
+.badge-discount {
+    position: absolute;
+    top: .5rem;
+    left: .5rem;
+    z-index: 2;
+}
+
+/* Prix barré */
+.old-price {
+    font-size: .85rem;
+}

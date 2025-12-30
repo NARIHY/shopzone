@@ -13,6 +13,10 @@ use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
 
 Route::prefix('/')->name('public.')->group(function () {
     Route::get('/', [\App\Http\Controllers\Public\PublicController::class, 'home'])->name('home');
+    // Route pour afficher un produit
+    Route::get('/product/{productToShow}', [\App\Http\Controllers\Public\PublicController::class, 'showProduct'])
+        ->name('product.show');
+    
     Route::get('/about', [\App\Http\Controllers\Public\PublicController::class, 'about'])->name('about');
 
     Route::get('/contact', [\App\Http\Controllers\Public\PublicController::class, 'contact'])->name('contact');
