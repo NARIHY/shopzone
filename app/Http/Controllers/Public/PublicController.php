@@ -28,11 +28,21 @@ class PublicController extends Controller
 
     public function showProduct(Product $productToShow): View
     {
-        $product = Product::with(['category', 'media'])
+        $product = Cache::remember(
+            'product_show_' . $productToShow->id,
+            600,
+            function () use ($productToShow) {
+                return Product::with(['category', 'media'])
                     ->where('is_active', true)
                     ->where('stock', '>', 0)
                     ->findOrFail($productToShow->id);
-        return view(CommonPublicView::getShowProductView(), compact('product'));
+            }
+        );
+
+        return view(
+            CommonPublicView::getShowProductView(),
+            compact('product')
+        );
     }
 
     public function showCategory(): View
