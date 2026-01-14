@@ -176,7 +176,7 @@
                 </a>
               </li>
 
-              <li><a href="#">Category</a></li>
+              <li><a href="{{ route('public.categories.show') }}" class="{{ Route::currentRouteName() == 'public.categories.show' ? 'active' : '' }}">Category</a></li>
 
               <li>
                 <a href="{{ route('public.about') }}"

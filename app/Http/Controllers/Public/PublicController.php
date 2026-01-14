@@ -10,7 +10,9 @@ use App\Models\Contact\Contact;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
+
 
 class PublicController extends Controller
 {
@@ -31,6 +33,23 @@ class PublicController extends Controller
                     ->where('stock', '>', 0)
                     ->findOrFail($productToShow->id);
         return view(CommonPublicView::getShowProductView(), compact('product'));
+    }
+
+    public function showCategory(): View
+    {
+        $categories = Cache::remember(
+            'public_product_categories',
+            now()->addMinutes(5), 
+            function () {
+                return ProductCategory::query()
+                    ->where('is_active', true)
+                    ->withCount('products')
+                    ->select('id', 'name', 'description')
+                    ->get();
+            }
+        );
+
+        return view(CommonPublicView::getShowCategoryView(), compact('categories'));
     }
 
     public function about(): View

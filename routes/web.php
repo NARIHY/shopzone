@@ -16,6 +16,10 @@ Route::prefix('/')->name('public.')->group(function () {
     // Route pour afficher un produit
     Route::get('/product/{productToShow}', [\App\Http\Controllers\Public\PublicController::class, 'showProduct'])
         ->name('product.show');
+
+    // Route pour afficher les catégories de produits
+    Route::get('/categories', [\App\Http\Controllers\Public\PublicController::class, 'showCategory'])
+        ->name('categories.show');
     
     Route::get('/about', [\App\Http\Controllers\Public\PublicController::class, 'about'])->name('about');
 

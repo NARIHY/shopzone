@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Access\Group;
 use App\Models\Access\Role;
+use App\Models\Files\Media;
 use App\Models\User;
 use App\Services\CachedData;
 use Illuminate\Support\Facades\Cache;
@@ -27,6 +28,12 @@ class AppServiceProvider extends ServiceProvider
      */
    public function boot(): void
     {
+        //Observers
+        Role::observe(\App\Observers\RoleObserver::class);
+        Media::observe(\App\Observers\MediaObserver::class);
+        User::observe(\App\Observers\UserObserver::class);
+
+        // Partage global des données mises en cache pour les formulaires
         View::composer('*', function ($view) {
 
             // Roles avec groupes (limité aux colonnes nécessaires)

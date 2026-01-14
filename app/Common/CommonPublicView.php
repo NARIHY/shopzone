@@ -5,6 +5,10 @@ namespace App\Common;
 class CommonPublicView
 {
 
+    public static function getShowCategoryView(): string
+    {
+        return self::baseView().'category.all';
+    }
     public static function getShowProductView(): string
     {
         return self::baseView().'home.product.show';
