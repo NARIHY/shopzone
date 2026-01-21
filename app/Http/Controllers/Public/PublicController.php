@@ -18,13 +18,51 @@ class PublicController extends Controller
 {
     public function home(): View
     {
-         $categories = ProductCategory::with(['products' => function ($q) {
-                            $q->where('is_active', true)
-                            ->where('stock', '>', 0)
-                            ->latest();
-                        }])->get();
+        Cache::forget('product_categories_home');
+        $categories = Cache::remember('product_categories_home', 600, function () {
+            return ProductCategory::query()
+                ->where('is_active', true)
+                ->whereHas('products', function ($q) {
+                    $q->where('is_active', true)
+                    ->where('stock', '>', 0);
+                })
+                ->with([
+                    'products' => function ($q) {
+                        $q->select([
+                            'id',
+                            'name',
+                            'slug',
+                            'price',
+                            'discount_price',
+                            'stock',
+                            'product_category_id',
+                        ])
+                        ->where('is_active', true)
+                        ->where('stock', '>', 0)
+                        ->take(10)
+                        ->latest()
+                        ->with([
+                            // ne demande que les colonnes réelles de la table medias
+                            'media' => function ($m) {
+                                $m->select(['media.id','media.path']);
+                            }
+                        ]);
+                    }
+                ])
+                ->select(['id', 'name', 'description'])
+                ->withCount([
+                    'products as products_count' => function ($q) {
+                        $q->where('is_active', true)
+                        ->where('stock', '>', 0);
+                    }
+                ])
+                ->get();
+        });
+
         return view(CommonPublicView::getHomeView(), compact('categories'));
     }
+
+
 
     public function showProduct(Product $productToShow): View
     {

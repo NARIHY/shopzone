@@ -43,5 +43,6 @@ class ProductObserver
         // Dépendances possibles
         Cache::forget('product_categories_input');
         Cache::forget('media_input');
+        Cache::forget('product_categories_home');
     }
 }

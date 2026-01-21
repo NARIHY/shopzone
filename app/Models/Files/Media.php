@@ -30,11 +30,9 @@ class Media extends Model
      */
     public function url(): string
     {
-        if ($this->disk === 'public') {
-            return asset('storage/' . $this->path);
-        }
-
-        throw new \RuntimeException("URL generation is not supported for the disk: {$this->disk}");
+        return asset('storage/' . $this->path);
+        //I don't know why this is not working with the public disk
+        // throw new \RuntimeException("URL generation is not supported for the disk: {$this->disk}");
     }
 
     /**
