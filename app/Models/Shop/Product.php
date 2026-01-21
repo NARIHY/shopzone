@@ -3,6 +3,7 @@
 namespace App\Models\Shop;
 
 use App\Models\Files\Media;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,10 +38,10 @@ class Product extends Model
      * A product can have multiple media files (images, videos, etc.)
      */
     public function media()
-{
-    return $this->belongsToMany(Media::class, 'media_product', 'product_id', 'media_id')
-                ->withTimestamps();
-}
+    {
+        return $this->belongsToMany(Media::class, 'media_product', 'product_id', 'media_id')
+            ->withTimestamps();
+    }
 
     /**
      * A product belongs to a single category
@@ -76,5 +77,29 @@ class Product extends Model
     public function inStock(): bool
     {
         return $this->stock > 0;
+    }
+
+    /* ----------------------------------------
+    |  MUTTATORS
+    |---------------------------------------- */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => ucfirst($value),
+        );
+    }
+
+    protected function slug(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => strtoupper(str_replace(' ', '-', $value)),
+        );
+    }
+
+    protected function sku(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => strtoupper($value),
+        );
     }
 }
