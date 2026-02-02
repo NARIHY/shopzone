@@ -44,6 +44,16 @@ class Product extends Model
     }
 
     /**
+     * Get the firstMedia
+     * @return Media|object|object{pivot: \Illuminate\Database\Eloquent\Relations\Pivot|null}
+     */
+    public function firstMediaPath()
+    {
+        return $this->media()->first()->path ?? "";
+    }
+
+
+    /**
      * A product belongs to a single category
      */
     public function category()

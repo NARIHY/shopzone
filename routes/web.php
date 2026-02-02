@@ -20,6 +20,8 @@ Route::prefix('/')->name('public.')->group(function () {
     // Route pour afficher les catégories de produits
     Route::get('/categories', [\App\Http\Controllers\Public\PublicController::class, 'showCategory'])
         ->name('categories.show');
+    Route::get('/categories/{categoryId}/products', [\App\Http\Controllers\Public\Category\CategoryPublicController::class, 'getProductByCategoryId'])
+        ->name('categories.products');
     
     Route::get('/about', [\App\Http\Controllers\Public\PublicController::class, 'about'])->name('about');
 
