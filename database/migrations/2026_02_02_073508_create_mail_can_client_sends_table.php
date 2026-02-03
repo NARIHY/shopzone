@@ -17,6 +17,9 @@ return new class extends Migration
             // Actif / Inactif
             $table->boolean('is_active')->default(true);
 
+            $table->dateTime('valid_from')->nullable();
+            $table->dateTime('valid_to')->nullable();
+
             $table->timestamps();
         });
     }

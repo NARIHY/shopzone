@@ -14,6 +14,8 @@ class MailCanClientSend extends Model
     protected $fillable = [
         'mail_limit',
         'is_active',
+        'valid_from',
+        'valid_to',
     ];
 
     protected $casts = [
