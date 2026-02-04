@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Mail;
 
 use App\Common\MailAdminView;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Mail\MailCanClientSend\MailCanClientSendToCreateRequest;
+use App\Jobs\Mail\MailCanSend\ProccessCreateMailCanSendJob;
 use App\Models\Mail\MailCanClientSend;
 use Illuminate\Http\Request;
 
@@ -11,10 +13,14 @@ class MailCanClientSendController extends Controller
 {
     public function index()
     {
-        // two different queries to optimize performance could be done here
-        // admin and client queries are different
-        $mailCanClientSends = MailCanClientSend::orderBy('created_at', 'desc')->paginate(20);
-        return view(MailAdminView::getListView(), compact('mailCanClientSends'));
+        return view(MailAdminView::getListView());
+    }
+
+    public function edit(MailCanClientSend $mailCanClientSend)
+    {
+        return view(MailAdminView::getCreateOrEditView(), [
+            'mailCanClientSend' => MailCanClientSend::findOrFail($mailCanClientSend->id),
+        ]);
     }
 
     public function create()
@@ -28,9 +34,10 @@ class MailCanClientSendController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(MailCanClientSendToCreateRequest $mailCanClientSendToCreateRequest)
     {
-        //
+        ProccessCreateMailCanSendJob::dispatch($mailCanClientSendToCreateRequest->validated());
+        return redirect()->route('admin.mailcanclientsend.index');
     }
 
     public function update(Request $request, $id)

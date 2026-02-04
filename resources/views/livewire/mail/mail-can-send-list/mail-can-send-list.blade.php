@@ -44,9 +44,9 @@
     </div>
 
     <!-- New Category Button -->
-    <a href="{{ route('admin.roles.create') }}"
+    <a href="{{ route('admin.mailcanclientsend.create') }}"
        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition">
-        {{ __('shop.+ New Role') }}
+        {{ __('+ New Mail') }}
     </a>
 </div>
 
@@ -74,12 +74,12 @@
 
                 {{-- Valid from --}}
                 <td class="px-6 py-4 text-sm text-center align-middle">
-                    {{ $item->valid_from ?? 'N/A' }}
+                    {{ $item->valid_from ? \Carbon\Carbon::parse($item->valid_from)->format('l d F Y') : 'N/A' }}
                 </td>
 
                 {{-- Valid to --}}
                 <td class="px-6 py-4 text-sm text-center align-middle">
-                    {{ $item->valid_to ?? 'N/A' }}
+                    {{ $item->valid_to ? \Carbon\Carbon::parse($item->valid_to)->format('l d F Y') : 'N/A' }}
                 </td>
 
                 {{-- Status --}}
@@ -97,7 +97,7 @@
                             {{ __('Details') }}
                         </button>
 
-                        <a href="{{ route('admin.mailCanSend.edit', $item )}}" class="px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700">
+                        <a href="{{ route('admin.mailcanclientsend.edit', $item )}}" class="px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700">
                             {{ __('edit') }}
                         </a>
 
@@ -156,12 +156,12 @@
 
                     <p>
                         <strong>{{ __('Valid from') }}:</strong>
-                        {{ $selectedMailCanSend->valid_from ?? 'N/A' }}
+                        {{ $item->valid_from ? \Carbon\Carbon::parse($item->valid_from)->format('l d F Y') : 'N/A' }}
                     </p>
 
                     <p>
                         <strong>{{ __('Valid to') }}:</strong>
-                        {{ $selectedMailCanSend->valid_to ?? 'N/A' }}
+                        {{ $selectedMailCanSend->valid_to ? \Carbon\Carbon::parse($selectedMailCanSend->valid_to)->format('l d F Y') : 'N/A' }}
                     </p>
 
                     <p>
