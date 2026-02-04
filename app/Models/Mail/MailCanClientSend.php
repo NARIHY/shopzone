@@ -12,6 +12,7 @@ class MailCanClientSend extends Model
     protected $table = 'mail_can_client_sends';
 
     protected $fillable = [
+        'title',
         'mail_limit',
         'is_active',
         'valid_from',

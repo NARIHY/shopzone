@@ -24,6 +24,11 @@ class ProccessCreateMailCanSendJob implements ShouldQueue, ShouldBeUnique
         //
     }
 
+    public function uniqueId(): string
+    {
+        return $this->mailCanClientSend->id;
+    }
+    
     /**
      * Execute the job.
      */

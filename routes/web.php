@@ -48,6 +48,9 @@ Route::middleware([
     Route::resource('products', \App\Http\Controllers\Shop\ProductController::class)->names('products');
     Route::resource('permissions', \App\Http\Controllers\Access\Permission\PermissionController::class)->names('permissions');
 
+    //Mail
+    Route::resource('mail-can-client-sends', \App\Http\Controllers\Mail\MailCanClientSendController::class)->names('mailcanclientsend');
+
     //affect role to permission
     Route::get('roles/{role}/permissions', [\App\Http\Controllers\Access\Role\RoleToPermissionController::class, 'index'])->name('roleToPermission.index');
     Route::post('roles/{role}/permissions', [\App\Http\Controllers\Access\Role\RoleToPermissionController::class, 'update'])->name('roleToPermission.update');

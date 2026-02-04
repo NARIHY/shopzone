@@ -26,6 +26,8 @@
                     <flux:navlist.item icon="user-group" :href="route('admin.groupUsers.index')" :current="request()->routeIs('admin.groupUsers.index')" wire:navigate> {{ __('User in a group') }} </flux:navlist.item>
                     <flux:navlist.item icon="server" :href="route('admin.permissions.index')" :current="request()->routeIs('admin.permissions.index')" wire:navigate> {{ __('Permissions') }} </flux:navlist.item>
 
+                    {{-- Email --}}
+                    <flux:navlist.item icon="envelope" :href="route('admin.mailcanclientsend.index')" :current="request()->routeIs('admin.mailcanclientsend.index')" wire:navigate> {{ __('Mail Can Client Sends') }} </flux:navlist.item>
                     {{-- SIDE BAR ITEMS --}}
                 </flux:navlist.group>
             </flux:navlist>
