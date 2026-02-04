@@ -48,7 +48,7 @@
             <x-input.number 
                 name="mail_limit"
                 label="{{ __('Mail limits') }}"
-                value="{{ old('stock', $mailCanClientSend->stock ?? 0) }}"
+                value="{{ old('stock', $mailCanClientSend->mail_limit ?? 0) }}"
                 min="100"
                 max="3000"
                 step="1"
@@ -80,7 +80,7 @@
                        name="is_active"
                        id="is_active"
                        value="1"
-                       {{ old('is_active', $role->is_active ?? false) ? 'checked' : '' }}
+                       {{ old('is_active', $mailCanClientSend->is_active ?? false) ? 'checked' : '' }}
                        class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600">
                 <label for="is_active" class="text-gray-700 dark:text-gray-200 font-medium">
                     {{ __('Active') }}

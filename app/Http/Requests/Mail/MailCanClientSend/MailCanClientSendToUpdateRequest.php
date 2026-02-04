@@ -11,7 +11,7 @@ class MailCanClientSendToUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class MailCanClientSendToUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required|string|max:255',
+            'mail_limit' => 'required|integer|min:100|max:3000',
+            'is_active' => 'boolean',
+            'valid_from' => 'required|date',
+            'valid_to' => 'required|date|after:valid_from',
         ];
     }
 }

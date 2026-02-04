@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Mail;
 use App\Common\MailAdminView;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mail\MailCanClientSend\MailCanClientSendToCreateRequest;
+use App\Http\Requests\Mail\MailCanClientSend\MailCanClientSendToUpdateRequest;
 use App\Jobs\Mail\MailCanSend\ProccessCreateMailCanSendJob;
+use App\Jobs\Mail\MailCanSend\ProccessUpdateMailCanSendJob;
 use App\Models\Mail\MailCanClientSend;
 use Illuminate\Http\Request;
 
@@ -29,9 +31,7 @@ class MailCanClientSendController extends Controller
     }
     public function show(MailCanClientSend $mailCanClientSend)
     {
-        return view(MailAdminView::getShowView(), [
-            'mailCanClientSend' => MailCanClientSend::findOrFail($mailCanClientSend->id),
-        ]);
+        // Do nothing, no show view
     }
 
     public function store(MailCanClientSendToCreateRequest $mailCanClientSendToCreateRequest)
@@ -40,12 +40,13 @@ class MailCanClientSendController extends Controller
         return redirect()->route('admin.mailcanclientsend.index');
     }
 
-    public function update(Request $request, $id)
+    public function update(MailCanClientSendToUpdateRequest $mailCanClientSendToUpdateRequest, $id)
     {
-        //
+        ProccessUpdateMailCanSendJob::dispatch($mailCanClientSendToUpdateRequest->validated(), MailCanClientSend::findOrFail($id));
+        return redirect()->back();
     }
     public function destroy($id)
     {
-        //
+        // do nothing cannot delete
     }
 }
