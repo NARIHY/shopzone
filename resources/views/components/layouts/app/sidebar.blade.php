@@ -28,6 +28,9 @@
 
                     {{-- Email --}}
                     <flux:navlist.item icon="envelope" :href="route('admin.mailcanclientsend.index')" :current="request()->routeIs('admin.mailcanclientsend.index')" wire:navigate> {{ __('Mail Can Client Sends') }} </flux:navlist.item>
+                    
+                    {{-- Tenant Information --}}
+                    <flux:navlist.item icon="building-office" :href="route('admin.tenantinformations.index')" :current="request()->routeIs('admin.tenantinformations.index')" wire:navigate> {{ __('Tenant Information') }} </flux:navlist.item>
                     {{-- SIDE BAR ITEMS --}}
                 </flux:navlist.group>
             </flux:navlist>

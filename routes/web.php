@@ -51,6 +51,10 @@ Route::middleware([
     //Mail
     Route::resource('mail-can-client-sends', \App\Http\Controllers\Mail\MailCanClientSendController::class)->names('mailcanclientsend');
 
+
+    //Tenant information
+    Route::resource('tenant-information', \App\Http\Controllers\Tenant\TenantInformationController::class)->names('tenantinformations');
+
     //affect role to permission
     Route::get('roles/{role}/permissions', [\App\Http\Controllers\Access\Role\RoleToPermissionController::class, 'index'])->name('roleToPermission.index');
     Route::post('roles/{role}/permissions', [\App\Http\Controllers\Access\Role\RoleToPermissionController::class, 'update'])->name('roleToPermission.update');
