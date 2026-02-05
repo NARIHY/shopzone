@@ -72,11 +72,29 @@
 
                 {{-- Logo --}}
                 {{-- File Upload --}}
+                @if($tenant && $tenant->logo_path)
+                <div class="row mb-3">
+                    <div class="col md-6">
+                        <x-form.file 
+                            name="logo_path"
+                            :value="$tenant->logo_path ?? null"
+                            help="{{ __('Company Logo') }}"
+                        />
+                    </div>
+                    <div class="col md-6">
+                            <div class="mt-2">
+                                <img src="{{ asset('storage/' . $tenant->logo_path) }}" alt="{{ __('Current Logo') }}" class="h-20 w-auto object-contain">
+                            </div>
+                    </div>
+                </div>
+
+                @else
                 <x-form.file 
-                    name="logo_path"
-                    :value="$tenant->logo_path ?? null"
-                    help="{{ __('Company Logo') }}"
-                />
+                            name="logo_path"
+                            :value="$tenant->logo_path ?? null"
+                            help="{{ __('Company Logo') }}"
+                        />
+                @endif
 
                 
 
