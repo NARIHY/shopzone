@@ -49,6 +49,9 @@
                     :value="old('email', $tenant->email ?? '')"
                 />
 
+
+
+
                 {{-- RIB --}}
                 <x-form.input
                     name="RIB"
