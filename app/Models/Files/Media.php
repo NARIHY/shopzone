@@ -16,8 +16,26 @@ class Media extends Model
         'disk',
         'mime_type',
         'size',
-        'original_name'
+        'original_name',
+        'is_webp'
     ];
+
+    protected $casts = [
+        'is_webp' => 'boolean',
+    ];
+
+    public function isImage(): bool
+    {
+        if($this->is_webp === false) {
+            return str_starts_with($this->mime_type, 'image/');
+        }
+        return false;
+    }
+
+    public function scopeImages($query)
+    {
+        return $query->where('mime_type', 'like', 'image/%');
+    }
 
     public function products()
     {
