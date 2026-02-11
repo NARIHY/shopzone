@@ -16,28 +16,60 @@ class ImageProcessor
         $this->imageManager = new ImageManager(new Driver());
     }
 
-    public function toWebp(Media $media, int $quality = 80): Media
+    public function toWebp(Media $media, int $quality = 80): ?Media
     {
+        // sécurité
+        if ($media->mime_type === 'image/webp') {
+            return $media;
+        }
+
+        if (! $media->exists()) {
+            return null;
+        }
+
         $disk = $media->disk;
-        $path = $media->path;
 
-        // read image from file system
-        $image = $this->imageManager->read(Storage::disk($disk)->path($path));
+        /**
+         * IMPORTANT :
+         * Laravel Storage utilise toujours "/"
+         * On normalise pour éviter les "\" Windows en base
+         */
+        $oldPath = ltrim(str_replace('\\', '/', $media->path), '/');
 
-        $newPath = pathinfo($path, PATHINFO_FILENAME) . '.webp';
+        // Chemin absolu OS (Windows/Linux)
+        $absoluteOldPath = Storage::disk($disk)->path(
+            str_replace('/', DIRECTORY_SEPARATOR, $oldPath)
+        );
 
-        // convert and save modified image in webp format
+        // Lire image
+        $image = $this->imageManager->read($absoluteOldPath);
+
+        // Dossier + nom fichier
+        $dirname  = pathinfo($oldPath, PATHINFO_DIRNAME);
+        $filename = pathinfo($oldPath, PATHINFO_FILENAME);
+
+        // Construire nouveau path (toujours "/" pour Laravel)
+        $newPath = ($dirname !== '.' ? $dirname.'/' : '') . $filename.'.webp';
+
+        // Encoder webp
         $webpContent = $image->toWebp($quality);
 
+        // Sauvegarder via Storage (PAS DIRECTORY_SEPARATOR ici)
         Storage::disk($disk)->put($newPath, (string) $webpContent);
 
-        return Media::create([
-            'title'         => $media->title,
-            'path'          => $newPath,
-            'disk'          => $disk,
-            'mime_type'     => 'image/webp',
-            'size'          => Storage::disk($disk)->size($newPath),
+        // Supprimer ancien fichier
+        Storage::disk($disk)->delete($oldPath);
+
+        // Update media existant
+        $media->update([
+            'path' => $newPath,
+            'mime_type' => 'image/webp',
+            'size' => Storage::disk($disk)->size($newPath),
+            'is_webp' => true,
+            'title' => basename($newPath),
             'original_name' => basename($newPath),
         ]);
+
+        return $media->fresh();
     }
 }

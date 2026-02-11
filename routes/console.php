@@ -8,4 +8,4 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('app:convert-images-to-webp-scheduler')->hourly()->withoutOverlapping()->onOneServer();
+Schedule::command('app:convert-images-to-webp-scheduler')->everyMinute();

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 
 class ConvertImageToWebpJob implements ShouldQueue
 {
@@ -18,15 +19,8 @@ class ConvertImageToWebpJob implements ShouldQueue
         public Media $media
     ) {}
 
-    public function handle()
+    public function handle(ImageProcessor $imageProcessor)
     {
-        Media::where('mime_type', 'like', 'image/%')
-            ->where('mime_type', '!=', 'image/webp')
-            ->chunkById(100, function ($medias) {
-                foreach ($medias as $media) {
-                    ConvertImageToWebpJob::dispatch($media);
-                }
-            });
+        $imageProcessor->toWebp($this->media);
     }
-
 }

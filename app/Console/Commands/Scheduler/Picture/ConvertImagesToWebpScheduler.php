@@ -4,36 +4,38 @@ namespace App\Console\Commands\Scheduler\Picture;
 
 use Illuminate\Console\Command;
 use App\Models\Files\Media;
-use App\Jobs\Files\Picture\ConvertImageToWebpJob;
+use App\Services\Image\ImageProcessor;
 
 class ConvertImagesToWebpScheduler extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:convert-images-to-webp-scheduler';
+    protected $description = 'CONVERT IMAGES TO WEBP FORMAT SCHEDULER';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(ImageProcessor $imageProcessor)
     {
-        Media::where('mime_type', 'like', 'image/%')
-        ->where('mime_type', '!=', 'image/webp')
-        ->chunkById(100, function ($medias) {
-            foreach ($medias as $media) {
-                ConvertImageToWebpJob::dispatch($media)
-                    ->onQueue('images');
-            }
-        });
+        $count = 0;
+
+        $this->info('Début conversion images...');
+
+        Media::images()
+            ->where('is_webp', false)
+            ->chunkById(100, function ($medias) use (&$count, $imageProcessor) {
+
+                foreach ($medias as $media) {
+
+                    try {
+                        $result = $imageProcessor->toWebp($media);
+
+                        if ($result) {
+                            $count++;
+                        }
+
+                    } catch (\Throwable $e) {
+                        $this->error("Erreur media ID {$media->id} : ".$e->getMessage());
+                    }
+                }
+            });
+
+        $this->info("Images converties : {$count}");
     }
 }
