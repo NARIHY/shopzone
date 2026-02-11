@@ -8,4 +8,6 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('app:convert-images-to-webp-scheduler')->everyMinute();
+
+// CONVERT ALL IMAGE TO WEBP SCHEDULER AT 00:00 DAILY
+Schedule::command('app:convert-images-to-webp-scheduler')->daily()->at('00:00');
