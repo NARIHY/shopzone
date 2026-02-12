@@ -13,6 +13,8 @@ class AnswerClientMail extends Model
         'subject',
         'content',
         'media_path',
+        'sender_type', 
+        'contact_id',
     ];
 
     public function contact()
