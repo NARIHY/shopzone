@@ -84,6 +84,7 @@ class ProcessUpdateMediaJob implements ShouldQueue
                     'mime_type'     => mime_content_type($localFullPath) ?: null,
                     'size'          => filesize($localFullPath) ?: null,
                     'original_name' => $originalName,
+                    'is_webp'=> false
                 ]);
 
                 // cleanup local temp
