@@ -16,4 +16,14 @@ class Contact extends Model
         'subject',
         'message',
     ];
+
+    public function answers()
+    {
+        return $this->hasMany(
+            \App\Models\Mail\AnswerClient\AnswerClientMail::class,
+            'contact_id'
+        );
+    }
+
+
 }
